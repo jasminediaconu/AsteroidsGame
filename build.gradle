@@ -3,7 +3,7 @@ import com.github.spotbugs.SpotBugsTask
 plugins {
     id 'java'
 //    id 'eclipse' // optional (to generate Eclipse project files)
-//    id 'idea' // optional (to generate IntelliJ IDEA project files)
+    id 'idea' // optional (to generate IntelliJ IDEA project files)
 
     // Test coverage
     id 'jacoco'
@@ -16,16 +16,35 @@ plugins {
 
     // FindBugs / SpotBugs
     id "com.github.spotbugs" version "2.0.1"
+
+    // Application
+    id 'application'
+
+    // JavaFX
+    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
+    compile 'com.github.almasb:fxgl:11.3'
+}
+
+javafx {
+    version = "13"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.media' ]
+}
+
+mainClassName = 'Main'
 group 'nl.tudelft.cse.sem.template'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 12
-
-repositories {
-    mavenCentral()
-}
 
 test {
     useJUnitPlatform()
@@ -35,11 +54,6 @@ test {
         includes = ['nl.tudelft.cse.sem.*']
         excludes = []
     }
-}
-
-dependencies {
-    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
-    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
 }
 
 jacocoTestCoverageVerification {
