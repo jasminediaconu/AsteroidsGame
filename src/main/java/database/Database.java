@@ -108,17 +108,19 @@ public class Database {
      * Inserts a record into the user table.
      * @param username username of user
      * @param password password of user
+     * @param salt salt for hashing
      * @throws SQLException when this exceptional condition happens
      */
-    public void insertUser(String username, String password) {
+    public void insertUser(String username, String password, String salt) {
 
         try {
             Connection conn = DriverManager.getConnection(this.getUrl());
 
-            PreparedStatement statement = conn.prepareStatement("insert into user values(?,?)");
+            PreparedStatement statement = conn.prepareStatement("insert into user values(?,?,?)");
 
             statement.setString(1, username);
             statement.setString(2, password);
+            statement.setString(3, salt);
 
             statement.execute();
 
@@ -187,7 +189,8 @@ public class Database {
             "username TEXT NOT NULL, alias TEXT NOT NULL,
              timestamp DATE NOT NULL, score INTEGER NOT NULL)";
         String create_table_user =
-        "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY, password TEXT NOT NULL)";
+        "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,
+         password TEXT NOT NULL, salt TEXT NOT NULL)";
 
         db.createNewTable(create_table_user);
     }*/
