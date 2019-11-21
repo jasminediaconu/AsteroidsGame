@@ -26,13 +26,11 @@ plugins {
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
-    compile 'com.github.almasb:fxgl:11.3'
 }
 
 javafx {
@@ -40,7 +38,7 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.media' ]
 }
 
-mainClassName = 'Main'
+mainClassName = 'MainScreen'
 group 'nl.tudelft.cse.sem.template'
 version '1.0-SNAPSHOT'
 
