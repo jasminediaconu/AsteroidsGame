@@ -2,6 +2,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import menu.LoginScreenController;
 import menu.MainScreenController;
@@ -60,7 +61,7 @@ public class MainScreen extends Application {
         stage.setScene(mainScene);
         stage.show();
 
-        //stage.getIcons().add(new Image("menu/images/icon.png"));
+        stage.getIcons().add(new Image("menu/images/asteroid.png"));
 
     }
 }
