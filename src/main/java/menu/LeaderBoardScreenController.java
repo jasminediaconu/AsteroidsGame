@@ -10,34 +10,34 @@ import javafx.stage.Stage;
 /**
  * The type LoginScreen Controller.
  */
-public class MenuScreenController {
+public class LeaderBoardScreenController {
 
-    private Scene leaderBoardScreen;
+    private Scene menuScreen;
 
     /**
-     * Getter for LeaderBoard Screen scene.
-     * @return mainScreen
+     * Getter for Menu Screen scene.
+     * @return menuScreen
      */
-    public Scene getLeaderBoardScreen() {
-        return leaderBoardScreen;
+    public Scene getMenuScreen() {
+        return menuScreen;
     }
 
     /**
-     * Setter for LeaderBoard Screen Scene.
+     * Setter for Main Screen Scene.
      * @param scene type Scene
      */
-    public void setLeaderBoardScreen(Scene scene) {
-        leaderBoardScreen = scene;
+    public void setMenuScreen(Scene scene) {
+        menuScreen = scene;
     }
 
     /**
      * Function triggered when pressing the 'Back' button.
-     * It returns the LeaderBoard Screen scene.
+     * It returns the Menu Screen scene.
      * @param actionEvent type ActionEvent
      */
-    public void openLeaderBoardScreen(ActionEvent actionEvent) {
+    public void openMenuScreen(ActionEvent actionEvent) {
         Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-        primaryStage.setScene(leaderBoardScreen);
+        primaryStage.setScene(menuScreen);
     }
 
     /**
@@ -49,6 +49,6 @@ public class MenuScreenController {
     public void exit(MouseEvent event) {
         Node node = (Node) event.getSource();
         Stage stage = (Stage) node.getScene().getWindow();
-        stage.hide();
+        stage.close();
     }
 }

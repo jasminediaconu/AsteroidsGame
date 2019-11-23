@@ -4,8 +4,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import menu.LeaderBoardScreenController;
 import menu.LoginScreenController;
 import menu.MainScreenController;
+import menu.MenuScreenController;
 import menu.RegisterScreenController;
 
 public class MainScreen extends Application {
@@ -35,16 +37,15 @@ public class MainScreen extends Application {
         Parent register = registerScreenLoader.load();
         Scene registerScene = new Scene(register);
 
-        FXMLLoader menuScreenLoader = new FXMLLoader(getClass()
-                .getResource("/menu/fxml/menuScreen.fxml"));
-        Parent menu = menuScreenLoader.load();
-        Scene menuScene = new Scene(menu);
-
         // injecting login scene inside main scene
         MainScreenController mainScreenController = mainScreenLoader.getController();
         mainScreenController.setLoginScreen(loginScene);
         mainScreenController.setRegisterScreen(registerScene);
 
+        FXMLLoader menuScreenLoader = new FXMLLoader(getClass()
+                .getResource("/menu/fxml/menuScreen.fxml"));
+        Parent menu = menuScreenLoader.load();
+        Scene menuScene = new Scene(menu);
 
         LoginScreenController loginScreenController = loginScreenLoader.getController();
         loginScreenController.setMainScreen(mainScene);
@@ -54,14 +55,32 @@ public class MainScreen extends Application {
         registerScreenController.setMainScreen(mainScene);
         registerScreenController.setMenuScreen(menuScene);
 
+        FXMLLoader leaderBoardScreenLoader = new FXMLLoader(getClass()
+                .getResource("/menu/fxml/leaderBoardScreen.fxml"));
+        Parent leaderBoard = leaderBoardScreenLoader.load();
+        Scene leaderBoardScene = new Scene(leaderBoard);
+
+        MenuScreenController menuScreenController = menuScreenLoader.getController();
+        menuScreenController.setLeaderBoardScreen(leaderBoardScene);
+
+        LeaderBoardScreenController leaderBoardScreenController
+                = leaderBoardScreenLoader.getController();
+        leaderBoardScreenController.setMenuScreen(menuScene);
+
         //scene.setFill(Color.TRANSPARENT);
         //stage.initStyle(StageStyle.TRANSPARENT);
 
+
+        // Changes the cursor type of the application
+        //mainScene.setCursor(Cursor.CROSSHAIR);
+
         stage.setTitle("Asteroids");
         stage.setScene(mainScene);
+        stage.setResizable(false);
         stage.show();
 
+        // Sets default icon of the application
         stage.getIcons().add(new Image("menu/images/asteroid.png"));
-
     }
+
 }
