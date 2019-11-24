@@ -3,7 +3,7 @@ import com.github.spotbugs.SpotBugsTask
 plugins {
     id 'java'
 //    id 'eclipse' // optional (to generate Eclipse project files)
-    id 'idea' // optional (to generate IntelliJ IDEA project files)
+//    id 'idea' // optional (to generate IntelliJ IDEA project files)
 
     // Test coverage
     id 'jacoco'
@@ -16,8 +16,8 @@ plugins {
 
     // FindBugs / SpotBugs
     id "com.github.spotbugs" version "2.0.1"
-
-    // Application
+	
+	 // Application
     id 'application'
 
     // JavaFX
@@ -52,6 +52,12 @@ test {
         includes = ['nl.tudelft.cse.sem.*']
         excludes = []
     }
+}
+
+dependencies {
+    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
+    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
+    compile group:'org.xerial', name:'sqlite-jdbc', version:'3.8.11.2'
 }
 
 jacocoTestCoverageVerification {
