@@ -1,5 +1,6 @@
 package database;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -7,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import user.User;
 
 @SuppressWarnings("PMD")
 public class Database {
@@ -106,11 +109,36 @@ public class Database {
 
     /**
      * Inserts a record into the user table.
+     * @param user the User that will be added to the database
+     */
+    public void insertUser(User user) {
+
+        try {
+            Connection conn = DriverManager.getConnection(this.getUrl());
+
+            PreparedStatement statement = conn.prepareStatement("insert into user values(?,?,?)");
+
+            statement.setString(1, user.getUsername());
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getSaltAsString());
+
+            statement.execute();
+
+            statement.close();
+            conn.close();
+        } catch (SQLException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+    /**
+     * Inserts a record into the user table.
      * @param username username of user
      * @param password password of user
      * @param salt salt for hashing
      * @throws SQLException when this exceptional condition happens
-     */
+     * /
     public void insertUser(String username, String password, String salt) {
 
         try {
@@ -130,33 +158,79 @@ public class Database {
             e.printStackTrace();
         }
     }
+    */
+    //TODO construct and return user.User object
 
-    //TODO construct and return User object
 
     /**
-     * Retrieves a User from the user table based on the username.
-     * @param username username of User
+     * Retrieves a user.User from the user table based on the username.
+     * @param username username of user.User
+     * @return User object created from values retrieved from database
      * @throws SQLException when this exceptional condition happens
      */
-    public void getUserByUsername(String username) {
+    public User getUserByUsername(String username) throws SQLException {
+        User user = new User(username);
+
+        Connection conn = DriverManager.getConnection(this.getUrl());
+
+        PreparedStatement stm = conn.prepareStatement("select * from user where username = ?");
+
+        stm.setString(1, username);
+
+        ResultSet resultSet = stm.executeQuery();
+
+        user.setPassword(resultSet.getString(2));
+        user.setSalt(resultSet.getString(3).getBytes());
+
+        stm.close();
+        resultSet.close();
+        conn.close();
+
+        return user;
+    }
+
+    /**
+     * Removes user from the database.
+     * @param username Username of the user to remove
+     * @return true iff user removed successfully (and was present before)
+     */
+    public boolean removeUserByUsername(String username) {
+        boolean removed = false;
         try {
             Connection conn = DriverManager.getConnection(this.getUrl());
 
-            PreparedStatement stm = conn.prepareStatement("select * from user where username = ?");
+            User toRemove;
+
+            // check if there is a user with the provided username
+            try {
+                toRemove = getUserByUsername(username);
+            } catch (SQLException e) {
+                if (e.getMessage().equals("ResultSet closed")) {
+                    return false;
+                }
+            }
+
+            PreparedStatement stm = conn.prepareStatement("delete from user where username = ?");
 
             stm.setString(1, username);
+            stm.executeUpdate();
 
-            ResultSet resultSet = stm.executeQuery();
+            // check if user is not present in the db anymore
+            try {
+                getUserByUsername(username);
+            } catch (SQLException e) {
+                removed = true;
+            }
 
             stm.close();
-            resultSet.close();
             conn.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        return removed;
     }
+
 
     /**
      * Retrieves a Game from the game table based on the id.
@@ -182,16 +256,22 @@ public class Database {
 
     }
 
-    /*public static void main(String[] args) {
+    /**
+     * Main method that connects to the database and creates the user and
+     * games table if they are not created yet.
+     * @param args String[] args
+     */
+    public static void main(String[] args) {
         Database db = new Database("jdbc:sqlite:C:/sqlite/db/semdatabase.db");
-        String create_table_game =
-        "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY," +
-            "username TEXT NOT NULL, alias TEXT NOT NULL,
-             timestamp DATE NOT NULL, score INTEGER NOT NULL)";
-        String create_table_user =
-        "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,
-         password TEXT NOT NULL, salt TEXT NOT NULL)";
+        db.connect();
+        //        String create_table_game =
+        //        "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY," +
+        //            "username TEXT NOT NULL, alias TEXT NOT NULL,
+        //             timestamp DATE NOT NULL, score INTEGER NOT NULL)";
+        String createTableUser =
+            "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
+            + "password TEXT NOT NULL, salt TEXT NOT NULL)";
 
-        db.createNewTable(create_table_user);
-    }*/
+        db.createNewTable(createTableUser);
+    }
 }

@@ -1,7 +1,9 @@
+import java.io.UnsupportedEncodingException;
+
 import org.junit.jupiter.api.Assertions;
-import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import user.User;
 
 class UserTest {
     private static User user;
@@ -33,6 +35,11 @@ class UserTest {
         user.setSalt(newBytes);
 
         Assertions.assertEquals(newBytes, user.getSalt());
+    }
+
+    @Test
+    void getSaltAsString() throws UnsupportedEncodingException {
+        Assertions.assertEquals(username, user.getSaltAsString());
     }
 
     @Test

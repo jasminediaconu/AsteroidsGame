@@ -1,3 +1,7 @@
+package user;
+
+import java.io.UnsupportedEncodingException;
+
 public class User {
     /**
      * salt retrieved from database to authenticate a user.
@@ -22,9 +26,9 @@ public class User {
 
 
     /**
-     * Constructs a User object.
+     * Constructs a user.User object.
      * Only a username is required because this class can be used to construct
-     * a User in "environments" where no password/alias/salt may be available
+     * a user.User in "environments" where no password/alias/salt may be available
      * (e.g. when retrieving a user from the database the password is not available)
      * @param username Username of the user
      */
@@ -38,6 +42,10 @@ public class User {
      */
     public byte[] getSalt() {
         return salt;
+    }
+
+    public String getSaltAsString() throws UnsupportedEncodingException {
+        return new String(salt, "UTF-8");
     }
 
     /**
