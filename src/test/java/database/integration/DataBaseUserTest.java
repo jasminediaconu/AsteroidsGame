@@ -1,9 +1,7 @@
 //package database.integration;
 //
-//import java.io.UnsupportedEncodingException;
-//import java.sql.SQLException;
-//
 //import database.Database;
+//import java.io.UnsupportedEncodingException;
 //import org.junit.jupiter.api.AfterEach;
 //import org.junit.jupiter.api.Assertions;
 //import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +12,7 @@
 //    private static User testUser;
 //    private static final String username = "username";
 //    private static final String alias = "alias";
-//    private static final String password = "password";
+//    private static final byte[] password = "password".getBytes();
 //    private static byte[] bytes = username.getBytes();
 //
 //    private static Database db;
@@ -42,7 +40,7 @@
 //
 //        Assertions.assertEquals(testUser.getUsername(), userFromDB.getUsername());
 //        Assertions.assertEquals(testUser.getSaltAsString(), userFromDB.getSaltAsString());
-//        Assertions.assertEquals(testUser.getPassword(), userFromDB.getPassword());
+//        Assertions.assertArrayEquals(testUser.getPassword(), userFromDB.getPassword());
 //    }
 //
 //    @Test
@@ -53,16 +51,17 @@
 //
 //        Assertions.assertTrue(db.removeUserByUsername(username));
 //    }
-//
-////    User checkIfUserInDatabase(String username) {
-////        User userFromDB;
-////        try {
-////            userFromDB = db.getUserByUsername(username);
-////            return userFromDB;
-////        } catch (SQLException e) {
-////            e.printStackTrace();
-////            Assertions.fail();
-////        }
-////        return null;
-////    }
+//    /*
+//    User checkIfUserInDatabase(String username) {
+//        User userFromDB;
+//        try {
+//            userFromDB = db.getUserByUsername(username);
+//            return userFromDB;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            Assertions.fail();
+//        }
+//        return null;
+//    }
+//    */
 //}

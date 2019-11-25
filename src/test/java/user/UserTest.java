@@ -9,7 +9,7 @@ class UserTest {
     private static User user;
     private static final String username = "username";
     private static final String alias = "alias";
-    private static final String password = "password";
+    private static final byte[] password = "password".getBytes();
     private static byte[] bytes = username.getBytes();
 
 
@@ -61,8 +61,13 @@ class UserTest {
     }
 
     @Test
+    void getPasswordAsString() throws UnsupportedEncodingException {
+        Assertions.assertEquals(new String(password, "UTF-8"), user.getPasswordAsString());
+    }
+
+    @Test
     void setPassword() {
-        String newPassword = "newPassword";
+        byte[] newPassword = "newPassword".getBytes();
         user.setPassword(newPassword);
 
         Assertions.assertEquals(newPassword, user.getPassword());

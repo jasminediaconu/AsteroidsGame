@@ -46,13 +46,10 @@ public class RegisterScreenController {
             if (db.getUserByUsername(usernameField.getText()) == null) {
                 User user = new User(usernameField.getText());
 
-                //TODO user.setSalt(authService.generateSalt());
-                // temp static salt:
-                user.setSalt("salt".getBytes());
-
                 try {
-                    user.setPassword(new String(authService
-                            .encryptPassword(user.getSalt(), password), "UTF-8"));
+                    user.setSalt(authService.generateSalt());
+                    user.setPassword(authService.encryptPassword(user.getSalt(),
+                            password.getBytes()));
 
                     db.insertUser(user);
                     System.out.println("user inserted into db");

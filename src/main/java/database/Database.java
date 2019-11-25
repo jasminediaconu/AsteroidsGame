@@ -1,5 +1,6 @@
 package database;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.Date;
@@ -129,14 +130,14 @@ public class Database {
             PreparedStatement statement = conn.prepareStatement("insert into user values(?,?,?)");
 
             statement.setString(1, user.getUsername());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getSaltAsString());
+            statement.setBytes(2, user.getPassword());
+            statement.setBytes(3, user.getSalt());
 
             statement.execute();
 
             statement.close();
             conn.close();
-        } catch (SQLException | UnsupportedEncodingException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -191,8 +192,8 @@ public class Database {
 
             ResultSet resultSet = stm.executeQuery();
 
-            user.setPassword(resultSet.getString(2));
-            user.setSalt(resultSet.getString(3).getBytes());
+            user.setPassword(resultSet.getBytes(2));
+            user.setSalt(resultSet.getBytes(3));
 
             stm.close();
             resultSet.close();
@@ -281,7 +282,7 @@ public class Database {
         //             timestamp DATE NOT NULL, score INTEGER NOT NULL)";
         String createTableUser =
             "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
-            + "password TEXT NOT NULL, salt TEXT NOT NULL)";
+            + "password BLOB NOT NULL, salt BLOB NOT NULL)";
 
         db.createNewTable(createTableUser);
     }

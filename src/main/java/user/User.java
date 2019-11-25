@@ -16,7 +16,7 @@ public class User {
     /**
      * (attempted) password of the user.
      */
-    private String password;
+    private byte[] password;
 
     /**
      * If the user does not want their username public the alias can
@@ -42,7 +42,7 @@ public class User {
      * @param username username of the user
      * @param password (attempted) password of the user
      */
-    public User(String username, String password) {
+    public User(String username, byte[] password) {
         this.username = username;
         this.password = password;
     }
@@ -87,15 +87,23 @@ public class User {
      * Getter for the password.
      * @return password String
      */
-    public String getPassword() {
+    public byte[] getPassword() {
         return password;
+    }
+
+    /**
+     * Getter for the password.
+     * @return password String
+     */
+    public String getPasswordAsString() throws UnsupportedEncodingException {
+        return new String(password, "UTF-8");
     }
 
     /**
      * Setter for the password.
      * @param password String to set password to
      */
-    public void setPassword(String password) {
+    public void setPassword(byte[] password) {
         this.password = password;
     }
 

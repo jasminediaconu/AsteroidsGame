@@ -38,7 +38,7 @@ public class LoginScreenController {
         String password = passwordField.getText();
         String username = usernameField.getText();
 
-        User attemptedUser = new User(username, password);
+        User attemptedUser = new User(username, password.getBytes());
         AuthenticationService authService = new AuthenticationService();
 
         if (authService.authenticate(attemptedUser)) {
