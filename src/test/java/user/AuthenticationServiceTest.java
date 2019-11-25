@@ -1,5 +1,6 @@
 package user;
 
+import database.Database;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -57,6 +58,12 @@ class AuthenticationServiceTest {
         Assertions.assertArrayEquals(encrypted, expectedPwEncrypted);
         Assertions.assertFalse(Arrays.equals(encrypted, encryptedOtherSalt));
         Assertions.assertFalse(Arrays.equals(encrypted, encryptedOtherPassword));
+    }
 
+    @Test
+    void insertUser() {
+        Database db = new Database();
+
+        db.insertUser(userFromDB);
     }
 }

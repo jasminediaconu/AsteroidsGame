@@ -4,8 +4,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
 import javafx.stage.Stage;
+import user.AuthenticationService;
+import user.User;
 
 /**
  * The type LoginScreen Controller.
@@ -15,6 +21,36 @@ public class LoginScreenController {
     private Scene mainScreen;
 
     private Scene menuScreen;
+
+    @FXML
+    public transient PasswordField passwordField;
+
+    @FXML
+    public transient TextField usernameField;
+
+    @FXML
+    public transient Button loginButton;
+
+    /**
+     * Authenticates User.
+     */
+    public void login() {
+        String password = passwordField.getText();
+        String username = usernameField.getText();
+
+        User attemptedUser = new User(username, password);
+        AuthenticationService authService = new AuthenticationService();
+
+        if (authService.authenticate(attemptedUser)) {
+            System.out.println("Login successful");
+            loginButton.setStyle("-fx-background-color: green; ");
+            //openMainScreen();
+            return;
+        }
+        loginButton.setStyle("-fx-background-color: red; ");
+        System.out.println("Login failed");
+        return;
+    }
 
     /**
      * Getter for Main Screen scene.

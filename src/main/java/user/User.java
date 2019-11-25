@@ -37,6 +37,17 @@ public class User {
     }
 
     /**
+     * Alternative constructor for User.
+     * Used on login to create attemptedUser
+     * @param username username of the user
+     * @param password (attempted) password of the user
+     */
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    /**
      * Getter for the salt.
      * @return the salt as a byte array
      */

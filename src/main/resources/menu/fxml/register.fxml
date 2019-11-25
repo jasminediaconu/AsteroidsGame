@@ -26,20 +26,20 @@
             <Font name="Century Gothic" size="25.0" />
          </font>
       </Button>
-      <Button layoutX="436.0" layoutY="409.0" mnemonicParsing="false" onAction="#openMenuScreen" prefHeight="50.0" prefWidth="298.0" text="Login">
+      <Button layoutX="436.0" layoutY="409.0" mnemonicParsing="false" onAction="#registerUser" prefHeight="50.0" prefWidth="298.0" text="Register">
          <font>
             <Font name="Century Gothic" size="25.0" />
          </font>
       </Button>
-      <TextField layoutX="68.0" layoutY="391.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
+      <TextField fx:id="usernameField" layoutX="68.0" layoutY="391.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
          <font>
             <Font size="18.0" />
          </font></TextField>
-      <PasswordField layoutX="68.0" layoutY="500.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
+      <PasswordField fx:id="passwordField" layoutX="68.0" layoutY="500.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
          <font>
             <Font size="18.0" />
          </font></PasswordField>
-      <PasswordField layoutX="68.0" layoutY="663.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
+      <PasswordField fx:id="passwordCheckField" layoutX="68.0" layoutY="663.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
          <font>
             <Font size="18.0" />
          </font>

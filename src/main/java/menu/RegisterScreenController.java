@@ -1,18 +1,78 @@
 package menu;
 
+import database.Database;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import user.AuthenticationService;
+import user.User;
 
 public class RegisterScreenController {
+
+    private static Database db = new Database();
+
+    private static AuthenticationService authService = new AuthenticationService();
 
     private Scene mainScreen;
 
     private Scene menuScreen;
+
+    @FXML
+    public transient TextField usernameField;
+
+    @FXML
+    public transient PasswordField passwordField;
+
+    @FXML
+    public transient PasswordField passwordCheckField;
+
+    /**
+     * Registers a new user (if the username is not taken yet).
+     */
+    public void registerUser() {
+        String password = passwordField.getText();
+        String passwordCheck = passwordCheckField.getText();
+
+        if (password.equals(passwordCheck)) {
+            if (db.getUserByUsername(usernameField.getText()) == null) {
+                User user = new User(usernameField.getText());
+
+                //TODO user.setSalt(authService.generateSalt());
+                // temp static salt:
+                user.setSalt("salt".getBytes());
+
+                try {
+                    user.setPassword(new String(authService
+                            .encryptPassword(user.getSalt(), password), "UTF-8"));
+
+                    db.insertUser(user);
+                    System.out.println("user inserted into db");
+
+                } catch (NoSuchAlgorithmException
+                        | InvalidKeySpecException
+                        | UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+            } else {
+                // user already in database
+                System.out.println("user already in db");
+            }
+        } else {
+            System.out.println("passwords don't match");
+            // password not the same
+        }
+
+    }
 
     /**
      * Getter for Main Screen scene.
