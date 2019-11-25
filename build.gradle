@@ -68,9 +68,7 @@ jacocoTestCoverageVerification {
             includes = ['nl.tudelft.cse.sem.*']
 
             limit {
-                counter = 'LINE'
-                value = 'TOTALCOUNT'
-                maximum = 0.3
+                maximum = 0.5
             }
         }
     }
