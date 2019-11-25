@@ -19,6 +19,8 @@ public class Database {
      */
     private String url;
 
+    private static final String defaultURL = "jdbc:sqlite:C:/sqlite/db/semdatabase.db";
+
 
     /**
      * Constructor.
@@ -26,6 +28,14 @@ public class Database {
      */
     public Database(String url) {
         this.url = url;
+        this.connect();
+    }
+
+    /**
+     * Constructor used when no specific database url is supplied.
+     */
+    public Database() {
+        this.url = defaultURL;
         this.connect();
     }
 
@@ -168,23 +178,30 @@ public class Database {
      * @return User object created from values retrieved from database
      * @throws SQLException when this exceptional condition happens
      */
-    public User getUserByUsername(String username) throws SQLException {
+    public User getUserByUsername(String username) {
         User user = new User(username);
 
-        Connection conn = DriverManager.getConnection(this.getUrl());
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(this.getUrl());
 
-        PreparedStatement stm = conn.prepareStatement("select * from user where username = ?");
+            PreparedStatement stm = conn.prepareStatement("select * from user where username = ?");
 
-        stm.setString(1, username);
+            stm.setString(1, username);
 
-        ResultSet resultSet = stm.executeQuery();
+            ResultSet resultSet = stm.executeQuery();
 
-        user.setPassword(resultSet.getString(2));
-        user.setSalt(resultSet.getString(3).getBytes());
+            user.setPassword(resultSet.getString(2));
+            user.setSalt(resultSet.getString(3).getBytes());
 
-        stm.close();
-        resultSet.close();
-        conn.close();
+            stm.close();
+            resultSet.close();
+            conn.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            user = null;
+        }
 
         return user;
     }
@@ -202,12 +219,8 @@ public class Database {
             User toRemove;
 
             // check if there is a user with the provided username
-            try {
-                toRemove = getUserByUsername(username);
-            } catch (SQLException e) {
-                if (e.getMessage().equals("ResultSet closed")) {
-                    return false;
-                }
+            if (getUserByUsername(username) == null) {
+                return false;
             }
 
             PreparedStatement stm = conn.prepareStatement("delete from user where username = ?");
@@ -216,9 +229,7 @@ public class Database {
             stm.executeUpdate();
 
             // check if user is not present in the db anymore
-            try {
-                getUserByUsername(username);
-            } catch (SQLException e) {
+            if (getUserByUsername(username) == null) {
                 removed = true;
             }
 

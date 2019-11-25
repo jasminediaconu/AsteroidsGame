@@ -1,9 +1,9 @@
-import java.io.UnsupportedEncodingException;
+package user;
 
+import java.io.UnsupportedEncodingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import user.User;
 
 class UserTest {
     private static User user;

@@ -1,8 +1,9 @@
-//package database;
+//package database.integration;
 //
 //import java.io.UnsupportedEncodingException;
 //import java.sql.SQLException;
 //
+//import database.Database;
 //import org.junit.jupiter.api.AfterEach;
 //import org.junit.jupiter.api.Assertions;
 //import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,7 @@
 //    void testInsertUser() throws UnsupportedEncodingException {
 //        db.insertUser(testUser);
 //
-//        User userFromDB = checkIfUserInDatabase(username);
+//        User userFromDB = db.getUserByUsername(username);
 //
 //        Assertions.assertEquals(testUser.getUsername(), userFromDB.getUsername());
 //        Assertions.assertEquals(testUser.getSaltAsString(), userFromDB.getSaltAsString());
@@ -48,20 +49,20 @@
 //    void testRemoveUser() {
 //        db.insertUser(testUser);
 //
-//        checkIfUserInDatabase(username);
+//        db.getUserByUsername(username);
 //
 //        Assertions.assertTrue(db.removeUserByUsername(username));
 //    }
 //
-//    User checkIfUserInDatabase(String username) {
-//        User userFromDB;
-//        try {
-//            userFromDB = db.getUserByUsername(username);
-//            return userFromDB;
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            Assertions.fail();
-//        }
-//        return null;
-//    }
+////    User checkIfUserInDatabase(String username) {
+////        User userFromDB;
+////        try {
+////            userFromDB = db.getUserByUsername(username);
+////            return userFromDB;
+////        } catch (SQLException e) {
+////            e.printStackTrace();
+////            Assertions.fail();
+////        }
+////        return null;
+////    }
 //}
