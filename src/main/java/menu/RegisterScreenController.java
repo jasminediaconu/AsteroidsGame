@@ -27,13 +27,13 @@ public class RegisterScreenController {
     private Scene menuScreen;
 
     @FXML
-    public transient TextField usernameField;
+    private transient TextField usernameField;
 
     @FXML
-    public transient PasswordField passwordField;
+    private transient PasswordField passwordField;
 
     @FXML
-    public transient PasswordField passwordCheckField;
+    private transient PasswordField passwordCheckField;
 
     /**
      * Registers a new user (if the username is not taken yet).
