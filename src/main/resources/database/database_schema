@@ -1,0 +1,7 @@
+//        String create_table_game =
+        //        "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY," +
+        //            "username TEXT NOT NULL, alias TEXT NOT NULL,
+        //             timestamp DATE NOT NULL, score INTEGER NOT NULL)";
+        String createTableUser =
+                "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
+                        + "password BLOB NOT NULL, salt BLOB NOT NULL)";
