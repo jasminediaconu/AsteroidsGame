@@ -13,3 +13,5 @@ out/**
 
 # database
 src/main/resources/database/semdatabase.md
+
+src/main/resources/database/semdatabase.db
