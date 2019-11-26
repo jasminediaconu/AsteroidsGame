@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 public class MenuScreenController {
 
     private Scene leaderBoardScreen;
+    private Scene gameScreen;
 
     /**
      * Getter for LeaderBoard Screen scene.
@@ -38,6 +39,32 @@ public class MenuScreenController {
     public void openLeaderBoardScreen(ActionEvent actionEvent) {
         Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(leaderBoardScreen);
+    }
+
+    /**
+     * Getter for Game Screen scene.
+     * @return mainScreen
+     */
+    public Scene getGameScreen() {
+        return gameScreen;
+    }
+
+    /**
+     * Setter for Game Screen scene.
+     * @param scene type Scene
+     */
+    public void setGameScreen(Scene scene) {
+        gameScreen = scene;
+    }
+
+    /**
+     * Function triggered when pressing the 'Play' button.
+     * It returns the Game Screen scene.
+     * @param actionEvent type ActionEvent
+     */
+    public void openGameScreen(ActionEvent actionEvent) {
+        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        primaryStage.setScene(gameScreen);
     }
 
     /**

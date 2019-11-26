@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -35,10 +36,16 @@ public class RegisterScreenController {
     @FXML
     private transient PasswordField passwordCheckField;
 
+    @FXML
+    private transient Label errorMessage;
+
+    @FXML
+    private transient Label errorMessage2;
+
     /**
      * Registers a new user (if the username is not taken yet).
      */
-    public void registerUser() {
+    public void registerUser(ActionEvent actionEvent) {
         String password = passwordField.getText();
         String passwordCheck = passwordCheckField.getText();
 
@@ -52,8 +59,11 @@ public class RegisterScreenController {
                             password.getBytes()));
 
                     db.insertUser(user);
-                    System.out.println("user inserted into db");
 
+                    errorMessage.setStyle("-fx-opacity: 0;");
+                    errorMessage2.setStyle("-fx-opacity: 0;");
+                    openMenuScreen(actionEvent);
+                    System.out.println("user inserted into db");
                 } catch (NoSuchAlgorithmException
                         | InvalidKeySpecException
                         | UnsupportedEncodingException e) {
@@ -62,9 +72,11 @@ public class RegisterScreenController {
 
             } else {
                 // user already in database
+                errorMessage.setStyle("-fx-opacity: 100;");
                 System.out.println("user already in db");
             }
         } else {
+            errorMessage2.setStyle("-fx-opacity: 100;");
             System.out.println("passwords don't match");
             // password not the same
         }

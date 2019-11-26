@@ -1,4 +1,5 @@
 import database.Database;
+import game.GameScreenController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -64,12 +65,19 @@ public class MainScreen extends Application {
         Parent leaderBoard = leaderBoardScreenLoader.load();
         Scene leaderBoardScene = new Scene(leaderBoard);
 
+        FXMLLoader gameScreenLoader = new FXMLLoader(getClass()
+                .getResource("/game/fxml/gameScreen.fxml"));
+        Parent game = gameScreenLoader.load();
+        Scene gameScene = new Scene(game);
+
         MenuScreenController menuScreenController = menuScreenLoader.getController();
         menuScreenController.setLeaderBoardScreen(leaderBoardScene);
+        menuScreenController.setGameScreen(gameScene);
 
         LeaderBoardScreenController leaderBoardScreenController
                 = leaderBoardScreenLoader.getController();
         leaderBoardScreenController.setMenuScreen(menuScene);
+
 
         //scene.setFill(Color.TRANSPARENT);
         //stage.initStyle(StageStyle.TRANSPARENT);

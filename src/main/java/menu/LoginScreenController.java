@@ -41,7 +41,7 @@ public class LoginScreenController {
     /**
      * Authenticates User.
      */
-    public void login(ActionEvent event) {
+    public void login(ActionEvent actionEvent) {
         String password = passwordField.getText();
         String username = usernameField.getText();
 
@@ -52,7 +52,7 @@ public class LoginScreenController {
             System.out.println("Login successful");
             errorMessage.setStyle("-fx-opacity: 0;");
             successMessage.setStyle("-fx-opacity: 100;");
-            openMenuScreen(event);
+            openMenuScreen(actionEvent);
             return;
         } else {
             successMessage.setStyle("-fx-opacity: 0;");
@@ -116,9 +116,7 @@ public class LoginScreenController {
     private void fillScene(Parent root) {
 
         Stage stage = (Stage) menuScreen.getWindow();
-
         Scene scene = new Scene(root);
-
         stage.setScene(scene);
 
     }

@@ -28,11 +28,6 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
-    spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
-}
-
 javafx {
     version = "13"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.media' ]
@@ -58,6 +53,8 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
     compile group:'org.xerial', name:'sqlite-jdbc', version:'3.8.11.2'
+    compile 'org.kordamp.ikonli:ikonli-javafx:11.3.4'
+    compile 'org.kordamp.ikonli:ikonli-fontawesome-pack:11.3.4'
 }
 
 jacocoTestCoverageVerification {
