@@ -25,6 +25,15 @@ class UserTest {
     }
 
     @Test
+    void testAltConstructor() throws UnsupportedEncodingException {
+        User testUser = new User("user", "pw".getBytes());
+
+        Assertions.assertNotNull(testUser);
+        Assertions.assertEquals( "user", testUser.getUsername());
+        Assertions.assertEquals("pw", testUser.getPasswordAsString());
+    }
+
+    @Test
     void getSalt() {
         Assertions.assertEquals(bytes, user.getSalt());
     }

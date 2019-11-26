@@ -1,4 +1,4 @@
-//package database.integration;
+//package integration.database;
 //
 //import database.Database;
 //import java.io.UnsupportedEncodingException;
@@ -10,7 +10,7 @@
 //
 //public class DataBaseUserTest {
 //    private static User testUser;
-//    private static final String username = "username";
+//    private static final String username = "randomusernamethatshouldneverbetaken";
 //    private static final String alias = "alias";
 //    private static final byte[] password = "password".getBytes();
 //    private static byte[] bytes = username.getBytes();
