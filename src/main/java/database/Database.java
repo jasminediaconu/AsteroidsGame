@@ -1,7 +1,5 @@
 package database;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -69,7 +67,7 @@ public class Database {
             conn.close();
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("invalid path to database");
         }
     }
 
@@ -85,7 +83,12 @@ public class Database {
             stmt.execute(sql);
             System.out.println("table created");
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            System.out.println("table couldn't be created");
+            System.out.println("possible reasons for the error: invalid sql "
+                + "statement passed as input or connection couldn't be "
+                + "established because of"
+                + "invalid path to the database");
+            //System.out.println(e.getMessage());
         }
     }
 
@@ -96,7 +99,6 @@ public class Database {
      * @param alias alias of player
      * @param timestamp timestamp of game
      * @param score score of player
-     * @throws SQLException when this exceptional condition happens
      */
     public void insertGame(int id, String username, String alias, Date timestamp, int score)  {
 
@@ -114,7 +116,7 @@ public class Database {
             stm.close();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error: connection couldn't be established");
         }
     }
 
@@ -138,46 +140,14 @@ public class Database {
             statement.close();
             conn.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error: connection couldn't be established");
         }
     }
-
-    /*
-    /**
-     * Inserts a record into the user table.
-     * @param username username of user
-     * @param password password of user
-     * @param salt salt for hashing
-     * @throws SQLException when this exceptional condition happens
-     * /
-    public void insertUser(String username, String password, String salt) {
-
-        try {
-            Connection conn = DriverManager.getConnection(this.getUrl());
-
-            PreparedStatement statement = conn.prepareStatement("insert into user values(?,?,?)");
-
-            statement.setString(1, username);
-            statement.setString(2, password);
-            statement.setString(3, salt);
-
-            statement.execute();
-
-            statement.close();
-            conn.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    */
-    //TODO construct and return user.User object
-
 
     /**
      * Retrieves a user.User from the user table based on the username.
      * @param username username of user.User
      * @return User object created from values retrieved from database
-     * @throws SQLException when this exceptional condition happens
      */
     public User getUserByUsername(String username) {
         User user = new User(username);
@@ -192,6 +162,11 @@ public class Database {
 
             ResultSet resultSet = stm.executeQuery();
 
+            if (resultSet.next() == false) {
+                System.out.println("no user found");
+                return null;
+            }
+
             user.setPassword(resultSet.getBytes(2));
             user.setSalt(resultSet.getBytes(3));
 
@@ -200,7 +175,8 @@ public class Database {
             conn.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error: connection couldn't be established"
+                + "user wasn't removed");
             user = null;
         }
 
@@ -238,7 +214,9 @@ public class Database {
             conn.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error: connection couldn't be established,"
+                    + " item wasn't removed");
+            return false;
         }
         return removed;
     }
@@ -247,7 +225,6 @@ public class Database {
     /**
      * Retrieves a Game from the game table based on the id.
      * @param id id of Game
-     * @throws SQLException when this exceptional condition happens
      */
     //TODO construct and return Game object
     public void getGameById(int id) {
@@ -263,7 +240,7 @@ public class Database {
             conn.close();
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("error: connection couldn't be established");
         }
 
     }
