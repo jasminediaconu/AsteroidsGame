@@ -29,7 +29,7 @@ class UserTest {
         User testUser = new User("user", "pw".getBytes());
 
         Assertions.assertNotNull(testUser);
-        Assertions.assertEquals( "user", testUser.getUsername());
+        Assertions.assertEquals("user", testUser.getUsername());
         Assertions.assertEquals("pw", testUser.getPasswordAsString());
     }
 
