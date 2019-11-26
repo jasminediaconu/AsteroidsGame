@@ -4,6 +4,7 @@
 //import java.io.UnsupportedEncodingException;
 //import org.junit.jupiter.api.AfterEach;
 //import org.junit.jupiter.api.Assertions;
+//import org.junit.jupiter.api.BeforeAll;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import user.User;
@@ -16,6 +17,12 @@
 //    private static byte[] bytes = username.getBytes();
 //
 //    private static Database db;
+//
+//
+//    @BeforeAll
+//    static void init() {
+//        Database.createDatabase();
+//    }
 //
 //    @BeforeEach
 //    void setUp() {

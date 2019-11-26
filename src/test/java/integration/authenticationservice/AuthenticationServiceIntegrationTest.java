@@ -4,8 +4,8 @@
 //import java.io.UnsupportedEncodingException;
 //import java.security.NoSuchAlgorithmException;
 //import java.security.spec.InvalidKeySpecException;
-//import javax.xml.crypto.Data;
 //import org.junit.jupiter.api.Assertions;
+//import org.junit.jupiter.api.BeforeAll;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
 //import user.AuthenticationService;
@@ -21,6 +21,10 @@
 //    private static byte[] pwEncrypted;
 //    private static final String password = "password";
 //
+//    @BeforeAll
+//    static void init() {
+//        Database.createDatabase();
+//    }
 //
 //    @BeforeEach
 //    void setUp() throws NoSuchAlgorithmException,
