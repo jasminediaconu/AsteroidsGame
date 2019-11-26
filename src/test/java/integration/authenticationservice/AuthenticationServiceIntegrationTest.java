@@ -15,7 +15,7 @@
 //
 //    private static User testUser;
 //    private static AuthenticationService authService = new AuthenticationService();
-//    // TODO change this to something more robus
+//    // TODO change this to something more robust
 //    private static final String username = "UserNotInDatabase";
 //    private static Database db = new Database();
 //    private static byte[] pwEncrypted;
