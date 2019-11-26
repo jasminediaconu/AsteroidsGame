@@ -2,9 +2,12 @@ package menu;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -12,6 +15,8 @@ import javafx.scene.layout.Border;
 import javafx.stage.Stage;
 import user.AuthenticationService;
 import user.User;
+
+import java.io.IOException;
 
 /**
  * The type LoginScreen Controller.
@@ -23,18 +28,24 @@ public class LoginScreenController {
     private Scene menuScreen;
 
     @FXML
+    public transient Button loginButton;
+
+    @FXML
     public transient PasswordField passwordField;
 
     @FXML
-    public transient TextField usernameField;
+    private transient TextField usernameField;
 
     @FXML
-    public transient Button loginButton;
+    private transient Label errorMessage;
+
+    @FXML
+    private transient Label successMessage;
 
     /**
      * Authenticates User.
      */
-    public void login() {
+    public void login(ActionEvent event) {
         String password = passwordField.getText();
         String username = usernameField.getText();
 
@@ -43,13 +54,17 @@ public class LoginScreenController {
 
         if (authService.authenticate(attemptedUser)) {
             System.out.println("Login successful");
-            loginButton.setStyle("-fx-background-color: green; ");
-            //openMainScreen();
+            errorMessage.setStyle("-fx-opacity: 0;");
+            successMessage.setStyle("-fx-opacity: 100;");
+            openMenuScreen(event);
             return;
         }
-        loginButton.setStyle("-fx-background-color: red; ");
-        System.out.println("Login failed");
-        return;
+        else {
+            successMessage.setStyle("-fx-opacity: 0;");
+            errorMessage.setStyle("-fx-opacity: 100;");
+            System.out.println("Login failed");
+            return;
+        }
     }
 
     /**
@@ -97,11 +112,20 @@ public class LoginScreenController {
     /**
      * Function triggered when pressing the 'Login' button.
      * It returns the Menu Screen scene.
-     * @param actionEvent type ActionEvent
      */
     public void openMenuScreen(ActionEvent actionEvent) {
         Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(menuScreen);
+    }
+
+    private void fillScene(Parent root) {
+
+        Stage stage = (Stage) menuScreen.getWindow();
+
+        Scene scene = new Scene(root);
+
+        stage.setScene(scene);
+
     }
 
     /**

@@ -51,9 +51,9 @@ public class AuthenticationService {
             //pwAttempted = new String(passwordAttempted, "UTF-8");
             return Arrays.equals(passwordActual, passwordAttempted);
 
-        } catch (NoSuchAlgorithmException |
-                InvalidKeySpecException |
-                UnsupportedEncodingException e) {
+        } catch (NoSuchAlgorithmException
+                | InvalidKeySpecException
+                | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
