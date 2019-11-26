@@ -11,6 +11,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
+/**
+ * Based on: https://www.javacodegeeks.com/2012/05/secure-password-storage-donts-dos-and.html
+ */
 public class AuthenticationService {
 
     /**
