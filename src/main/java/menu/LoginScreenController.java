@@ -2,7 +2,6 @@ package menu;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,12 +10,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Border;
 import javafx.stage.Stage;
 import user.AuthenticationService;
 import user.User;
-
-import java.io.IOException;
 
 /**
  * The type LoginScreen Controller.
@@ -58,8 +54,7 @@ public class LoginScreenController {
             successMessage.setStyle("-fx-opacity: 100;");
             openMenuScreen(event);
             return;
-        }
-        else {
+        } else {
             successMessage.setStyle("-fx-opacity: 0;");
             errorMessage.setStyle("-fx-opacity: 100;");
             System.out.println("Login failed");
