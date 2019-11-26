@@ -18,7 +18,8 @@ public class Database {
      */
     private String url;
 
-    private static final String defaultURL = "jdbc:sqlite:C:/sqlite/db/semdatabase.db";
+    private static final String defaultURL =
+            "jdbc:sqlite:src/main/resources/database/semdatabase.db";
 
 
     /**
@@ -251,7 +252,7 @@ public class Database {
      * @param args String[] args
      */
     public static void main(String[] args) {
-        Database db = new Database("jdbc:sqlite:C:/sqlite/db/semdatabase.db");
+        Database db = new Database(defaultURL);
         db.connect();
         //        String create_table_game =
         //        "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY," +
@@ -260,6 +261,24 @@ public class Database {
         String createTableUser =
             "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
             + "password BLOB NOT NULL, salt BLOB NOT NULL)";
+
+        db.createNewTable(createTableUser);
+    }
+
+    /**
+     * Main method that connects to the database and creates the user and
+     * games table if they are not created yet.
+     */
+    public static void createDatabase() {
+        Database db = new Database(defaultURL);
+        db.connect();
+        //        String create_table_game =
+        //        "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY," +
+        //            "username TEXT NOT NULL, alias TEXT NOT NULL,
+        //             timestamp DATE NOT NULL, score INTEGER NOT NULL)";
+        String createTableUser =
+                "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
+                        + "password BLOB NOT NULL, salt BLOB NOT NULL)";
 
         db.createNewTable(createTableUser);
     }

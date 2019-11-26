@@ -1,3 +1,4 @@
+import database.Database;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -20,6 +21,9 @@ public class MainScreen extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
+
+        //Database db = new Database();
+        Database.createDatabase();
         FXMLLoader mainScreenLoader = new FXMLLoader(getClass()
                 .getResource("/menu/fxml/mainScreen.fxml"));
         Parent main = mainScreenLoader.load();
