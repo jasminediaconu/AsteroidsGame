@@ -33,11 +33,9 @@ public class GameScreenController {
         gameScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT) {
                 player.rotateLeft();
-            }
-            else if (e.getCode() == KeyCode.RIGHT) {
+            } else if (e.getCode() == KeyCode.RIGHT) {
                 player.rotateRight();
-            }
-            else if (e.getCode() == KeyCode.SPACE) {
+            } else if (e.getCode() == KeyCode.SPACE) {
                 Bullet bullet = new Bullet();
                 bullet.setVelocity(
                         new Point2D(Math.cos(Math.toRadians(player.getRotate())),
@@ -46,11 +44,11 @@ public class GameScreenController {
                 addBullet(bullet,
                         player.getView().getTranslateX() + player.getView().getTranslateY() / 12,
                         player.getView().getTranslateY() + player.getView().getTranslateY() / 10);
-            }
-            else if (e.getCode() == KeyCode.UP) {
+            } else if (e.getCode() == KeyCode.UP) {
                 player.thrust();
+            } else  {
+                player.moveForward();
             }
-            else player.moveForward();
         });
     }
 

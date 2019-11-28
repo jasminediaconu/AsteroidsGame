@@ -3,8 +3,6 @@ package game;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 
-import javax.swing.text.html.ImageView;
-
 public class SpaceEntity {
     protected transient Node view;
 
@@ -56,8 +54,8 @@ public class SpaceEntity {
      */
     public void rotateRight() {
         view.setRotate(view.getRotate() + 5);
-//        setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
-//                velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
+        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
+        //       velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
     }
 
     /**
@@ -66,8 +64,8 @@ public class SpaceEntity {
      */
     public void rotateLeft() {
         view.setRotate(view.getRotate() - 5);
-//        setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
-//                velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
+        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
+        //velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
     }
 
     public boolean isColliding(SpaceEntity other) {
