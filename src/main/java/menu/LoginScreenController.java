@@ -15,7 +15,7 @@ import user.AuthenticationService;
 import user.User;
 
 /**
- * The type LoginScreen Controller.
+ * The type LoginScreen ViewController.
  */
 public class LoginScreenController {
 
