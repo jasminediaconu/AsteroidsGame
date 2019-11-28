@@ -114,7 +114,8 @@ public class GameScreenController {
     /**
      * This method updates the objects on the screen according to the Timer.
      */
-    private void onUpdate() {
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis") // Warning suppressed because PMD
+    private void onUpdate() {                        // flags some for each loops as an UR anomaly
         for (SpaceEntity bullet : bullets) {
             for (SpaceEntity asteroid : asteroids) {
                 if (bullet.isColliding(asteroid)) {
