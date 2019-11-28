@@ -7,4 +7,5 @@ public class Bullet extends SpaceEntity {
     Bullet() {
         super(new ImageView(new Image("/game/sprites/laserBlue.png")));
     }
+
 }

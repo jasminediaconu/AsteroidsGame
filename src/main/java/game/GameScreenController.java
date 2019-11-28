@@ -19,7 +19,7 @@ public class GameScreenController {
     private transient List<SpaceEntity> bullets = new ArrayList<>();
     private transient List<SpaceEntity> asteroids = new ArrayList<>();
 
-    private transient SpaceEntity player;
+    private transient Player player;
 
     private transient Scene gameScene;
 
@@ -33,17 +33,24 @@ public class GameScreenController {
         gameScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT) {
                 player.rotateLeft();
-            } else if (e.getCode() == KeyCode.RIGHT) {
+            }
+            else if (e.getCode() == KeyCode.RIGHT) {
                 player.rotateRight();
-            } else if (e.getCode() == KeyCode.SPACE) {
+            }
+            else if (e.getCode() == KeyCode.SPACE) {
                 Bullet bullet = new Bullet();
-                bullet.setVelocity(player.getVelocity().normalize().multiply(5));
+                bullet.setVelocity(
+                        new Point2D(Math.cos(Math.toRadians(player.getRotate())),
+                                Math.sin(Math.toRadians(player.getRotate())))
+                                .normalize().multiply(5));
                 addBullet(bullet,
                         player.getView().getTranslateX() + player.getView().getTranslateY() / 12,
-                         player.getView().getTranslateY() + player.getView().getTranslateY() / 10);
-            } else if (e.getCode() == KeyCode.UP) {
-                player.moveForward();
+                        player.getView().getTranslateY() + player.getView().getTranslateY() / 10);
             }
+            else if (e.getCode() == KeyCode.UP) {
+                player.thrust();
+            }
+            else player.moveForward();
         });
     }
 
@@ -62,7 +69,7 @@ public class GameScreenController {
     private Parent createContent() {
 
         player = new Player();
-        player.setVelocity(new Point2D(5, 0));
+        player.setVelocity(new Point2D(10, 0));
         anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
         addSpaceEntity(player, 400, 400);
 
@@ -114,6 +121,7 @@ public class GameScreenController {
     /**
      * This method updates the objects on the screen according to the Timer.
      */
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void onUpdate() {
         for (SpaceEntity bullet : bullets) {
             for (SpaceEntity asteroid : asteroids) {
