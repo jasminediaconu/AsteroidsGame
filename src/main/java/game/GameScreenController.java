@@ -36,14 +36,16 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.RIGHT) {
                 player.rotateRight();
             } else if (e.getCode() == KeyCode.SPACE) {
-                Bullet bullet = new Bullet();
-                bullet.setVelocity(
-                        new Point2D(Math.cos(Math.toRadians(player.getRotate())),
-                                Math.sin(Math.toRadians(player.getRotate())))
-                                .normalize().multiply(5));
-                addBullet(bullet,
-                        player.getView().getTranslateX() + player.getView().getTranslateY() / 12,
-                        player.getView().getTranslateY() + player.getView().getTranslateY() / 10);
+                Bullet bullet = new Bullet(player);
+                addBullet(bullet, player);
+
+                // -------This makes the static ufo shoot a bullet when space is pressed----------
+                /*
+                Bullet b2  = new Bullet(ufo);
+                addBullet(b2, ufo);
+                 */
+                // -------------------------------------------------------------------------------
+
             } else if (e.getCode() == KeyCode.UP) {
                 player.thrust();
             } else  {
@@ -85,13 +87,16 @@ public class GameScreenController {
     /**
      * This method adds a Bullet object when the user press the SPACE key.
      * @param bullet SpaceEntity type
-     * @param x coordinate
-     * @param y coordinate
+     * @param firedFrom SpaceEntity that fired the bullet
      */
-    private void addBullet(SpaceEntity bullet, double x, double y) {
+    private void addBullet(SpaceEntity bullet, SpaceEntity firedFrom) {
         bullets.add(bullet);
+        double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
+        double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
+
         addSpaceEntity(bullet, x, y);
     }
+
 
     /**
      * This method adds an Asteroid object on the screen at random time.

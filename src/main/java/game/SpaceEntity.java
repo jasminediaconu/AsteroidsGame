@@ -2,6 +2,8 @@ package game;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class SpaceEntity {
     protected transient Node view;
@@ -71,6 +73,15 @@ public class SpaceEntity {
     public boolean isColliding(SpaceEntity other) {
         return getView().getBoundsInParent().intersects(other.getView().getBoundsInParent());
     }
+
+    /**
+     * Sets sprite of SpaceEntity.
+     * @param url link to sprite image
+     */
+    public void setImage(String url) {
+        this.view = new ImageView(new Image(url));
+    }
+
 
     //    protected float speed;
     //    protected SpaceEntity[] spawnables;
