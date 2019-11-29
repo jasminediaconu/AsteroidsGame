@@ -50,7 +50,6 @@ public class GameScreenController {
             else if (e.getCode() == KeyCode.UP) {
                 player.thrust();
             }
-            else player.moveForward();
         });
     }
 
@@ -69,7 +68,7 @@ public class GameScreenController {
     private Parent createContent() {
 
         player = new Player();
-        player.setVelocity(new Point2D(10, 0));
+        player.setVelocity(new Point2D(0, 0));
         anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
         addSpaceEntity(player, 400, 400);
 
@@ -146,6 +145,7 @@ public class GameScreenController {
             addAsteroid(new Asteroid(), Math.random() * anchorPane.getPrefWidth(),
                     Math.random() * anchorPane.getPrefHeight());
         }
+        player.moveForward();
     }
 
 }
