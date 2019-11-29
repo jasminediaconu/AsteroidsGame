@@ -9,8 +9,10 @@ public class Player extends SpaceEntity {
         super(new ImageView(new Image("game/sprites/playerShip.png")));
     }
 
+    /**
+     * Thrust spaceship.
+     */
     public void thrust() {
-
         setVelocity(new Point2D( 0.7 * (velocity.getX() + Math.cos(Math.toRadians(getRotate()))),
                 0.7 * (velocity.getY() + Math.sin(Math.toRadians(getRotate())))));
 

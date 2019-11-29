@@ -2,8 +2,8 @@ package game;
 
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
-
-import javax.swing.text.html.ImageView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class SpaceEntity {
     protected transient Node view;
@@ -56,8 +56,8 @@ public class SpaceEntity {
      */
     public void rotateRight() {
         view.setRotate(view.getRotate() + 5);
-//        setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
-//                velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
+        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
+        //       velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
     }
 
     /**
@@ -66,13 +66,22 @@ public class SpaceEntity {
      */
     public void rotateLeft() {
         view.setRotate(view.getRotate() - 5);
-//        setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
-//                velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
+        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
+        //velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
     }
 
     public boolean isColliding(SpaceEntity other) {
         return getView().getBoundsInParent().intersects(other.getView().getBoundsInParent());
     }
+
+    /**
+     * Sets sprite of SpaceEntity.
+     * @param url link to sprite image
+     */
+    public void setImage(String url) {
+        this.view = new ImageView(new Image(url));
+    }
+
 
     //    protected float speed;
     //    protected SpaceEntity[] spawnables;
