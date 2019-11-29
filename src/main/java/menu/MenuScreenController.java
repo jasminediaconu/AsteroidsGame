@@ -1,5 +1,6 @@
 package menu;
 
+import game.GameScreenController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -8,7 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 /**
- * The type LoginScreen Controller.
+ * The type LoginScreen ViewController.
  */
 public class MenuScreenController {
 
@@ -63,8 +64,9 @@ public class MenuScreenController {
      * @param actionEvent type ActionEvent
      */
     public void openGameScreen(ActionEvent actionEvent) {
+        GameScreenController gameScreenController = new GameScreenController();
         Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-        primaryStage.setScene(gameScreen);
+        primaryStage.setScene(gameScreenController.getGameScene());
     }
 
     /**

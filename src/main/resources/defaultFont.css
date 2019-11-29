@@ -18,3 +18,5 @@ Button:hover {
 TextField, PasswordField {
     -fx-font-size: 18px;
 }
+
+Pane { -fx-content-display: none;}

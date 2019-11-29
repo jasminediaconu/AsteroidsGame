@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Text?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" stylesheets="@../defaultFont.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="menu.MenuScreenController">
+<fx:root fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" stylesheets="@../defaultFont.css" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="800.0" fitWidth="800.0">
          <image>
@@ -47,6 +47,11 @@
             <Font size="36.0" />
          </font>
       </Label>
+      <ImageView fx:id="player" fitHeight="90.0" fitWidth="118.0" layoutX="341.0" layoutY="667.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@sprites/playerShip.png" />
+         </image>
+      </ImageView>
       <Pane fx:id="pauseMenu" layoutX="111.0" layoutY="151.0" prefHeight="498.0" prefWidth="578.0" style="-fx-background-color: black; -fx-opacity: 0;">
          <children>
             <Text id="title" fill="WHITE" layoutX="184.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pause" wrappingWidth="210.20001220703125">
@@ -72,4 +77,4 @@
          </children>
       </Pane>
    </children>
-</AnchorPane>
+</fx:root>

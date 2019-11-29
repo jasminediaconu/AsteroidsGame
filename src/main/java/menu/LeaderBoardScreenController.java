@@ -8,7 +8,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 /**
- * The type LoginScreen Controller.
+ * The type LoginScreen ViewController.
  */
 public class LeaderBoardScreenController {
 
