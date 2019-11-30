@@ -19,7 +19,7 @@ public class GameScreenController {
     private transient List<SpaceEntity> bullets = new ArrayList<>();
     private transient List<SpaceEntity> asteroids = new ArrayList<>();
 
-    private transient SpaceEntity player;
+    private transient Player player;
 
     private transient Scene gameScene;
 
@@ -36,12 +36,19 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.RIGHT) {
                 player.rotateRight();
             } else if (e.getCode() == KeyCode.SPACE) {
-                Bullet bullet = new Bullet();
-                bullet.setVelocity(player.getVelocity().normalize().multiply(5));
-                addBullet(bullet,
-                        player.getView().getTranslateX() + player.getView().getTranslateY() / 12,
-                         player.getView().getTranslateY() + player.getView().getTranslateY() / 10);
+                Bullet bullet = new Bullet(player);
+                addBullet(bullet, player);
+
+                // -------This makes the static ufo shoot a bullet when space is pressed----------
+                /*
+                Bullet b2  = new Bullet(ufo);
+                addBullet(b2, ufo);
+                 */
+                // -------------------------------------------------------------------------------
+
             } else if (e.getCode() == KeyCode.UP) {
+                player.thrust();
+            } else  {
                 player.moveForward();
             }
         });
@@ -62,7 +69,7 @@ public class GameScreenController {
     private Parent createContent() {
 
         player = new Player();
-        player.setVelocity(new Point2D(5, 0));
+        player.setVelocity(new Point2D(0, 0));
         anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
         addSpaceEntity(player, 400, 400);
 
@@ -80,13 +87,16 @@ public class GameScreenController {
     /**
      * This method adds a Bullet object when the user press the SPACE key.
      * @param bullet SpaceEntity type
-     * @param x coordinate
-     * @param y coordinate
+     * @param firedFrom SpaceEntity that fired the bullet
      */
-    private void addBullet(SpaceEntity bullet, double x, double y) {
+    private void addBullet(SpaceEntity bullet, SpaceEntity firedFrom) {
         bullets.add(bullet);
+        double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
+        double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
+
         addSpaceEntity(bullet, x, y);
     }
+
 
     /**
      * This method adds an Asteroid object on the screen at random time.
@@ -139,6 +149,7 @@ public class GameScreenController {
             addAsteroid(new Asteroid(), Math.random() * anchorPane.getPrefWidth(),
                     Math.random() * anchorPane.getPrefHeight());
         }
+        player.moveForward();
     }
 
 }
