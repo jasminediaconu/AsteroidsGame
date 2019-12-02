@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import game.Game;
 import user.User;
 
 @SuppressWarnings("PMD")
@@ -177,7 +178,7 @@ public class Database {
 
         } catch (SQLException e) {
             System.out.println("error: connection couldn't be established"
-                + "user wasn't removed");
+                + "couldn't find user");
             user = null;
         }
 
@@ -227,14 +228,32 @@ public class Database {
      * Retrieves a Game from the game table based on the id.
      * @param id id of Game
      */
-    //TODO construct and return Game object
-    public void getGameById(int id) {
+    public Game getGameById(int id) {
+        Game game = new Game();
+
         try {
             Connection conn = DriverManager.getConnection(this.getUrl());
 
             PreparedStatement statement = conn.prepareStatement("select * from game where id = ?");
 
             ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next()) {
+                int gameId = resultSet.getInt(1);
+                String username = resultSet.getString(2);
+                String alias = resultSet.getString(3);
+                Date timestamp = resultSet.getDate(4);
+                int score = resultSet.getInt(5);
+
+                //we expect only one row to be returned
+               //so the while loop only iterates once
+                game.setId(gameId);
+                game.setUsername(username);
+                game.setAlias(alias);
+                game.setTimestamp(timestamp);
+                game.setScore(score);
+            }
+
 
             statement.close();
             resultSet.close();
@@ -244,6 +263,7 @@ public class Database {
             System.out.println("error: connection couldn't be established");
         }
 
+        return game;
     }
 
     /**
