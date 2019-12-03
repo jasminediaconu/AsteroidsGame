@@ -1,6 +1,5 @@
 package menu;
 
-import java.security.Key;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -64,7 +63,7 @@ public class LoginScreenController {
         User attemptedUser = new User(username, password.getBytes());
         AuthenticationService authService = new AuthenticationService();
 
-        if (authService.authenticate(attemptedUser) && validateInput()) {
+        if (validateInput() && authService.authenticate(attemptedUser)) {
             System.out.println("Login successful");
             errorMessage.setStyle("-fx-opacity: 0;");
             successMessage.setStyle("-fx-opacity: 100;");

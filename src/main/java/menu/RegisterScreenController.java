@@ -59,7 +59,7 @@ public class RegisterScreenController {
         String password = passwordField.getText();
         String passwordCheck = passwordCheckField.getText();
 
-        if (password.equals(passwordCheck) && validateInput()) {
+        if (validateInput() && password.equals(passwordCheck)) {
             if (db.getUserByUsername(usernameField.getText()) == null) {
                 User user = new User(usernameField.getText());
 
