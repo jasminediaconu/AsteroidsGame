@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import game.Game;
 import user.User;
@@ -264,6 +267,43 @@ public class Database {
         }
 
         return game;
+    }
+
+    /**
+     * Gets the top 5 highscores and the username or alias associated with them.
+     * @return HashMap where the key is the score and the value is the alias or if that is null, the username.
+     */
+    public Map<Integer, String> getTop5Scores(){
+        Map<Integer, String> highScores = new HashMap<Integer, String>();
+        try {
+            Connection conn = DriverManager.getConnection(this.getUrl());
+
+            PreparedStatement statement = conn.prepareStatement("select top 5 score, username, alias from game order by score desc");
+
+            ResultSet resultSet = statement.executeQuery();
+
+            while(resultSet.next()) {
+                int score = resultSet.getInt("score");
+                String username = resultSet.getString("username");
+                String alias = resultSet.getString("alias");
+
+                if(alias == null){
+                    highScores.put(score, username);
+                }
+                else{
+                    highScores.put(score, alias);
+                }
+            }
+
+            statement.close();
+            resultSet.close();
+            conn.close();
+
+        } catch (SQLException e) {
+            System.out.println("error: connection couldn't be established");
+        }
+
+        return highScores;
     }
 
     /**
