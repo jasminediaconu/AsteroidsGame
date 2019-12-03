@@ -112,7 +112,8 @@ public class RegisterScreenController {
     public boolean validateInput() {
         return LoginScreenController.validateUsername(usernameField, usernameErrorLabel)
                 && LoginScreenController.validatePassword(passwordField, passwordErrorLabel)
-                && LoginScreenController.validatePassword(passwordCheckField, passwordCheckErrorLabel);
+                && LoginScreenController.validatePassword(passwordCheckField,
+                passwordCheckErrorLabel);
     }
 
     /**

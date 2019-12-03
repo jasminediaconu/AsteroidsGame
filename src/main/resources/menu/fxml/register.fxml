@@ -32,7 +32,7 @@
             <Font name="Century Gothic" size="25.0" />
          </font>
       </Button>
-      <TextField fx:id="usernameField" onKeyPressed="#validate" layoutX="68.0" layoutY="391.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
+      <TextField fx:id="usernameField" onKeyReleased="#validate" layoutX="68.0" layoutY="391.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
          <font>
             <Font size="18.0" />
          </font></TextField>
@@ -41,7 +41,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <PasswordField fx:id="passwordField" onKeyPressed="#validate" layoutX="68.0" layoutY="500.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
+      <PasswordField fx:id="passwordField" onKeyReleased="#validate" layoutX="68.0" layoutY="500.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
          <font>
             <Font size="18.0" />
          </font></PasswordField>
@@ -50,7 +50,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <PasswordField fx:id="passwordCheckField" onKeyPressed="#validate" layoutX="68.0" layoutY="663.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
+      <PasswordField fx:id="passwordCheckField" onKeyReleased="#validate" layoutX="68.0" layoutY="663.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
          <font>
             <Font size="18.0" />
          </font>

@@ -52,7 +52,7 @@
             <Font name="Century Gothic" size="96.0" />
          </font>
       </Text>
-      <TextField fx:id="usernameField" onKeyPressed="#validateInput" layoutX="72.0" layoutY="462.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
+      <TextField fx:id="usernameField" onKeyReleased="#validateInput" layoutX="72.0" layoutY="462.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
          <font>
             <Font size="18.0" />
          </font></TextField>
@@ -61,7 +61,7 @@
             <Font size="15.0" />
          </font>
       </Label>
-      <PasswordField fx:id="passwordField" onKeyPressed="#validateInput" layoutX="72.0" layoutY="576.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
+      <PasswordField fx:id="passwordField" onKeyReleased="#validateInput" layoutX="72.0" layoutY="576.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
          <font>
             <Font size="18.0" />
          </font>
