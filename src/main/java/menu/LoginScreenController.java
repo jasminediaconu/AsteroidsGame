@@ -25,6 +25,8 @@ import user.User;
  * The type LoginScreen ViewController.
  */
 public class LoginScreenController {
+    private static final int minPasswordLength = 5;
+    private static final int minUsernameLength = 4;
 
     private Scene mainScreen;
 
@@ -92,11 +94,11 @@ public class LoginScreenController {
      */
     public static boolean validateUsername(TextField username, Label errorLabel) {
         String user = username.getText();
-        Border border = new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
-        if (user.length() < 4) {
+        if (user.length() < minUsernameLength) {
             // alert user
+            Border border = new Border(new BorderStroke(Color.RED,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
             errorLabel.setOpacity(100);
             username.setBorder(border);
             return false;
@@ -116,11 +118,11 @@ public class LoginScreenController {
      */
     public static boolean validatePassword(PasswordField password, Label passwordErrorLabel) {
         String pass = password.getText();
-        Border border = new Border(new BorderStroke(Color.RED,
-                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
 
-        if (pass.length() < 5) {
+        if (pass.length() < minPasswordLength) {
             // alert user
+            Border border = new Border(new BorderStroke(Color.RED,
+                    BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
             password.setBorder(border);
             passwordErrorLabel.setOpacity(100);
             return false;

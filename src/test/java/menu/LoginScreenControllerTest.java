@@ -23,10 +23,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class LoginScreenControllerTest {
-    private PasswordField passwordField;
-    private TextField usernameField;
-    private Label usernameError;
-    private Label passwordError;
+    private transient PasswordField passwordField;
+    private transient TextField usernameField;
+    private transient Label usernameError;
+    private transient Label passwordError;
 
     /**
      * Initializes JavaFX toolkit.
