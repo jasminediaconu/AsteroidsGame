@@ -21,8 +21,20 @@ public class Player extends SpaceEntity {
      */
     private int currentScore;
 
-    Player() {
+    /*Player() {
         super(new ImageView(new Image("game/sprites/playerShip.png")));
+    }*/
+
+    /**
+     * Constructor for Player.
+     * Initial values: lives = 3, totalScore = 0, currentScore = 0.
+     */
+    public Player() {
+        super(new ImageView(new Image("game/sprites/playerShip.png")));
+
+        this.lives = 3;
+        this.totalScore = 0;
+        this.currentScore = 0;
     }
 
     /**
@@ -43,6 +55,13 @@ public class Player extends SpaceEntity {
      */
     public void addLife() {
         this.lives++;
+    }
+
+    /**
+     * Removes a life.
+     */
+    public void removeLife() {
+        this.lives--;
     }
 
     /**
@@ -71,6 +90,15 @@ public class Player extends SpaceEntity {
      */
     public void setLives(int lives) {
         this.lives = lives;
+    }
+
+    /**
+     * Increments the player's score by the value passed.
+     * @param value value.
+     */
+    public void incrementScore(int value) {
+        this.currentScore += value;
+        this.totalScore += value;
     }
 
     /**

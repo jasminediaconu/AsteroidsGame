@@ -16,8 +16,9 @@ public class GameScreenController {
 
     private transient AnchorPane anchorPane;
 
-    private transient List<SpaceEntity> bullets = new ArrayList<>();
+    private transient List<Bullet> bullets = new ArrayList<Bullet>();
     private transient List<SpaceEntity> asteroids = new ArrayList<>();
+    private transient List<SpaceEntity> ufos = new ArrayList<>();
 
     private transient Player player;
 
@@ -90,7 +91,7 @@ public class GameScreenController {
      * @param firedFrom SpaceEntity that fired the bullet
      */
     private void addBullet(SpaceEntity bullet, SpaceEntity firedFrom) {
-        bullets.add(bullet);
+        bullets.add((Bullet)bullet);
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
@@ -124,16 +125,43 @@ public class GameScreenController {
     /**
      * This method updates the objects on the screen according to the Timer.
      */
-    @SuppressWarnings("PMD.DataflowAnomalyAnalysis") // Warning suppressed because PMD
+    @SuppressWarnings("PMD") // Warning suppressed because PMD
     private void onUpdate() {                        // flags some for each loops as an UR anomaly
-        for (SpaceEntity bullet : bullets) {
+        for (Bullet bullet : bullets) {
             for (SpaceEntity asteroid : asteroids) {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
 
+                    if (bullet.getFiredByPlayer()) {
+                        //TODO increment score of player
+                    }
+
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
+            }
+        }
+
+        //check if player collided with an asteroid.
+        for (SpaceEntity asteroid: asteroids) {
+            if (player.isColliding(asteroid)) {
+                player.removeLife();
+                //TODO call player.spawn()
+            }
+        }
+
+        //check if player collided with an enemy bullet.
+        for (Bullet bullet: bullets) {
+            if (!bullet.getFiredByPlayer() && player.isColliding(bullet)) {
+                player.removeLife();
+                //TODO call player.spawn()
+            }
+        }
+
+        for (SpaceEntity ufo: ufos) {
+            if (player.isColliding(ufo)) {
+                player.removeLife();
+                //TODO call player.spawn()
             }
         }
 
@@ -143,6 +171,17 @@ public class GameScreenController {
         bullets.forEach(SpaceEntity::moveForward);
         asteroids.forEach(SpaceEntity::moveForward);
 
+        //checks if player is qualified to get a life.
+        if (player.getCurrentScore() >= 10000) {
+            player.addLife();
+            player.setCurrentScore(player.getCurrentScore() - 10000);
+        }
+
+        //checks if player died.
+        if (!player.hasLives()) {
+            gameEnd();
+        }
+
         double threshold = 0.02;
 
         if (Math.random() < threshold) {
@@ -150,6 +189,18 @@ public class GameScreenController {
                     Math.random() * anchorPane.getPrefHeight());
         }
         player.moveForward();
+    }
+
+    /**
+     * This method gets called when the player died.
+     * Or when the game ends for whatever different reason.
+     * Player is prompted to type in an alias.
+     * The current game gets added to the database.
+     * The highscore/leaderboard screen gets shown(??).
+     */
+    private void gameEnd() {
+        //TODO get alias value
+        //TODO add Game to game database
     }
 
 }
