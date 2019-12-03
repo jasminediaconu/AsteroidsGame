@@ -2,6 +2,10 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import game.asteroids.Large;
+import game.asteroids.Medium;
+import game.asteroids.Small;
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -143,10 +147,18 @@ public class GameScreenController {
         bullets.forEach(SpaceEntity::moveForward);
         asteroids.forEach(SpaceEntity::moveForward);
 
-        double threshold = 0.02;
+        double threshold = 0.005;
 
         if (Math.random() < threshold) {
-            addAsteroid(new Asteroid(), Math.random() * anchorPane.getPrefWidth(),
+            addAsteroid(new Small(), Math.random() * anchorPane.getPrefWidth(),
+                    Math.random() * anchorPane.getPrefHeight());
+        }
+        if (Math.random() < threshold) {
+            addAsteroid(new Large(), Math.random() * anchorPane.getPrefWidth(),
+                    Math.random() * anchorPane.getPrefHeight());
+        }
+        if (Math.random() < threshold) {
+            addAsteroid(new Medium(), Math.random() * anchorPane.getPrefWidth(),
                     Math.random() * anchorPane.getPrefHeight());
         }
         player.moveForward();
