@@ -10,7 +10,8 @@ public class SpaceEntity {
 
     protected Point2D velocity = new Point2D(0, 0);
 
-    private boolean alive = true;
+    protected boolean alive = true;
+    protected int rotationSpeed = 1;
 
     public SpaceEntity(Node view) {
         this.view = view;
@@ -50,12 +51,14 @@ public class SpaceEntity {
         return view.getRotate();
     }
 
+    public int getRotationSpeed() { return rotationSpeed; }
+
     /**
      * This method rotates the SpaceEntity object
      * 5 degrees to the right.
      */
-    public void rotateRight() {
-        view.setRotate(view.getRotate() + 5);
+    public void rotateRight(int rotationSpeed) {
+        view.setRotate(view.getRotate() + rotationSpeed);
         //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
         //       velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
     }
@@ -64,8 +67,8 @@ public class SpaceEntity {
      * This method rotates the SpaceEntity object
      * 5 degrees to the left.
      */
-    public void rotateLeft() {
-        view.setRotate(view.getRotate() - 5);
+    public void rotateLeft(int rotationSpeed) {
+        view.setRotate(view.getRotate() - rotationSpeed);
         //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
         //velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
     }

@@ -32,9 +32,9 @@ public class GameScreenController {
         gameScene = new Scene(createContent());
         gameScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT) {
-                player.rotateLeft();
+                player.rotateLeft(player.getRotationSpeed());
             } else if (e.getCode() == KeyCode.RIGHT) {
-                player.rotateRight();
+                player.rotateRight(player.getRotationSpeed());
             } else if (e.getCode() == KeyCode.SPACE) {
                 Bullet bullet = new Bullet(player);
                 addBullet(bullet, player);
@@ -142,6 +142,10 @@ public class GameScreenController {
 
         bullets.forEach(SpaceEntity::moveForward);
         asteroids.forEach(SpaceEntity::moveForward);
+        for(SpaceEntity as : asteroids) {
+            as.moveForward();
+            as.rotateRight(as.rotationSpeed);
+        }
 
         double threshold = 0.02;
 
