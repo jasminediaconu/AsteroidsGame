@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import user.User;
@@ -269,18 +270,16 @@ public class Database {
     }
 
     /**
-     * Gets the top 5 highscores and the username or alias associated with them.
-     * The key is the score.
-     * The value is the alias or if that is null, the username.
-     * @return HashMap.
+     * Gets the Games with the top 5 highscores.
+     * @return ArrayList containing the top 5 games.
      */
-    public Map<Integer, String> getTop5Scores() {
-        Map<Integer, String> highScores = new HashMap<Integer, String>();
+    public ArrayList<Game> getTop5Scores() {
+        ArrayList<Game> highScores = new ArrayList<Game>();
         try {
             Connection conn = DriverManager.getConnection(this.getUrl());
 
             PreparedStatement statement = conn.prepareStatement("select top 5 "
-                + "score, username, alias from game order by score desc");
+                + "* from game order by score desc");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -288,12 +287,15 @@ public class Database {
                 int score = resultSet.getInt("score");
                 String username = resultSet.getString("username");
                 String alias = resultSet.getString("alias");
+                Date timestamp = resultSet.getDate("timestamp");
+                int id = resultSet.getInt("id");
 
-                if (alias == null) {
-                    highScores.put(score, username);
-                } else {
-                    highScores.put(score, alias);
-                }
+                Game game = new Game();
+                game.setId(id);
+                game.setScore(score);
+                game.setTimestamp(timestamp);
+                game.setAlias(alias);
+                game.setUsername(username);
             }
 
             statement.close();
