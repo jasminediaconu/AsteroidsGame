@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import user.AuthenticationService;
@@ -42,6 +43,15 @@ public class RegisterScreenController {
     @FXML
     private transient Label errorMessage2;
 
+    @FXML
+    private transient Label usernameErrorLabel;
+
+    @FXML
+    private transient Label passwordErrorLabel;
+
+    @FXML
+    private transient Label passwordCheckErrorLabel;
+
     /**
      * Registers a new user (if the username is not taken yet).
      */
@@ -49,7 +59,7 @@ public class RegisterScreenController {
         String password = passwordField.getText();
         String passwordCheck = passwordCheckField.getText();
 
-        if (password.equals(passwordCheck)) {
+        if (password.equals(passwordCheck) && validateInput()) {
             if (db.getUserByUsername(usernameField.getText()) == null) {
                 User user = new User(usernameField.getText());
 
@@ -73,6 +83,7 @@ public class RegisterScreenController {
             } else {
                 // user already in database
                 errorMessage.setStyle("-fx-opacity: 100;");
+                usernameErrorLabel.setOpacity(0);
                 System.out.println("user already in db");
             }
         } else {
@@ -81,6 +92,27 @@ public class RegisterScreenController {
             // password not the same
         }
 
+    }
+
+    /**
+     * Calls helper methods that check if username and password are of sufficient length
+     * and if not it notifies the user.
+     * @param event key press Event
+     */
+    public void validate(KeyEvent event) {
+        LoginScreenController.validateUsername(usernameField, usernameErrorLabel);
+        LoginScreenController.validatePassword(passwordField, passwordErrorLabel);
+        LoginScreenController.validatePassword(passwordCheckField, passwordCheckErrorLabel);
+    }
+
+    /**
+     * Calls helper methods that check if username and password are of sufficient length
+     * and if not it notifies the user.
+     */
+    public boolean validateInput() {
+        return LoginScreenController.validateUsername(usernameField, usernameErrorLabel)
+                && LoginScreenController.validatePassword(passwordField, passwordErrorLabel)
+                && LoginScreenController.validatePassword(passwordCheckField, passwordCheckErrorLabel);
     }
 
     /**

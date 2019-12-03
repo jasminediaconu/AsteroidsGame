@@ -32,19 +32,34 @@
             <Font name="Century Gothic" size="25.0" />
          </font>
       </Button>
-      <TextField fx:id="usernameField" layoutX="68.0" layoutY="391.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
+      <TextField fx:id="usernameField" onKeyPressed="#validate" layoutX="68.0" layoutY="391.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
          <font>
             <Font size="18.0" />
          </font></TextField>
-      <PasswordField fx:id="passwordField" layoutX="68.0" layoutY="500.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
+      <Label fx:id="usernameErrorLabel" layoutX="68.0" layoutY="431.0" style="-fx-opacity: 0;" text="Username is less than 4 characters" textFill="#c95517">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="passwordField" onKeyPressed="#validate" layoutX="68.0" layoutY="500.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
          <font>
             <Font size="18.0" />
          </font></PasswordField>
-      <PasswordField fx:id="passwordCheckField" layoutX="68.0" layoutY="663.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
+      <Label fx:id="passwordErrorLabel" layoutX="68.0" layoutY="540.0" style="-fx-opacity: 0;" text="Password is less than 5 characters" textFill="#c95517">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="passwordCheckField" onKeyPressed="#validate" layoutX="68.0" layoutY="663.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
          <font>
             <Font size="18.0" />
          </font>
       </PasswordField>
+      <Label fx:id="passwordCheckErrorLabel" layoutX="68.0" layoutY="703.0" style="-fx-opacity: 0;" text="Password is less than 5 characters" textFill="#c95517">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
       <Text fill="WHITE" layoutX="68.0" layoutY="326.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Register">
          <font>
             <Font name="Century Gothic" size="50.0" />
@@ -75,7 +90,7 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="errorMessage2" layoutX="43.0" layoutY="713.0" style="-fx-opacity: 0;" text="Passwords don't match" textFill="#c90505">
+      <Label fx:id="errorMessage2" layoutX="68.0" layoutY="720.0" style="-fx-opacity: 0;" text="Passwords don't match" textFill="#c90505">
          <font>
             <Font size="20.0" />
          </font>

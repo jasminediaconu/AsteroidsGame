@@ -1,5 +1,6 @@
 package menu;
 
+import java.security.Key;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -63,7 +64,7 @@ public class LoginScreenController {
         User attemptedUser = new User(username, password.getBytes());
         AuthenticationService authService = new AuthenticationService();
 
-        if (authService.authenticate(attemptedUser)) {
+        if (authService.authenticate(attemptedUser) && validateInput()) {
             System.out.println("Login successful");
             errorMessage.setStyle("-fx-opacity: 0;");
             successMessage.setStyle("-fx-opacity: 100;");
@@ -86,6 +87,15 @@ public class LoginScreenController {
     }
 
     /**
+     * Calls helper methods that check if username and password are of sufficient length
+     * and if not it notifies the user.
+     */
+    public boolean validateInput() {
+        return validateUsername(usernameField, usernameErrorLabel)
+                && validatePassword(passwordField, passwordErrorLabel);
+    }
+
+    /**
      * Checks if username is long enough.
      * If not displays error message and gives the usernameField a red border.
      * @param username TextField
@@ -93,9 +103,7 @@ public class LoginScreenController {
      * @return true iff username is long enough
      */
     public static boolean validateUsername(TextField username, Label errorLabel) {
-        String user = username.getText();
-
-        if (user.length() < minUsernameLength) {
+        if (username.getText().length() < minUsernameLength) {
             // alert user
             Border border = new Border(new BorderStroke(Color.RED,
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
@@ -117,9 +125,7 @@ public class LoginScreenController {
      * @return true iff password is long enough
      */
     public static boolean validatePassword(PasswordField password, Label passwordErrorLabel) {
-        String pass = password.getText();
-
-        if (pass.length() < minPasswordLength) {
+        if (password.getText().length() < minPasswordLength) {
             // alert user
             Border border = new Border(new BorderStroke(Color.RED,
                     BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
