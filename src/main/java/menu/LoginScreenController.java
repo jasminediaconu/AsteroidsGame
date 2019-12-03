@@ -63,7 +63,8 @@ public class LoginScreenController {
         User attemptedUser = new User(username, password.getBytes());
         AuthenticationService authService = new AuthenticationService();
 
-        if (validateInput() && authService.authenticate(attemptedUser)) {
+        validateInput();
+        if (authService.authenticate(attemptedUser)) {
             System.out.println("Login successful");
             errorMessage.setStyle("-fx-opacity: 0;");
             successMessage.setStyle("-fx-opacity: 100;");
