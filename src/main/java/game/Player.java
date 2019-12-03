@@ -42,7 +42,7 @@ public class Player extends SpaceEntity {
      * Increments the lives field by one.
      */
     public void addLife() {
-        this.lives ++;
+        this.lives++;
     }
 
     /**
@@ -50,7 +50,7 @@ public class Player extends SpaceEntity {
      * @return false is the player has 0 lives, true if they have more.
      */
     public boolean hasLives() {
-        if(this.lives <= 0) {
+        if (this.lives <= 0) {
             return false;
         }
 
