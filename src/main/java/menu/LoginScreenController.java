@@ -9,7 +9,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import user.AuthenticationService;
 import user.User;
@@ -38,6 +45,12 @@ public class LoginScreenController {
     @FXML
     private transient Label successMessage;
 
+    @FXML
+    private transient Label usernameErrorLabel;
+
+    @FXML
+    private transient Label passwordErrorLabel;
+
     /**
      * Authenticates User.
      */
@@ -53,12 +66,68 @@ public class LoginScreenController {
             errorMessage.setStyle("-fx-opacity: 0;");
             successMessage.setStyle("-fx-opacity: 100;");
             openMenuScreen(actionEvent);
-            return;
         } else {
             successMessage.setStyle("-fx-opacity: 0;");
             errorMessage.setStyle("-fx-opacity: 100;");
             System.out.println("Login failed");
-            return;
+        }
+    }
+
+    /**
+     * Calls helper methods that check if username and password are of sufficient length
+     * and if not it notifies the user.
+     * @param actionEvent Action Event
+     */
+    public void validateInput(KeyEvent actionEvent) {
+        validateUsername(usernameField, usernameErrorLabel);
+        validatePassword(passwordField, passwordErrorLabel);
+    }
+
+    /**
+     * Checks if username is long enough.
+     * If not displays error message and gives the usernameField a red border.
+     * @param username TextField
+     * @param errorLabel Label to display
+     * @return true iff username is long enough
+     */
+    public static boolean validateUsername(TextField username, Label errorLabel) {
+        String user = username.getText();
+        Border border = new Border(new BorderStroke(Color.RED,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+
+        if (user.length() < 4) {
+            // alert user
+            errorLabel.setOpacity(100);
+            username.setBorder(border);
+            return false;
+        } else {
+            errorLabel.setOpacity(0);
+            username.setBorder(null);
+            return true;
+        }
+    }
+
+    /**
+     * Checks if username is long enough.
+     * If not displays error message and gives the usernameField a red border.
+     * @param password TextField
+     * @param passwordErrorLabel Label to display
+     * @return true iff password is long enough
+     */
+    public static boolean validatePassword(PasswordField password, Label passwordErrorLabel) {
+        String pass = password.getText();
+        Border border = new Border(new BorderStroke(Color.RED,
+                BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
+
+        if (pass.length() < 5) {
+            // alert user
+            password.setBorder(border);
+            passwordErrorLabel.setOpacity(100);
+            return false;
+        } else {
+            passwordErrorLabel.setOpacity(0);
+            password.setBorder(null);
+            return true;
         }
     }
 
