@@ -1,5 +1,6 @@
 package database;
 
+import game.Game;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -7,11 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import game.Game;
 import user.User;
 
 @SuppressWarnings("PMD")
@@ -241,15 +239,16 @@ public class Database {
 
             ResultSet resultSet = statement.executeQuery();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 int gameId = resultSet.getInt(1);
                 String username = resultSet.getString(2);
                 String alias = resultSet.getString(3);
                 Date timestamp = resultSet.getDate(4);
                 int score = resultSet.getInt(5);
 
-                //we expect only one row to be returned
-               //so the while loop only iterates once
+                //we expect only one row to be returned,
+                // so the while loop only iterates once
+
                 game.setId(gameId);
                 game.setUsername(username);
                 game.setAlias(alias);
@@ -271,26 +270,28 @@ public class Database {
 
     /**
      * Gets the top 5 highscores and the username or alias associated with them.
-     * @return HashMap where the key is the score and the value is the alias or if that is null, the username.
+     * The key is the score.
+     * The value is the alias or if that is null, the username.
+     * @return HashMap.
      */
-    public Map<Integer, String> getTop5Scores(){
+    public Map<Integer, String> getTop5Scores() {
         Map<Integer, String> highScores = new HashMap<Integer, String>();
         try {
             Connection conn = DriverManager.getConnection(this.getUrl());
 
-            PreparedStatement statement = conn.prepareStatement("select top 5 score, username, alias from game order by score desc");
+            PreparedStatement statement = conn.prepareStatement("select top 5 "
+                + "score, username, alias from game order by score desc");
 
             ResultSet resultSet = statement.executeQuery();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 int score = resultSet.getInt("score");
                 String username = resultSet.getString("username");
                 String alias = resultSet.getString("alias");
 
-                if(alias == null){
+                if (alias == null) {
                     highScores.put(score, username);
-                }
-                else{
+                } else {
                     highScores.put(score, alias);
                 }
             }
