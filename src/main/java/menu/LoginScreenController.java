@@ -79,16 +79,6 @@ public class LoginScreenController {
     /**
      * Calls helper methods that check if username and password are of sufficient length
      * and if not it notifies the user.
-     * @param actionEvent Action Event
-     */
-    public void validateInput(KeyEvent actionEvent) {
-        validateUsername(usernameField, usernameErrorLabel);
-        validatePassword(passwordField, passwordErrorLabel);
-    }
-
-    /**
-     * Calls helper methods that check if username and password are of sufficient length
-     * and if not it notifies the user.
      */
     public boolean validateInput() {
         return validateUsername(usernameField, usernameErrorLabel)

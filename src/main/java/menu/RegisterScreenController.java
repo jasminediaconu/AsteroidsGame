@@ -97,17 +97,6 @@ public class RegisterScreenController {
     /**
      * Calls helper methods that check if username and password are of sufficient length
      * and if not it notifies the user.
-     * @param event key press Event
-     */
-    public void validate(KeyEvent event) {
-        LoginScreenController.validateUsername(usernameField, usernameErrorLabel);
-        LoginScreenController.validatePassword(passwordField, passwordErrorLabel);
-        LoginScreenController.validatePassword(passwordCheckField, passwordCheckErrorLabel);
-    }
-
-    /**
-     * Calls helper methods that check if username and password are of sufficient length
-     * and if not it notifies the user.
      */
     public boolean validateInput() {
         return LoginScreenController.validateUsername(usernameField, usernameErrorLabel)
