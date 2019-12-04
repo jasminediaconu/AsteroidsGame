@@ -134,6 +134,7 @@ public class LoginScreenController {
      * (contains no disallowd characters)
      * @param textField TextField to add listener to
      */
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public static void setInvalidCharListener(TextField textField) {
         textField.textProperty().addListener(
             (obs, oldValue, newValue) -> { // Currently only checks for whitespaces
