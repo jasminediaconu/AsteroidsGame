@@ -119,6 +119,10 @@ public class RegisterScreenController {
      * @param scene type Scene
      */
     public void setMainScreen(Scene scene) {
+        LoginScreenController.setInvalidCharListener(passwordField);
+        LoginScreenController.setInvalidCharListener(passwordCheckField);
+        LoginScreenController.setInvalidCharListener(usernameField);
+
         mainScreen = scene;
     }
 

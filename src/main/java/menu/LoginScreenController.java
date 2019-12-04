@@ -130,6 +130,19 @@ public class LoginScreenController {
     }
 
     /**
+     * Adds a listener to the TextField that checks if the input is valid.
+     * (contains no disallowd characters)
+     * @param textField TextField to add listener to
+     */
+    public static void setInvalidCharListener(TextField textField) {
+        textField.textProperty().addListener(
+            (obs, oldValue, newValue) -> { // Currently only checks for whitespaces
+                textField.setText(newValue.replaceAll(" ", ""));
+            }
+        );
+    }
+
+    /**
      * Getter for Main Screen scene.
      * @return mainScreen
      */
@@ -143,6 +156,8 @@ public class LoginScreenController {
      */
     public void setMainScreen(Scene scene) {
         mainScreen = scene;
+        setInvalidCharListener(usernameField);
+        setInvalidCharListener(passwordField);
     }
 
     /**
