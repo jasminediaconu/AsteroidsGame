@@ -11,6 +11,8 @@ import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
@@ -83,10 +85,10 @@ public class GameScreenController {
      */
     private Parent createContent() {
 
-        player = new Player();
-        player.setVelocity(new Point2D(0, 0));
         anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
-        addSpaceEntity(player, 400, 400);
+
+        player = new Player();
+        addSpaceEntity(player);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -109,30 +111,29 @@ public class GameScreenController {
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
-        addSpaceEntity(bullet, x, y);
+        bullet.setLocation(new Point2D(x, y));
+
+        addSpaceEntity(bullet);
     }
 
 
     /**
      * This method adds an Asteroid object on the screen at random time.
      * @param asteroid SpaceEntity type
-     * @param x coordinate
-     * @param y coordinate
      */
-    private void addAsteroid(SpaceEntity asteroid, double x, double y) {
+    private void addAsteroid(SpaceEntity asteroid) {
         asteroids.add(asteroid);
-        addSpaceEntity(asteroid, x, y);
+        addSpaceEntity(asteroid);
     }
 
     /**
      * This method adds a generic SpaceEntity on the screen.
      * @param object SpaceEntity type
-     * @param x coordinate
-     * @param y coordinate
      */
-    private void addSpaceEntity(SpaceEntity object, double x, double y) {
-        object.getView().setTranslateX(x);
-        object.getView().setTranslateY(y);
+    private void addSpaceEntity(SpaceEntity object) {
+        object.setView(new ImageView(new Image(object.getUrl())));
+        object.getView().setTranslateX(object.getLocation().getX());
+        object.getView().setTranslateY(object.getLocation().getY());
         anchorPane.getChildren().add(object.getView());
     }
 
@@ -161,16 +162,13 @@ public class GameScreenController {
         double threshold = 0.005;
 
         if (Math.random() < threshold) {
-            addAsteroid(new Small(), Math.random() * anchorPane.getPrefWidth(),
-                    Math.random() * anchorPane.getPrefHeight());
+            addAsteroid(new Small());
         }
         if (Math.random() < threshold) {
-            addAsteroid(new Large(), Math.random() * anchorPane.getPrefWidth(),
-                    Math.random() * anchorPane.getPrefHeight());
+            addAsteroid(new Large());
         }
         if (Math.random() < threshold) {
-            addAsteroid(new Medium(), Math.random() * anchorPane.getPrefWidth(),
-                    Math.random() * anchorPane.getPrefHeight());
+            addAsteroid(new Medium());
         }
         player.move();
     }

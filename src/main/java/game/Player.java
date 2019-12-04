@@ -11,11 +11,10 @@ public class Player extends SpaceEntity {
     }
 
     /**
-     * Spawns the player in the middle of the screen,
+     * respawns the player in the middle of the screen,
      * with a velocity and rotation of 0.
-     * @param entity the player.
      */
-    public void spawn(SpaceEntity entity) {
+    public void respawn() {
         setVelocity(new Point2D(0, 0));
         setLocation(new Point2D(center, center));
         setRotation(0);
@@ -57,9 +56,11 @@ public class Player extends SpaceEntity {
         //velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
     }
 
-    @Override
     public void checkMove() {
 
     }
 
+    public String getUrl() {
+        return "/game/sprites/playerShip.png";
+    }
 }

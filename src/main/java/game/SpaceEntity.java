@@ -18,13 +18,6 @@ public abstract class SpaceEntity {
     private boolean alive = true;
 
     /**
-     * default constructor.
-     */
-    public SpaceEntity() {
-
-    }
-
-    /**
      * function that updates the location and rotation of the spaceEntity,
      * to be called every frame.
      */
@@ -47,7 +40,7 @@ public abstract class SpaceEntity {
 
     /**
      * A function that makes use of javaFX intersects method.
-     * @param other the spaceEntity to check possible collision with
+     * @param other the spaceEntity to check possible collision with.
      * @return boolean collision.
      */
     public boolean isColliding(SpaceEntity other) {
@@ -55,8 +48,14 @@ public abstract class SpaceEntity {
     }
 
     /**
+     * Method to get the sprite URL of the spaceEntity subclass.
+     * @return the sprite URL.
+     */
+    public abstract String getUrl();
+
+    /**
      * Sets sprite of SpaceEntity with a file path.
-     * @param url link to sprite image
+     * @param url link to sprite image.
      */
     public void setImage(String url) {
         this.view = new ImageView(new Image(url));

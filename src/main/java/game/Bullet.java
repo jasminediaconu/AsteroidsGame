@@ -44,8 +44,11 @@ public class Bullet extends SpaceEntity {
         return this.speed;
     }
 
-    @Override
     public void checkMove() {
 
+    }
+
+    public String getUrl() {
+        return "/game/sprites/laserBlue.png";
     }
 }
