@@ -1,11 +1,15 @@
 package game;
 
+import static game.GameScreenController.screenSize;
+
 import java.util.Random;
 import javafx.geometry.Point2D;
 
 public abstract class Asteroid extends SpaceEntity {
 
-    private static final int boundaryMargin = 200;
+    private static final double minVelocity = 0.2;
+    private static final int spawnMargin = 100;
+    public static final int courseMargin = 5;
 
     /**
      * Asteroid constructor, further instantiates an asteroid subclass.
@@ -18,47 +22,70 @@ public abstract class Asteroid extends SpaceEntity {
      */
     public Asteroid(int maxVelocity, int maxRotation) {
 
+        Point2D course;
         Random rand = new Random();
-
-        int boundary = GameScreenController.screenSize + boundaryMargin;
-        Point2D topLeftCorner = new Point2D(0, 0);
-        Point2D topRightUpCorner = new Point2D(GameScreenController.screenSize, 0);
-        Point2D bottomLeftCorner = new Point2D(0, GameScreenController.screenSize);
-        Point2D bottomRightCorner =
-                new Point2D(GameScreenController.screenSize, GameScreenController.screenSize);
-
+        // rand.nextInt(boundary + spawnMargin) - spawnMargin;
+        int gaussianCourse = (int) (rand.nextGaussian()
+                * ((screenSize / 2) - courseMargin) + (screenSize / 2));
+        int gaussianSpawn = (int) (rand.nextGaussian()
+                * ((screenSize / 2) + spawnMargin) + (screenSize / 2));
+        int boundary = screenSize + spawnMargin;
         int x = 0;
         int y = 0;
 
         //TODO: set a random velocity with a direction towards the screen.
         switch (rand.nextInt(4)) {
             case 0:
-                x = rand.nextInt(boundary + boundaryMargin) - boundaryMargin;
-                y = -boundaryMargin;
-
+                x = gaussianSpawn;
+                y = -spawnMargin;
                 setLocation(new Point2D(x, y));
+
+                x = gaussianCourse;
+                y = screenSize / 2;
+                course = new Point2D(x, y);
+                setVelocity(course.subtract(getLocation()));
 
                 break;
             case 1:
-                x = rand.nextInt(boundary + boundaryMargin) - boundaryMargin;
+                x = gaussianSpawn;
                 y = boundary;
+                setLocation(new Point2D(x, y));
+
+                x = gaussianCourse;
+                y = screenSize / 2;
+                course = new Point2D(x, y);
+                setVelocity(course.subtract(getLocation()));
 
                 break;
             case 2:
-                x = -boundaryMargin;
-                y = rand.nextInt(boundary + boundaryMargin) - boundaryMargin;
+                x = -spawnMargin;
+                y = gaussianSpawn;
+                setLocation(new Point2D(x, y));
+
+                x = screenSize / 2;
+                y = gaussianCourse;
+                course = new Point2D(x, y);
+                setVelocity(course.subtract(getLocation()));
 
                 break;
             case 3:
                 x = boundary;
-                y = rand.nextInt(boundary + boundaryMargin) - boundaryMargin;
+                y = gaussianSpawn;
+                setLocation(new Point2D(x, y));
+
+                x = screenSize / 2;
+                y = gaussianCourse;
+                course = new Point2D(x, y);
+                setVelocity(course.subtract(getLocation()));
 
                 break;
             default:
                 break;
         }
 
-        setLocation(new Point2D(x, y));
+        setVelocity(getVelocity().normalize().multiply(rand.nextDouble() * maxVelocity + 0.1));
+        setRotationSpeed(rand.nextInt(maxRotation * 2) - maxRotation);
+
     }
 
     public void checkMove() {

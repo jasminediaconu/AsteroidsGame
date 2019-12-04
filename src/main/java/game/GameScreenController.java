@@ -151,12 +151,12 @@ public class GameScreenController {
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
 
-        double threshold = 0.005;
+        double threshold = 0.01;
 
-        if (Math.random() < threshold) {
+        if (Math.random() < threshold / 4) {
             addAsteroid(new Small());
         }
-        if (Math.random() < threshold) {
+        if (Math.random() < threshold / 2) {
             addAsteroid(new Large());
         }
         if (Math.random() < threshold) {

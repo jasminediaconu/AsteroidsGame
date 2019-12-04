@@ -9,8 +9,8 @@ public class Small extends Asteroid {
     private static final String sprite1 =
             "/game/sprites/asteroids/asteroidBrown_small1.png";
 
-    private static final int maxRotation = 16;
-    private static final int maxVelocity = 16;
+    private static final int maxRotation = 8;
+    private static final int maxVelocity = 8;
     public static final int score = 200;
 
     public Small() {

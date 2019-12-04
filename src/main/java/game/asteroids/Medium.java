@@ -9,8 +9,8 @@ public class Medium extends Asteroid {
     private static final String sprite1 =
             "/game/sprites/asteroids/asteroidBrown_med1.png";
 
-    private static final int maxRotation = 8;
-    private static final int maxVelocity = 8;
+    private static final int maxRotation = 4;
+    private static final int maxVelocity = 4;
     public static final int score = 150;
 
     public Medium() {
