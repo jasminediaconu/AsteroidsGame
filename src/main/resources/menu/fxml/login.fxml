@@ -52,21 +52,31 @@
             <Font name="Century Gothic" size="96.0" />
          </font>
       </Text>
-      <TextField fx:id="usernameField" layoutX="72.0" layoutY="462.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
+      <TextField fx:id="usernameField" onKeyReleased="#validateInput" layoutX="72.0" layoutY="462.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
          <font>
             <Font size="18.0" />
          </font></TextField>
-      <PasswordField fx:id="passwordField" layoutX="72.0" layoutY="576.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
+      <Label fx:id="usernameErrorLabel" layoutX="72.0" layoutY="500.0" style="-fx-opacity: 0;" text="Username is less than 4 characters" textFill="#c95517">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="passwordField" onKeyReleased="#validateInput" layoutX="72.0" layoutY="576.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
          <font>
             <Font size="18.0" />
          </font>
       </PasswordField>
+      <Label fx:id="passwordErrorLabel" layoutX="72.0" layoutY="615.0" style="-fx-opacity: 0;" text="Password is less than 5 characters" textFill="#c95517">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
       <Label fx:id="errorMessage" layoutX="72.0" layoutY="638.0" style="-fx-opacity: 0;" text="Login failed: try again" textFill="#c90505">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Label fx:id="successMessage" layoutX="82.0" layoutY="648.0" style="-fx-opacity: 0;" text="Login succeded!" textFill="#14c91d">
+      <Label fx:id="successMessage" layoutX="82.0" layoutY="648.0" style="-fx-opacity: 0;" text="Login succeeded!" textFill="#14c91d">
          <font>
             <Font size="20.0" />
          </font>
