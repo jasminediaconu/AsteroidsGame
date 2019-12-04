@@ -1,9 +1,5 @@
 package game;
 
-import game.asteroids.Large;
-import game.asteroids.Medium;
-import game.asteroids.Small;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +73,7 @@ public class GameScreenController {
 
     /**
      * Sets up the initial scene of the game.
-     * @return
+     * @return The generated parent
      */
     private Parent createContent() {
 
@@ -90,7 +86,6 @@ public class GameScreenController {
         player.getView().setScaleY(0.69);
 
         AnimationTimer timer = new AnimationTimer() {
-            @Override
             public void handle(long now) {
                 onUpdate();
             }

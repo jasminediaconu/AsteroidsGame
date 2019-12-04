@@ -2,8 +2,6 @@ package game.asteroids;
 
 import game.Asteroid;
 
-import java.util.Random;
-
 public class Large extends Asteroid {
 
     private static final String sprite0 =
