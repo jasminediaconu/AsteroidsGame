@@ -11,7 +11,7 @@ public class SpaceEntity {
     protected Point2D velocity = new Point2D(0, 0);
 
     protected boolean alive = true;
-    protected int rotationSpeed = 1;
+    protected transient int rotationSpeed = 1;
 
     public SpaceEntity(Node view) {
         this.view = view;
@@ -51,7 +51,9 @@ public class SpaceEntity {
         return view.getRotate();
     }
 
-    public int getRotationSpeed() { return rotationSpeed; }
+    public int getRotationSpeed() {
+        return rotationSpeed;
+    }
 
     /**
      * This method rotates the SpaceEntity object

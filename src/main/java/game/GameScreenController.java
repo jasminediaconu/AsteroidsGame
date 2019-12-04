@@ -142,7 +142,7 @@ public class GameScreenController {
 
         bullets.forEach(SpaceEntity::moveForward);
         asteroids.forEach(SpaceEntity::moveForward);
-        for(SpaceEntity as : asteroids) {
+        for (SpaceEntity as : asteroids) {
             as.moveForward();
             as.rotateRight(as.rotationSpeed);
         }
