@@ -31,9 +31,8 @@ public class Player extends SpaceEntity {
                 0.7 * (getVelocity().getY() + Math.sin(Math.toRadians(getRotation()))))
         );
 
-        view.setTranslateX(view.getTranslateX() + getVelocity().getX());
-        view.setTranslateY(view.getTranslateY() + getVelocity().getY());
-        System.out.println(getVelocity().getX() + " : " + getVelocity().getY());
+        System.out.println("VEL: " + getVelocity().getX() + " and " + getVelocity().getY());
+        System.out.println("POS: " + getLocation().getX() + " and " + getLocation().getY());
     }
 
     /**

@@ -72,14 +72,6 @@ public class GameScreenController {
     }
 
     /**
-     * Getter for the Screen size.
-     * @return int Screen size
-     */
-    public int getScreenSize() {
-        return screenSize;
-    }
-
-    /**
      * Sets up the initial scene of the game.
      * @return
      */
@@ -118,7 +110,7 @@ public class GameScreenController {
 
 
     /**
-     * This method adds an Asteroid object on the screen at random time.
+     * This method adds an Asteroid object on the screen.
      * @param asteroid SpaceEntity type
      */
     private void addAsteroid(SpaceEntity asteroid) {
@@ -170,6 +162,7 @@ public class GameScreenController {
         if (Math.random() < threshold) {
             addAsteroid(new Medium());
         }
+
         player.move();
     }
 

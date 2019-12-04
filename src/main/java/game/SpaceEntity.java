@@ -22,15 +22,27 @@ public abstract class SpaceEntity {
      * to be called every frame.
      */
     public void move() {
-        location.add(velocity);
-        rotation += rotationSpeed;
-        //TODO: Update view.
+        setLocation(getLocation().add(getVelocity()));
+        setRotation(getRotation() + getRotationSpeed());
+
+        //Can't test this method unless this line is commented out,
+        //updateView needs the Node which doesnt work in a test suite.
+        updateView();
 
         //Call a checkMove function implemented by child's,
         //To check if the new position of the spaceEntity is valid.
         //Asteroids and bullets should be removed if out of screen, player should wrap around.
         //checkMove();
 
+    }
+
+    /**
+     * helper function of move, which updates te view of the spaceEntity.
+     */
+    public void updateView() {
+        getView().setTranslateX(getLocation().getX());
+        getView().setTranslateY(getLocation().getY());
+        getView().setRotate(getRotation());
     }
 
     /**
