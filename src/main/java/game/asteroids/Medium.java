@@ -1,11 +1,15 @@
 package game.asteroids;
 
 import game.Asteroid;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
-public class Medium extends Asteroid{
+public class Medium extends Asteroid {
+
+    private static final int maxRotation = 8;
+    private static final int maxVelocity = 8;
+    public static final int score = 150;
+
     public Medium() {
-        super(new ImageView(new Image("/game/sprites/meteorBrown_med1.png")));
+        super(maxVelocity, maxRotation);
     }
+
 }

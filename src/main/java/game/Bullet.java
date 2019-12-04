@@ -9,31 +9,31 @@ public class Bullet extends SpaceEntity {
     /**
      * Speed of the bullet relative to the shooter.
      */
-    private transient double velocity = 5.0;
+    private transient double speed = 5.0;
 
     /**
      * Constructor for a Bullet.
      * @param firedFrom SpaceEntity that fired the bullet
      */                     // maybe add a param velocity here
     public Bullet(SpaceEntity firedFrom) {
-        super(new ImageView(new Image("/game/sprites/laserBlue.png")));
+        super();
         if (firedFrom instanceof Hostile) {
             this.setImage("/game/sprites/laserGreen.png");
         }
-        this.setVelocity(new Point2D(Math.cos(Math.toRadians(firedFrom.getRotate())),
-                Math.sin(Math.toRadians(firedFrom.getRotate())))
+        this.setVelocity(new Point2D(Math.cos(Math.toRadians(firedFrom.getRotation())),
+                Math.sin(Math.toRadians(firedFrom.getRotation())))
                 .normalize().multiply(5));
 
-        this.getView().setRotate(firedFrom.getRotate());
+        this.getView().setRotate(firedFrom.getRotation());
         this.getView().setRotate(getView().getRotate() + 90);
     }
 
     /**
-     * Sets the bullet velocity.
-     * @param velocity new velocity
+     * Sets the bullet speed.
+     * @param speed new speed
      */
-    public void setBulletVelocity(double velocity) {
-        this.velocity = velocity;
+    public void setBulletVelocity(double speed) {
+        this.speed = speed;
     }
 
     /**
@@ -41,7 +41,11 @@ public class Bullet extends SpaceEntity {
      * @return current bullet velocity
      */
     public double getBulletVelocity() {
-        return this.velocity;
+        return this.speed;
     }
 
+    @Override
+    public void checkMove() {
+
+    }
 }

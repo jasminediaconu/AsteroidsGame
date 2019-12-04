@@ -5,33 +5,101 @@ import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class SpaceEntity {
+public abstract class SpaceEntity {
+
+    //javaFX node
     protected transient Node view;
 
-    protected Point2D velocity = new Point2D(0, 0);
-
+    //spaceEntity Data.
+    private Point2D location = new Point2D(0, 0);
+    private Point2D velocity = new Point2D(0, 0);
+    private int rotation = 0;
+    private int rotationSpeed = 0;
     private boolean alive = true;
 
-    public SpaceEntity(Node view) {
+    /**
+     * default constructor.
+     */
+    public SpaceEntity() {
+
+    }
+
+    /**
+     * function that updates the location and rotation of the spaceEntity,
+     * to be called every frame.
+     */
+    public void move() {
+        location.add(velocity);
+        rotation += rotationSpeed;
+        //TODO: Update view.
+
+        //Call a checkMove function implemented by child's,
+        //To check if the new position of the spaceEntity is valid.
+        //Asteroids and bullets should be removed if out of screen, player should wrap around.
+        //checkMove();
+
+    }
+
+    /**
+     * A function to check if the new position of the spaceEntity is valid.
+     */
+    public abstract void checkMove();
+
+    /**
+     * A function that makes use of javaFX intersects method.
+     * @param other the spaceEntity to check possible collision with
+     * @return boolean collision.
+     */
+    public boolean isColliding(SpaceEntity other) {
+        return getView().getBoundsInParent().intersects(other.getView().getBoundsInParent());
+    }
+
+    /**
+     * Sets sprite of SpaceEntity with a file path.
+     * @param url link to sprite image
+     */
+    public void setImage(String url) {
+        this.view = new ImageView(new Image(url));
+    }
+
+    public Node getView() {
+        return view;
+    }
+
+    public void setView(Node view) {
         this.view = view;
-
     }
 
-    public void moveForward() {
-        view.setTranslateX(view.getTranslateX() + velocity.getX());
-        view.setTranslateY(view.getTranslateY() + velocity.getY());
+    public Point2D getLocation() {
+        return location;
     }
 
-    public void setVelocity(Point2D velocity) {
-        this.velocity = velocity;
+    public void setLocation(Point2D location) {
+        this.location = location;
     }
 
     public Point2D getVelocity() {
         return velocity;
     }
 
-    public Node getView() {
-        return view;
+    public void setVelocity(Point2D velocity) {
+        this.velocity = velocity;
+    }
+
+    public int getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(int rotation) {
+        this.rotation = rotation;
+    }
+
+    public int getRotationSpeed() {
+        return rotationSpeed;
+    }
+
+    public void setRotationSpeed(int rotationSpeed) {
+        this.rotationSpeed = rotationSpeed;
     }
 
     public boolean isAlive() {
@@ -46,71 +114,4 @@ public class SpaceEntity {
         this.alive = alive;
     }
 
-    public double getRotate() {
-        return view.getRotate();
-    }
-
-    /**
-     * This method rotates the SpaceEntity object
-     * 5 degrees to the right.
-     */
-    public void rotateRight() {
-        view.setRotate(view.getRotate() + 5);
-        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
-        //       velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
-    }
-
-    /**
-     * This method rotates the SpaceEntity object
-     * 5 degrees to the left.
-     */
-    public void rotateLeft() {
-        view.setRotate(view.getRotate() - 5);
-        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
-        //velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
-    }
-
-    public boolean isColliding(SpaceEntity other) {
-        return getView().getBoundsInParent().intersects(other.getView().getBoundsInParent());
-    }
-
-    /**
-     * Sets sprite of SpaceEntity.
-     * @param url link to sprite image
-     */
-    public void setImage(String url) {
-        this.view = new ImageView(new Image(url));
-    }
-
-
-    //    protected float speed;
-    //    protected SpaceEntity[] spawnables;
-    //
-    //    int value;      //Point value on destruction
-    //
-    //    Point2D position, destination,
-    //            direction; //int 0-71 for the direction of the SpaceEntity, 0 being directly up.
-    //
-    //    /**
-    //     * Checks whether this SpaceEntity intersects with another.
-    //     * @param other The SpaceEntity object to test for intersection with
-    //     * @return Boolean that indicates intersection
-    //     */
-    //    public abstract boolean intersect(SpaceEntity other);
-    //
-    //    /**
-    //     * Get the position of the SpaceEntity
-    //     *
-    //     * @return
-    //     */
-    //    public abstract double getPosition();
-    //
-    //    /**
-    //     * Get the distance to the target SpaceEntity by getting
-    //     * the difference between its and our
-    //     * coordinates and applying the Pythagorean theorem. Uses the objects' centers.
-    //     * @param target SpaceEntity that we want to get the distance to.
-    //     * @return
-    //     */
-    //    public abstract double getDistance(SpaceEntity target);
 }

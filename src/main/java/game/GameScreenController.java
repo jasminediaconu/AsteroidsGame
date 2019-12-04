@@ -1,11 +1,12 @@
 package game;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import game.asteroids.Large;
 import game.asteroids.Medium;
 import game.asteroids.Small;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
@@ -17,6 +18,8 @@ import javafx.scene.layout.AnchorPane;
  * The type GameScreen ViewController.
  */
 public class GameScreenController {
+
+    public static final int screenSize = 800;
 
     private transient AnchorPane anchorPane;
 
@@ -32,7 +35,7 @@ public class GameScreenController {
      */
     public GameScreenController() {
         anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(800, 800);
+        anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
         gameScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT) {
@@ -53,7 +56,7 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.UP) {
                 player.thrust();
             } else  {
-                player.moveForward();
+                player.move();
             }
         });
     }
@@ -64,6 +67,14 @@ public class GameScreenController {
      */
     public Scene getGameScene() {
         return gameScene;
+    }
+
+    /**
+     * Getter for the Screen size.
+     * @return int Screen size
+     */
+    public int getScreenSize() {
+        return screenSize;
     }
 
     /**
@@ -144,8 +155,8 @@ public class GameScreenController {
         bullets.removeIf(SpaceEntity::isDead);
         asteroids.removeIf(SpaceEntity::isDead);
 
-        bullets.forEach(SpaceEntity::moveForward);
-        asteroids.forEach(SpaceEntity::moveForward);
+        bullets.forEach(SpaceEntity::move);
+        asteroids.forEach(SpaceEntity::move);
 
         double threshold = 0.005;
 
@@ -161,7 +172,7 @@ public class GameScreenController {
             addAsteroid(new Medium(), Math.random() * anchorPane.getPrefWidth(),
                     Math.random() * anchorPane.getPrefHeight());
         }
-        player.moveForward();
+        player.move();
     }
 
 }
