@@ -100,12 +100,13 @@ public class GameScreenController {
      */
     private void addBullet(SpaceEntity bullet, SpaceEntity firedFrom) {
         bullets.add(bullet);
+        addSpaceEntity(bullet);
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
         bullet.setLocation(new Point2D(x, y));
 
-        addSpaceEntity(bullet);
+
     }
 
 
@@ -151,16 +152,16 @@ public class GameScreenController {
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
 
-        double threshold = 0.01;
+        double threshold = 0.03;
 
-        if (Math.random() < threshold / 4) {
+        if (Math.random() < threshold / 16) {
             addAsteroid(new Small());
         }
-        if (Math.random() < threshold / 2) {
-            addAsteroid(new Large());
+        if (Math.random() < threshold / 8) {
+            addAsteroid(new Medium());
         }
         if (Math.random() < threshold) {
-            addAsteroid(new Medium());
+            addAsteroid(new Large());
         }
 
         player.move();

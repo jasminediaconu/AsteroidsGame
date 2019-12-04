@@ -7,7 +7,7 @@ import javafx.geometry.Point2D;
 
 public abstract class Asteroid extends SpaceEntity {
 
-    private static final double minVelocity = 0.2;
+    private static final double minVelocity = 1;
     private static final int spawnMargin = 100;
     public static final int courseMargin = 5;
 
@@ -83,7 +83,9 @@ public abstract class Asteroid extends SpaceEntity {
                 break;
         }
 
-        setVelocity(getVelocity().normalize().multiply(rand.nextDouble() * maxVelocity + 0.1));
+        setVelocity(getVelocity().normalize().multiply(
+                rand.nextDouble() * maxVelocity + minVelocity
+        ));
         setRotationSpeed(rand.nextInt(maxRotation * 2) - maxRotation);
 
     }

@@ -6,8 +6,9 @@ public class Player extends SpaceEntity {
 
     private static final int center = GameScreenController.screenSize / 2;
 
+    //TODO: spawn player correctly
     Player() {
-        super();
+        setLocation(new Point2D(center, center));
     }
 
     /**
@@ -59,6 +60,9 @@ public class Player extends SpaceEntity {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String getUrl() {
         return "/game/sprites/playerShip.png";
     }
