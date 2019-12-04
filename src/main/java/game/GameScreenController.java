@@ -23,6 +23,10 @@ public class GameScreenController {
 
     public static final int screenSize = 800;
 
+    //TODO: make spawn chances increase with a higher score.
+    private static final double asteroidSpawnChance = 0.03;
+    private static final double hostileSpawnChance = 0.0001;
+
     private transient AnchorPane anchorPane;
 
     private transient List<SpaceEntity> bullets = new ArrayList<>();
@@ -81,6 +85,9 @@ public class GameScreenController {
 
         player = new Player();
         addSpaceEntity(player);
+
+        player.getView().setScaleX(0.69);
+        player.getView().setScaleY(0.69);
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -151,20 +158,12 @@ public class GameScreenController {
 
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
-
-        double threshold = 0.03;
-
-        if (Math.random() < threshold / 16) {
-            addAsteroid(new Small());
-        }
-        if (Math.random() < threshold / 8) {
-            addAsteroid(new Medium());
-        }
-        if (Math.random() < threshold) {
-            addAsteroid(new Large());
-        }
-
         player.move();
+
+        if (Math.random() < asteroidSpawnChance) {
+            addAsteroid(Asteroid.spawnAsteroid());
+        }
+
     }
 
 }

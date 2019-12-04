@@ -2,10 +2,19 @@ package game;
 
 import static game.GameScreenController.screenSize;
 
+import game.asteroids.Large;
+import game.asteroids.Medium;
+import game.asteroids.Small;
 import java.util.Random;
+
 import javafx.geometry.Point2D;
 
 public abstract class Asteroid extends SpaceEntity {
+
+    //see spawnAsteroid()
+    private static final double smallSpawnThreshold = 0.1;
+    private static final double medSpawnThreshold = 0.3;
+    private static final double largeSpawnThreshold = 1.0;
 
     private static final double minVelocity = 1;
     private static final int spawnMargin = 100;
@@ -86,6 +95,25 @@ public abstract class Asteroid extends SpaceEntity {
         ));
         setRotationSpeed(rand.nextInt(maxRotation * 2) - maxRotation);
 
+    }
+
+    /**
+     * Method that spawns in a new random asteroid.
+     * @return A new Asteroid.
+     */
+    public static Asteroid spawnAsteroid() {
+
+        double number = Math.random();
+
+        if (number < smallSpawnThreshold) {
+            return new Small();
+        } else if (number < medSpawnThreshold) {
+            return new Medium();
+        } else if (number < largeSpawnThreshold) {
+            return new Large();
+        } else {
+            return new Large();
+        }
     }
 
     public void checkMove() {
