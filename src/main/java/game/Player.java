@@ -6,7 +6,6 @@ public class Player extends SpaceEntity {
 
     private static final int center = GameScreenController.screenSize / 2;
 
-    //TODO: spawn player correctly
     Player() {
         setLocation(new Point2D(center, center));
     }
@@ -31,9 +30,6 @@ public class Player extends SpaceEntity {
                 0.7 * (getVelocity().getX() + Math.cos(Math.toRadians(getRotation()))),
                 0.7 * (getVelocity().getY() + Math.sin(Math.toRadians(getRotation()))))
         );
-
-        System.out.println("VEL: " + getVelocity().getX() + " and " + getVelocity().getY());
-        System.out.println("POS: " + getLocation().getX() + " and " + getLocation().getY());
     }
 
     /**

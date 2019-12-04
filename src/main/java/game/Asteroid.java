@@ -24,16 +24,14 @@ public abstract class Asteroid extends SpaceEntity {
 
         Point2D course;
         Random rand = new Random();
-        // rand.nextInt(boundary + spawnMargin) - spawnMargin;
         int gaussianCourse = (int) (rand.nextGaussian()
                 * ((screenSize / 2) - courseMargin) + (screenSize / 2));
         int gaussianSpawn = (int) (rand.nextGaussian()
                 * ((screenSize / 2) + spawnMargin) + (screenSize / 2));
         int boundary = screenSize + spawnMargin;
-        int x = 0;
-        int y = 0;
+        int x;
+        int y;
 
-        //TODO: set a random velocity with a direction towards the screen.
         switch (rand.nextInt(4)) {
             case 0:
                 x = gaussianSpawn;
