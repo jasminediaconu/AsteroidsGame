@@ -41,9 +41,9 @@ public class GameScreenController {
         gameScene = new Scene(createContent());
         gameScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT) {
-                player.rotateLeft(player.getRotationSpeed());
+                player.rotateLeft();
             } else if (e.getCode() == KeyCode.RIGHT) {
-                player.rotateRight(player.getRotationSpeed());
+                player.rotateRight();
             } else if (e.getCode() == KeyCode.SPACE) {
                 Bullet bullet = new Bullet(player);
                 addBullet(bullet, player);
