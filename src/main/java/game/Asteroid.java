@@ -20,7 +20,7 @@ public abstract class Asteroid extends SpaceEntity {
     private static final int spawnMargin = 100;
     private static final int courseMargin = 5;
 
-    private int caseNr = -1;
+    private transient int caseNr = -1;
 
     /**
      * Asteroid constructor, further instantiates an asteroid subclass.

@@ -1,25 +1,26 @@
 package game;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import game.asteroids.Large;
 import game.asteroids.Medium;
 import game.asteroids.Small;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-public class AsteroidTest {
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
+class AsteroidTest {
 
     @Test
     void randomGeneration() {
         int[] caseCounter = {0,0,0,0};
 
-        for(int i = 0; i < 400; i++) {
+        for (int i = 0; i < 400; i++) {
             Asteroid sm = new Small();
             caseCounter[sm.caseTest()]++;
         }
 
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             assertNotEquals(0,caseCounter[i]);
             System.out.println("Instances of case " + i + ": " + caseCounter[i]);
         }
@@ -31,7 +32,7 @@ public class AsteroidTest {
         Asteroid md;
         Asteroid lg;
 
-        for(int i = 0; i < 300; i++) {
+        for (int i = 0; i < 300; i++) {
             sm = new Small();
             md = new Medium();
             lg = new Large();
@@ -47,11 +48,17 @@ public class AsteroidTest {
         int smCount = 0;
         int mdCount = 0;
         int lgCount = 0;
-        for(int i = 0; i < 300; i++) {
+        for (int i = 0; i < 300; i++) {
             Asteroid s = Asteroid.spawnAsteroid();
-            if(s instanceof Small) smCount++;
-            if(s instanceof Medium) mdCount++;
-            if(s instanceof Large) lgCount++;
+            if (s instanceof Small) {
+                smCount++;
+            }
+            if (s instanceof Medium) {
+                mdCount++;
+            }
+            if (s instanceof Large) {
+                lgCount++;
+            }
         }
 
         System.out.println("Instances of Small: " + smCount);

@@ -1,13 +1,13 @@
 package game;
 
-import game.asteroids.Small;
-import javafx.geometry.Point2D;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class BulletTest {
+import game.asteroids.Small;
+import javafx.geometry.Point2D;
+import org.junit.jupiter.api.Test;
+
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
+class BulletTest {
     @Test
     void originTest() {
         Asteroid origin = new Small();

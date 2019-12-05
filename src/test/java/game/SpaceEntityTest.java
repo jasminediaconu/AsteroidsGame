@@ -1,5 +1,10 @@
 package game;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -7,21 +12,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-import java.awt.*;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-public class SpaceEntityTest {
-    Image image;
-    ImageView view;
-    SpaceEntity spaceEntity;
+class SpaceEntityTest {
+    private transient ImageView view;
+    private transient SpaceEntity spaceEntity;
 
 
     @BeforeEach
-    public void start() throws Exception {
+    void start() {
         spaceEntity = new Player();
     }
 
@@ -34,10 +31,8 @@ public class SpaceEntityTest {
 
     @Test
     void getterTest() {
-        spaceEntity.getRotation();
         assertEquals(0,spaceEntity.getRotation());
 
-        spaceEntity.getLocation();
         Point2D centreScreen = new Point2D(400,400);
         assertEquals(centreScreen,spaceEntity.getLocation());
 
