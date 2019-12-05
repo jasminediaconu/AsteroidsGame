@@ -1,25 +1,65 @@
 package game;
 
 import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public class Player extends SpaceEntity {
 
+    private static final int center = GameScreenController.screenSize / 2;
+
     Player() {
-        super(new ImageView(new Image("game/sprites/playerShip.png")));
-        rotationSpeed = 5;
+        setLocation(new Point2D(center, center));
+    }
+
+    /**
+     * respawns the player in the middle of the screen,
+     * with a velocity and rotation of 0.
+     */
+    public void respawn() {
+        setVelocity(new Point2D(0, 0));
+        setLocation(new Point2D(center, center));
+        setRotation(0);
+        setAlive(true);
+        //TODO: make invulnerable
     }
 
     /**
      * Thrust spaceship.
      */
     public void thrust() {
-        setVelocity(new Point2D(0.7 * (velocity.getX() + Math.cos(Math.toRadians(getRotate()))),
-                0.7 * (velocity.getY() + Math.sin(Math.toRadians(getRotate())))));
+        setVelocity(new Point2D(
+                0.7 * (getVelocity().getX() + Math.cos(Math.toRadians(getRotation()))),
+                0.7 * (getVelocity().getY() + Math.sin(Math.toRadians(getRotation()))))
+        );
+    }
 
-        view.setTranslateX(view.getTranslateX() + velocity.getX());
-        view.setTranslateY(view.getTranslateY() + velocity.getY());
-        System.out.println(velocity.getX() + " : " + velocity.getY());
+    /**
+     * This method rotates the SpaceEntity object
+     * 5 degrees to the right.
+     */
+    public void rotateRight() {
+        setRotation(getRotation() + 5);
+        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
+        //       velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
+    }
+
+    /**
+     * This method rotates the SpaceEntity object
+     * 5 degrees to the left.
+     */
+    public void rotateLeft() {
+        setRotation(getRotation() - 5);
+        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
+        //velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
+    }
+
+    public void checkMove() {
+
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public String getUrl() {
+        return "/game/sprites/playerShip.png";
     }
 }

@@ -6,8 +6,8 @@ import javafx.scene.image.ImageView;
 
 public abstract class Hostile extends SpaceEntity {
 
-    public Hostile(Node view) {
-        super(view);
+    public Hostile() {
+        super();
     }
 
 }

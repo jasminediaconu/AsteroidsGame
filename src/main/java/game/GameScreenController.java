@@ -2,10 +2,13 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
@@ -13,6 +16,12 @@ import javafx.scene.layout.AnchorPane;
  * The type GameScreen ViewController.
  */
 public class GameScreenController {
+
+    public static final int screenSize = 800;
+
+    //TODO: make spawn chances increase with a higher score.
+    private static final double asteroidSpawnChance = 0.03;
+    private static final double hostileSpawnChance = 0.0001;
 
     private transient AnchorPane anchorPane;
 
@@ -28,7 +37,7 @@ public class GameScreenController {
      */
     public GameScreenController() {
         anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(800, 800);
+        anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
         gameScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.LEFT) {
@@ -49,7 +58,7 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.UP) {
                 player.thrust();
             } else  {
-                player.moveForward();
+                player.move();
             }
         });
     }
@@ -64,17 +73,19 @@ public class GameScreenController {
 
     /**
      * Sets up the initial scene of the game.
-     * @return
+     * @return The generated parent
      */
     private Parent createContent() {
 
-        player = new Player();
-        player.setVelocity(new Point2D(0, 0));
         anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
-        addSpaceEntity(player, 400, 400);
+
+        player = new Player();
+        addSpaceEntity(player);
+
+        player.getView().setScaleX(0.69);
+        player.getView().setScaleY(0.69);
 
         AnimationTimer timer = new AnimationTimer() {
-            @Override
             public void handle(long now) {
                 onUpdate();
             }
@@ -91,33 +102,33 @@ public class GameScreenController {
      */
     private void addBullet(SpaceEntity bullet, SpaceEntity firedFrom) {
         bullets.add(bullet);
+        addSpaceEntity(bullet);
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
-        addSpaceEntity(bullet, x, y);
+        bullet.setLocation(new Point2D(x, y));
+
+
     }
 
 
     /**
-     * This method adds an Asteroid object on the screen at random time.
+     * This method adds an Asteroid object on the screen.
      * @param asteroid SpaceEntity type
-     * @param x coordinate
-     * @param y coordinate
      */
-    private void addAsteroid(SpaceEntity asteroid, double x, double y) {
+    private void addAsteroid(SpaceEntity asteroid) {
         asteroids.add(asteroid);
-        addSpaceEntity(asteroid, x, y);
+        addSpaceEntity(asteroid);
     }
 
     /**
      * This method adds a generic SpaceEntity on the screen.
      * @param object SpaceEntity type
-     * @param x coordinate
-     * @param y coordinate
      */
-    private void addSpaceEntity(SpaceEntity object, double x, double y) {
-        object.getView().setTranslateX(x);
-        object.getView().setTranslateY(y);
+    private void addSpaceEntity(SpaceEntity object) {
+        object.setView(new ImageView(new Image(object.getUrl())));
+        object.getView().setTranslateX(object.getLocation().getX());
+        object.getView().setTranslateY(object.getLocation().getY());
         anchorPane.getChildren().add(object.getView());
     }
 
@@ -140,20 +151,14 @@ public class GameScreenController {
         bullets.removeIf(SpaceEntity::isDead);
         asteroids.removeIf(SpaceEntity::isDead);
 
-        bullets.forEach(SpaceEntity::moveForward);
-        asteroids.forEach(SpaceEntity::moveForward);
-        for (SpaceEntity as : asteroids) {
-            as.moveForward();
-            as.rotateRight(as.rotationSpeed);
+        bullets.forEach(SpaceEntity::move);
+        asteroids.forEach(SpaceEntity::move);
+        player.move();
+
+        if (Math.random() < asteroidSpawnChance) {
+            addAsteroid(Asteroid.spawnAsteroid());
         }
 
-        double threshold = 0.02;
-
-        if (Math.random() < threshold) {
-            addAsteroid(new Asteroid(), Math.random() * anchorPane.getPrefWidth(),
-                    Math.random() * anchorPane.getPrefHeight());
-        }
-        player.moveForward();
     }
 
 }
