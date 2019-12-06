@@ -31,6 +31,22 @@ public class Bullet extends SpaceEntity {
     }
 
     /**
+     * Gets the origin of the bullet (the SpaceEntity that fired it).
+     * @return SpaceEntity origin
+     */
+    public SpaceEntity getOrigin() {
+        return origin;
+    }
+
+    /**
+     * Gets the default speed of the bullet.
+     * @return double defaultSpeed
+     */
+    public double getDefaultSpeed() {
+        return defaultSpeed;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public String getUrl() {

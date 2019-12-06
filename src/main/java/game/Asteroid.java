@@ -18,7 +18,9 @@ public abstract class Asteroid extends SpaceEntity {
 
     private static final double minVelocity = 1;
     private static final int spawnMargin = 100;
-    public static final int courseMargin = 5;
+    private static final int courseMargin = 5;
+
+    private transient int caseNr = -1;
 
     /**
      * Asteroid constructor, further instantiates an asteroid subclass.
@@ -52,6 +54,7 @@ public abstract class Asteroid extends SpaceEntity {
                 course = new Point2D(x, y);
                 setVelocity(course.subtract(getLocation()));
 
+                caseNr = 0;
                 break;
             case 1:
                 x = gaussianSpawn;
@@ -63,6 +66,7 @@ public abstract class Asteroid extends SpaceEntity {
                 course = new Point2D(x, y);
                 setVelocity(course.subtract(getLocation()));
 
+                caseNr = 1;
                 break;
             case 2:
                 x = -spawnMargin;
@@ -74,6 +78,7 @@ public abstract class Asteroid extends SpaceEntity {
                 course = new Point2D(x, y);
                 setVelocity(course.subtract(getLocation()));
 
+                caseNr = 2;
                 break;
             case 3:
                 x = boundary;
@@ -85,6 +90,7 @@ public abstract class Asteroid extends SpaceEntity {
                 course = new Point2D(x, y);
                 setVelocity(course.subtract(getLocation()));
 
+                caseNr = 3;
                 break;
             default:
                 break;
@@ -109,8 +115,6 @@ public abstract class Asteroid extends SpaceEntity {
             return new Small();
         } else if (number < medSpawnThreshold) {
             return new Medium();
-        } else if (number < largeSpawnThreshold) {
-            return new Large();
         } else {
             return new Large();
         }
@@ -118,6 +122,10 @@ public abstract class Asteroid extends SpaceEntity {
 
     public void checkMove() {
         //TODO: kill the asteroid if it flies of the screen. (further away than the margin)
+    }
+
+    public int caseTest() {
+        return caseNr;
     }
 
 }
