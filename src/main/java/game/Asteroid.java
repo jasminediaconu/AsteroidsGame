@@ -18,7 +18,8 @@ public abstract class Asteroid extends SpaceEntity {
 
     private static final double minVelocity = 1;
     private static final int spawnMargin = 100;
-    public static final int courseMargin = 5;
+    public static int score = 0;
+    public static final int courseMargin = 50;
 
     /**
      * Asteroid constructor, further instantiates an asteroid subclass.
@@ -118,6 +119,10 @@ public abstract class Asteroid extends SpaceEntity {
 
     public void checkMove() {
         //TODO: kill the asteroid if it flies of the screen. (further away than the margin)
+    }
+
+    public int getScore() {
+        return this.score;
     }
 
 }

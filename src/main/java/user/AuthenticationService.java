@@ -46,22 +46,16 @@ public class AuthenticationService {
 
         try {
             byte [] passwordAttempted = encryptPassword(salt, attemptedUser.getPassword());
-
             byte[] passwordActual = userFromDB.getPassword();
-            //byte[] passwordActual = pwString.getBytes();
-
             String pwAttempted;
-            //pwAttempted = new String(passwordAttempted, "UTF-8");
-            return Arrays.equals(passwordActual, passwordAttempted);
 
+            return Arrays.equals(passwordActual, passwordAttempted);
         } catch (NoSuchAlgorithmException
                 | InvalidKeySpecException
                 | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
         return false;
-        //return Arrays.equals(passwordAttempted, passwordActual);
     }
 
     /**
@@ -96,16 +90,4 @@ public class AuthenticationService {
 
         return salt;
     }
-
-    /*private byte[] getEncryptedPassword(User user)
-            throws InvalidKeySpecException, NoSuchAlgorithmException {
-
-        Database db = new Database();
-        User userFromDB = db.getUserByUsername(user.getUsername());
-
-        String attemptedPw = user.getPassword();
-        byte[] salt = userFromDB.getSalt();
-
-        return encryptPassword(salt, attemptedPw);
-    }*/
 }

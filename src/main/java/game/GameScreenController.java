@@ -23,6 +23,8 @@ public class GameScreenController {
     private static final double asteroidSpawnChance = 0.03;
     private static final double hostileSpawnChance = 0.0001;
 
+    private transient int score = 0;
+
     private transient AnchorPane anchorPane;
 
     private transient List<SpaceEntity> bullets = new ArrayList<>();
@@ -142,6 +144,8 @@ public class GameScreenController {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
+                    Asteroid ast = (Asteroid)asteroid;
+                    score += ast.getScore();
 
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
