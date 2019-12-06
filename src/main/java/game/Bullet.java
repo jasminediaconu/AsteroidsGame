@@ -7,7 +7,7 @@ public class Bullet extends SpaceEntity {
     /**
      * Speed of bullets is relative to its origin.
      */
-    private static final transient double defaultSpeed = 8.0;
+    private static final transient double defaultSpeed = 12.0;
     private transient SpaceEntity origin;
 
     /**

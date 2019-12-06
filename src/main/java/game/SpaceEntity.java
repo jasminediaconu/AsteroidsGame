@@ -13,8 +13,8 @@ public abstract class SpaceEntity {
     //spaceEntity Data.
     private Point2D location = new Point2D(0, 0);
     private Point2D velocity = new Point2D(0, 0);
-    private int rotation = 0;
-    private int rotationSpeed = 0;
+    private double rotation = 0;
+    private double rotationSpeed = 0;
     private boolean alive = true;
 
     /**
@@ -98,19 +98,19 @@ public abstract class SpaceEntity {
         this.velocity = velocity;
     }
 
-    public int getRotation() {
+    public double getRotation() {
         return rotation;
     }
 
-    public void setRotation(int rotation) {
+    public void setRotation(double rotation) {
         this.rotation = rotation;
     }
 
-    public int getRotationSpeed() {
+    public double getRotationSpeed() {
         return rotationSpeed;
     }
 
-    public void setRotationSpeed(int rotationSpeed) {
+    public void setRotationSpeed(double rotationSpeed) {
         this.rotationSpeed = rotationSpeed;
     }
 
