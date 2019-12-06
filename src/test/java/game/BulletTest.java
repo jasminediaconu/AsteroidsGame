@@ -21,7 +21,7 @@ class BulletTest {
         Asteroid origin = new Small();
         Bullet b = new Bullet(origin);
 
-        assertEquals(8,b.getDefaultSpeed());
+        assertEquals(12.0,b.getDefaultSpeed());
     }
 
     @Test
@@ -31,7 +31,7 @@ class BulletTest {
         Bullet b = new Bullet(origin);
 
         //Velocity should be 10 + 8
-        Point2D velocity = new Point2D(18,0);
+        Point2D velocity = new Point2D(22,0);
         assertEquals(velocity,b.getVelocity());
         assertEquals(origin.getRotation() + 90, b.getRotation());
     }

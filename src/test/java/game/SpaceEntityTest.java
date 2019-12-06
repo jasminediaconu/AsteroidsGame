@@ -70,19 +70,4 @@ class SpaceEntityTest {
         assertTrue(spaceEntity.isDead());
         assertFalse(spaceEntity.isAlive());
     }
-
-    @Test
-    void moveTest() {
-        spaceEntity.setVelocity(new Point2D(1,1));
-        spaceEntity.setRotationSpeed(2);
-
-        Point2D center = new Point2D(400,400);
-        assertEquals(center,spaceEntity.getLocation());
-
-        spaceEntity.move();
-
-        Point2D newloc = new Point2D(401,401);
-        assertEquals(newloc,spaceEntity.getLocation());
-        assertEquals(2,spaceEntity.getRotation());
-    }
 }
