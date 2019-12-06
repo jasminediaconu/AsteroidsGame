@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javafx.animation.AnimationTimer;
+import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -37,7 +39,6 @@ public class GameScreenController {
     private transient boolean left = false;
     private transient boolean down = false;
     private transient boolean space = false;
-
 
     /**
      * GameScreenController constructor.
@@ -116,8 +117,6 @@ public class GameScreenController {
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
         bullet.setLocation(new Point2D(x, y));
-
-
     }
 
 
@@ -154,8 +153,9 @@ public class GameScreenController {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
+
                     Asteroid ast = (Asteroid)asteroid;
-                    score += ast.getScore();
+                    incrementScore(ast.getScore());
 
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
@@ -192,6 +192,15 @@ public class GameScreenController {
         if (space && player.canFire()) {
             addBullet(player.shoot(), player);
         }
+    }
+
+    /**
+     * Increments score field.
+     * @param points points to add to current score
+     */
+    public void incrementScore(int points) {
+        this.score += points;
+        // TODO set label text to score
     }
 
 }
