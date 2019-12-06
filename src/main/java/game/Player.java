@@ -6,6 +6,13 @@ public class Player extends SpaceEntity {
 
     private static final int center = GameScreenController.screenSize / 2;
 
+    //amount of time (in seconds roughly) the player has to wait until it can fine again
+    private transient double fireCooldown = 0.2;
+    private transient double currentFireCooldown = 1;
+
+    //acceleration modifier, very sensitive.
+    private transient double acceleration = 0.069;
+
     Player() {
         setLocation(new Point2D(center, center));
     }
@@ -26,10 +33,10 @@ public class Player extends SpaceEntity {
      * Thrust spaceship.
      */
     public void thrust() {
-        setVelocity(new Point2D(
-                0.7 * (getVelocity().getX() + Math.cos(Math.toRadians(getRotation()))),
-                0.7 * (getVelocity().getY() + Math.sin(Math.toRadians(getRotation()))))
-        );
+        setVelocity(getVelocity().add(
+                acceleration * Math.cos(Math.toRadians(getRotation())),
+                acceleration * Math.sin(Math.toRadians(getRotation()))
+                ));
     }
 
     /**
@@ -37,9 +44,9 @@ public class Player extends SpaceEntity {
      * 5 degrees to the right.
      */
     public void rotateRight() {
-        setRotation(getRotation() + 5);
-        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
-        //       velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
+        setRotation(getRotation() + 4);
+
+        //setRotationSpeed(getRotationSpeed() + 1.0 / 20);
     }
 
     /**
@@ -47,9 +54,34 @@ public class Player extends SpaceEntity {
      * 5 degrees to the left.
      */
     public void rotateLeft() {
-        setRotation(getRotation() - 5);
-        //setVelocity(new Point2D(velocity.getX() + Math.cos(Math.toRadians(getRotate())),
-        //velocity.getY() + Math.sin(Math.toRadians(getRotate()))));
+        setRotation(getRotation() - 4);
+
+        //setRotationSpeed(getRotationSpeed() - 1.0 / 20);
+    }
+
+    /**
+     * Function to be called when the player shoots.
+     */
+    public Bullet shoot() {
+        this.currentFireCooldown = this.fireCooldown;
+        return new Bullet(this);
+    }
+
+    /**
+     * Checks if the player can fire their weapon.
+     * @return boolean the player can fire
+     */
+    public boolean canFire() {
+        return currentFireCooldown <= 0.0;
+    }
+
+    /**
+     * To be called every frame, decreases the cooldown timer.
+     */
+    public void cooldown() {
+        if (currentFireCooldown > Double.MIN_VALUE) {
+            currentFireCooldown -= 1.0 / 60.0;
+        }
     }
 
     public void checkMove() {

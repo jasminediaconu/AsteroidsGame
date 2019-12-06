@@ -24,13 +24,18 @@ public class GameScreenController {
     private static final double hostileSpawnChance = 0.0001;
 
     private transient AnchorPane anchorPane;
+    private transient Scene gameScene;
 
     private transient List<SpaceEntity> bullets = new ArrayList<>();
     private transient List<SpaceEntity> asteroids = new ArrayList<>();
-
     private transient Player player;
 
-    private transient Scene gameScene;
+    private transient boolean up = false;
+    private transient boolean right = false;
+    private transient boolean left = false;
+    private transient boolean down = false;
+    private transient boolean space = false;
+
 
     /**
      * GameScreenController constructor.
@@ -39,26 +44,28 @@ public class GameScreenController {
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
+
         gameScene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.LEFT) {
-                player.rotateLeft();
-            } else if (e.getCode() == KeyCode.RIGHT) {
-                player.rotateRight();
+            if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.A) {
+                left = true;
+            } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
+                right = true;
+            } else if (e.getCode() == KeyCode.UP  || e.getCode() == KeyCode.W) {
+                up = true;
             } else if (e.getCode() == KeyCode.SPACE) {
-                Bullet bullet = new Bullet(player);
-                addBullet(bullet, player);
+                space = true;
+            }
+        });
 
-                // -------This makes the static ufo shoot a bullet when space is pressed----------
-                /*
-                Bullet b2  = new Bullet(ufo);
-                addBullet(b2, ufo);
-                 */
-                // -------------------------------------------------------------------------------
-
-            } else if (e.getCode() == KeyCode.UP) {
-                player.thrust();
-            } else  {
-                player.move();
+        gameScene.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.A) {
+                left = false;
+            } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
+                right = false;
+            } else if (e.getCode() == KeyCode.UP  || e.getCode() == KeyCode.W) {
+                up = false;
+            } else if (e.getCode() == KeyCode.SPACE) {
+                space = false;
             }
         });
     }
@@ -137,12 +144,14 @@ public class GameScreenController {
      */
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void onUpdate() {
+
+        checkButtons();
+
         for (SpaceEntity bullet : bullets) {
             for (SpaceEntity asteroid : asteroids) {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
-
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
             }
@@ -154,11 +163,30 @@ public class GameScreenController {
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
         player.move();
+        player.cooldown();
 
         if (Math.random() < asteroidSpawnChance) {
             addAsteroid(Asteroid.spawnAsteroid());
         }
+    }
 
+    /**
+     * Method to call functions that execute behaviour of buttons.
+     */
+    private void checkButtons() {
+
+        if (up) {
+            player.thrust();
+        }
+        if (right) {
+            player.rotateRight();
+        }
+        if (left) {
+            player.rotateLeft();
+        }
+        if (space && player.canFire()) {
+            addBullet(player.shoot(), player);
+        }
     }
 
 }
