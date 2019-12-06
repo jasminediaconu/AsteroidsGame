@@ -88,6 +88,13 @@ public class Player extends SpaceEntity {
 
     }
 
+    public double getCurrentFireCooldown() {
+        return currentFireCooldown;
+    }
+    public double getFireCooldownTime() {
+        return fireCooldown;
+    }
+
     /**
      * {@inheritDoc}
      */
