@@ -1,8 +1,6 @@
 package game;
 
 import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 public class Bullet extends SpaceEntity {
 
@@ -12,28 +10,39 @@ public class Bullet extends SpaceEntity {
     private boolean firedByPlayer;
 
     /**
-     * Speed of the bullet relative to the shooter.
+     * Speed of bullets is relative to its origin.
      */
-    private transient double velocity = 5.0;
+    private static final transient double defaultSpeed = 12.0;
+    private transient SpaceEntity origin;
 
     /**
      * Constructor for a Bullet.
      * @param firedFrom SpaceEntity that fired the bullet
-     */                     // maybe add a param velocity here
+     */
     public Bullet(SpaceEntity firedFrom) {
         super(new ImageView(new Image("/game/sprites/laserBlue.png")));
-        this.firedByPlayer = true;
         if (firedFrom instanceof Hostile) {
             this.setImage("/game/sprites/laserGreen.png");
-            this.firedByPlayer = false;
         }
         this.setVelocity(new Point2D(Math.cos(Math.toRadians(firedFrom.getRotate())),
                 Math.sin(Math.toRadians(firedFrom.getRotate())))
                 .normalize().multiply(5));
 
-        this.getView().setRotate(firedFrom.getRotate());
-        this.getView().setRotate(getView().getRotate() + 90);
+        origin = firedFrom;
+
+        setVelocity(new Point2D(
+                Math.cos(Math.toRadians(firedFrom.getRotation())),
+                Math.sin(Math.toRadians(firedFrom.getRotation()))
+        ).normalize().multiply(defaultSpeed).add(firedFrom.getVelocity()));
+
+        setRotation(firedFrom.getRotation() + 90);
     }
+
+    public void checkMove() {
+
+    }
+
+    
 
     /**
      * Getter for firedByPlayer.
@@ -51,20 +60,32 @@ public class Bullet extends SpaceEntity {
         this.firedByPlayer = shot;
     }
 
+    
     /**
-     * Sets the bullet velocity.
-     * @param velocity new velocity
+     * Gets the origin of the bullet (the SpaceEntity that fired it).
+     * @return SpaceEntity origin
      */
-    public void setBulletVelocity(double velocity) {
-        this.velocity = velocity;
+    public SpaceEntity getOrigin() {
+        return origin;
+    }
+
+    
+
+    /**
+     * Gets the default speed of the bullet.
+     * @return double defaultSpeed
+     */
+    public double getDefaultSpeed() {
+        return defaultSpeed;
     }
 
     /**
-     * Getter for bullet velocity.
-     * @return current bullet velocity
+     * {@inheritDoc}
      */
-    public double getBulletVelocity() {
-        return this.velocity;
+    public String getUrl() {
+        if (origin instanceof Hostile) {
+            return "/game/sprites/laserGreen16.png";
+        }
+        return "/game/sprites/laserBlue16.png";
     }
-
 }

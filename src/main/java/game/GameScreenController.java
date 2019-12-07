@@ -2,10 +2,13 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
@@ -14,7 +17,14 @@ import javafx.scene.layout.AnchorPane;
  */
 public class GameScreenController {
 
+    public static final int screenSize = 800;
+
+    //TODO: make spawn chances increase with a higher score.
+    private static final double asteroidSpawnChance = 0.03;
+    private static final double hostileSpawnChance = 0.0001;
+
     private transient AnchorPane anchorPane;
+    private transient Scene gameScene;
 
     private transient List<Bullet> bullets = new ArrayList<Bullet>();
     private transient List<SpaceEntity> asteroids = new ArrayList<>();
@@ -22,35 +32,42 @@ public class GameScreenController {
 
     private transient Player player;
 
-    private transient Scene gameScene;
+    private transient boolean up = false;
+    private transient boolean right = false;
+    private transient boolean left = false;
+    private transient boolean down = false;
+    private transient boolean space = false;
+
 
     /**
      * GameScreenController constructor.
      */
     public GameScreenController() {
         anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(800, 800);
+        anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
+
         gameScene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.LEFT) {
-                player.rotateLeft();
-            } else if (e.getCode() == KeyCode.RIGHT) {
-                player.rotateRight();
+            if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.A) {
+                left = true;
+            } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
+                right = true;
+            } else if (e.getCode() == KeyCode.UP  || e.getCode() == KeyCode.W) {
+                up = true;
             } else if (e.getCode() == KeyCode.SPACE) {
-                Bullet bullet = new Bullet(player);
-                addBullet(bullet, player);
+                space = true;
+            }
+        });
 
-                // -------This makes the static ufo shoot a bullet when space is pressed----------
-                /*
-                Bullet b2  = new Bullet(ufo);
-                addBullet(b2, ufo);
-                 */
-                // -------------------------------------------------------------------------------
-
-            } else if (e.getCode() == KeyCode.UP) {
-                player.thrust();
-            } else  {
-                player.moveForward();
+        gameScene.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.A) {
+                left = false;
+            } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
+                right = false;
+            } else if (e.getCode() == KeyCode.UP  || e.getCode() == KeyCode.W) {
+                up = false;
+            } else if (e.getCode() == KeyCode.SPACE) {
+                space = false;
             }
         });
     }
@@ -65,17 +82,19 @@ public class GameScreenController {
 
     /**
      * Sets up the initial scene of the game.
-     * @return
+     * @return The generated parent
      */
     private Parent createContent() {
 
-        player = new Player();
-        player.setVelocity(new Point2D(0, 0));
         anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
-        addSpaceEntity(player, 400, 400);
+
+        player = new Player();
+        addSpaceEntity(player);
+
+        player.getView().setScaleX(0.69);
+        player.getView().setScaleY(0.69);
 
         AnimationTimer timer = new AnimationTimer() {
-            @Override
             public void handle(long now) {
                 onUpdate();
             }
@@ -91,43 +110,46 @@ public class GameScreenController {
      * @param firedFrom SpaceEntity that fired the bullet
      */
     private void addBullet(SpaceEntity bullet, SpaceEntity firedFrom) {
-        bullets.add((Bullet)bullet);
+        bullets.add(bullet);
+        addSpaceEntity(bullet);
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
-        addSpaceEntity(bullet, x, y);
+        bullet.setLocation(new Point2D(x, y));
+
+
     }
 
 
     /**
-     * This method adds an Asteroid object on the screen at random time.
+     * This method adds an Asteroid object on the screen.
      * @param asteroid SpaceEntity type
-     * @param x coordinate
-     * @param y coordinate
      */
-    private void addAsteroid(SpaceEntity asteroid, double x, double y) {
+    private void addAsteroid(SpaceEntity asteroid) {
         asteroids.add(asteroid);
-        addSpaceEntity(asteroid, x, y);
+        addSpaceEntity(asteroid);
     }
 
     /**
      * This method adds a generic SpaceEntity on the screen.
      * @param object SpaceEntity type
-     * @param x coordinate
-     * @param y coordinate
      */
-    private void addSpaceEntity(SpaceEntity object, double x, double y) {
-        object.getView().setTranslateX(x);
-        object.getView().setTranslateY(y);
+    private void addSpaceEntity(SpaceEntity object) {
+        object.setView(new ImageView(new Image(object.getUrl())));
+        object.getView().setTranslateX(object.getLocation().getX());
+        object.getView().setTranslateY(object.getLocation().getY());
         anchorPane.getChildren().add(object.getView());
     }
 
     /**
      * This method updates the objects on the screen according to the Timer.
      */
-    @SuppressWarnings("PMD") // Warning suppressed because PMD
-    private void onUpdate() {                        // flags some for each loops as an UR anomaly
-        for (Bullet bullet : bullets) {
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
+    private void onUpdate() {
+
+        checkButtons();
+
+        for (SpaceEntity bullet : bullets) {
             for (SpaceEntity asteroid : asteroids) {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
@@ -168,8 +190,10 @@ public class GameScreenController {
         bullets.removeIf(SpaceEntity::isDead);
         asteroids.removeIf(SpaceEntity::isDead);
 
-        bullets.forEach(SpaceEntity::moveForward);
-        asteroids.forEach(SpaceEntity::moveForward);
+        bullets.forEach(SpaceEntity::move);
+        asteroids.forEach(SpaceEntity::move);
+        player.move();
+        player.cooldown();
 
         //checks if player is qualified to get a life.
         if (player.getCurrentScore() >= 10000) {
@@ -182,13 +206,31 @@ public class GameScreenController {
             gameEnd();
         }
 
-        double threshold = 0.02;
-
-        if (Math.random() < threshold) {
-            addAsteroid(new Asteroid(), Math.random() * anchorPane.getPrefWidth(),
-                    Math.random() * anchorPane.getPrefHeight());
+        if (Math.random() < asteroidSpawnChance) {
+            addAsteroid(Asteroid.spawnAsteroid());
         }
-        player.moveForward();
+    }
+        
+
+        
+
+    /**
+     * Method to call functions that execute behaviour of buttons.
+     */
+    private void checkButtons() {
+
+        if (up) {
+            player.thrust();
+        }
+        if (right) {
+            player.rotateRight();
+        }
+        if (left) {
+            player.rotateLeft();
+        }
+        if (space && player.canFire()) {
+            addBullet(player.shoot(), player);
+        }
     }
 
     /**
