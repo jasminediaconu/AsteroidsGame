@@ -19,6 +19,8 @@ public class GameScreenController {
 
     public static final int screenSize = 800;
 
+    public static int scoreUp = 10000;
+
     //TODO: make spawn chances increase with a higher score.
     private static final double asteroidSpawnChance = 0.03;
     private static final double hostileSpawnChance = 0.0001;
@@ -197,9 +199,9 @@ public class GameScreenController {
         player.cooldown();
 
         //checks if player is qualified to get a life.
-        if (player.getCurrentScore() >= 10000) {
+        if (player.getCurrentScore() >= scoreUp) {
             player.addLife();
-            player.setCurrentScore(player.getCurrentScore() - 10000);
+            player.setCurrentScore(player.getCurrentScore() - scoreUp);
         }
 
         //checks if player died.
