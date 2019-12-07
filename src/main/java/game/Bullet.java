@@ -20,19 +20,12 @@ public class Bullet extends SpaceEntity {
      * @param firedFrom SpaceEntity that fired the bullet
      */
     public Bullet(SpaceEntity firedFrom) {
-        super(new ImageView(new Image("/game/sprites/laserBlue.png")));
-        if (firedFrom instanceof Hostile) {
-            this.setImage("/game/sprites/laserGreen.png");
-        }
-        this.setVelocity(new Point2D(Math.cos(Math.toRadians(firedFrom.getRotate())),
-                Math.sin(Math.toRadians(firedFrom.getRotate())))
-                .normalize().multiply(5));
 
         origin = firedFrom;
 
         setVelocity(new Point2D(
-                Math.cos(Math.toRadians(firedFrom.getRotation())),
-                Math.sin(Math.toRadians(firedFrom.getRotation()))
+            Math.cos(Math.toRadians(firedFrom.getRotation())),
+            Math.sin(Math.toRadians(firedFrom.getRotation()))
         ).normalize().multiply(defaultSpeed).add(firedFrom.getVelocity()));
 
         setRotation(firedFrom.getRotation() + 90);
@@ -41,8 +34,6 @@ public class Bullet extends SpaceEntity {
     public void checkMove() {
 
     }
-
-    
 
     /**
      * Getter for firedByPlayer.

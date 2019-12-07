@@ -6,7 +6,7 @@ public class Player extends SpaceEntity {
 
     private static final int center = GameScreenController.screenSize / 2;
 
-    //amount of time (in seconds roughly) the player has to wait until it can fine again
+    //amount of time (in seconds roughly) the player has to wait until it can fire again
     private transient double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
 
@@ -72,7 +72,15 @@ public class Player extends SpaceEntity {
         //setRotationSpeed(getRotationSpeed() + 1.0 / 20);
     }
 
+    /**
+     * This method rotates the SpaceEntity object
+     * 5 degrees to the left.
+     */
+    public void rotateLeft() {
+        setRotation(getRotation() - 4);
 
+        //setRotationSpeed(getRotationSpeed() - 1.0 / 20);
+    }
 
     /**
      * Adds a life to this player.
@@ -157,19 +165,7 @@ public class Player extends SpaceEntity {
     public void setCurrentScore(int currentScore) {
         this.currentScore = currentScore;
     }
-    
 
-
-
-    /**
-     * This method rotates the SpaceEntity object
-     * 5 degrees to the left.
-     */
-    public void rotateLeft() {
-        setRotation(getRotation() - 4);
-
-        //setRotationSpeed(getRotationSpeed() - 1.0 / 20);
-    }
 
     /**
      * Function to be called when the player shoots.

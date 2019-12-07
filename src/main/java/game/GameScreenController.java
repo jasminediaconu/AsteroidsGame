@@ -26,8 +26,8 @@ public class GameScreenController {
     private transient AnchorPane anchorPane;
     private transient Scene gameScene;
 
-    private transient List<Bullet> bullets = new ArrayList<Bullet>();
-    private transient List<SpaceEntity> asteroids = new ArrayList<>();
+    private transient List<Bullet> bullets = new ArrayList<>();
+    private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<SpaceEntity> ufos = new ArrayList<>();
 
     private transient Player player;
@@ -106,18 +106,16 @@ public class GameScreenController {
 
     /**
      * This method adds a Bullet object when the user press the SPACE key.
-     * @param bullet SpaceEntity type
+     * @param bullet Bullet type
      * @param firedFrom SpaceEntity that fired the bullet
      */
-    private void addBullet(SpaceEntity bullet, SpaceEntity firedFrom) {
+    private void addBullet(Bullet bullet, SpaceEntity firedFrom) {
         bullets.add(bullet);
         addSpaceEntity(bullet);
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
         bullet.setLocation(new Point2D(x, y));
-
-
     }
 
 
@@ -125,7 +123,7 @@ public class GameScreenController {
      * This method adds an Asteroid object on the screen.
      * @param asteroid SpaceEntity type
      */
-    private void addAsteroid(SpaceEntity asteroid) {
+    private void addAsteroid(Asteroid asteroid) {
         asteroids.add(asteroid);
         addSpaceEntity(asteroid);
     }
@@ -149,14 +147,14 @@ public class GameScreenController {
 
         checkButtons();
 
-        for (SpaceEntity bullet : bullets) {
-            for (SpaceEntity asteroid : asteroids) {
+        for (Bullet bullet : bullets) {
+            for (Asteroid asteroid : asteroids) {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
 
                     if (bullet.getFiredByPlayer()) {
-                        //TODO increment score of player
+                        player.incrementScore(asteroid.getScore());
                     }
 
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
@@ -164,11 +162,13 @@ public class GameScreenController {
             }
         }
 
+        //TODO check if needed to check if player died inside collision checking.
+
         //check if player collided with an asteroid.
         for (SpaceEntity asteroid: asteroids) {
             if (player.isColliding(asteroid)) {
                 player.removeLife();
-                //TODO call player.spawn()
+                player.respawn();
             }
         }
 
@@ -176,14 +176,15 @@ public class GameScreenController {
         for (Bullet bullet: bullets) {
             if (!bullet.getFiredByPlayer() && player.isColliding(bullet)) {
                 player.removeLife();
-                //TODO call player.spawn()
+                player.respawn();
             }
         }
 
+        //check if player collided with an enemy ship.
         for (SpaceEntity ufo: ufos) {
             if (player.isColliding(ufo)) {
                 player.removeLife();
-                //TODO call player.spawn()
+                player.respawn();
             }
         }
 
@@ -210,9 +211,6 @@ public class GameScreenController {
             addAsteroid(Asteroid.spawnAsteroid());
         }
     }
-        
-
-        
 
     /**
      * Method to call functions that execute behaviour of buttons.
