@@ -15,6 +15,8 @@ public class Player extends SpaceEntity {
 
     private Shield shield;
 
+    private transient double invulnerabilityTime;
+
     /**
      * Constructor for Player.
      * Initial values: lives = 3, totalScore = 0, currentScore = 0.
@@ -51,7 +53,7 @@ public class Player extends SpaceEntity {
         setLocation(new Point2D(center, center));
         setRotation(0);
         setAlive(true);
-        //TODO: make invulnerable
+        this.invulnerabilityTime = 2.0;
     }
 
     /**
@@ -96,7 +98,10 @@ public class Player extends SpaceEntity {
      * Removes a life.
      */
     public void removeLife() {
-        this.lives--;
+        if(invulnerabilityTime <= 0) {
+            this.lives--;
+            this.respawn();
+        }
     }
 
     /**
@@ -247,5 +252,20 @@ public class Player extends SpaceEntity {
      */
     public void setShield(Shield shield) {
         this.shield = shield;
+    }
+
+    /**
+     * Returns seconds left of invulnerability.
+     * @return current invulnerabilityTime
+     */
+    public double getInvulnerabilityTime() {
+        return invulnerabilityTime;
+    }
+
+    /**
+     * Decreases invulnerability time by 1 frame.
+     */
+    public void updateInvulnerabilityTime() {
+        this.invulnerabilityTime -= 1d/60d;
     }
 }

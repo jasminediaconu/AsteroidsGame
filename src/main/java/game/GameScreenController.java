@@ -197,7 +197,6 @@ public class GameScreenController {
         for (SpaceEntity asteroid: asteroids) {
             if (player.isColliding(asteroid)) {
                 player.removeLife();
-                player.respawn();
             }
         }
 
@@ -205,7 +204,6 @@ public class GameScreenController {
         for (Bullet bullet: bullets) {
             if (bullet.getOrigin() != player && player.isColliding(bullet)) {
                 player.removeLife();
-                player.respawn();
             }
         }
 
@@ -213,7 +211,6 @@ public class GameScreenController {
         for (SpaceEntity ufo: ufos) {
             if (player.isColliding(ufo)) {
                 player.removeLife();
-                player.respawn();
             }
         }
 
@@ -224,6 +221,7 @@ public class GameScreenController {
         asteroids.forEach(SpaceEntity::move);
         player.move();
         player.cooldown();
+        player.updateInvulnerabilityTime();
 
         //checks if player is qualified to get a life.
         if (player.getCurrentScore() >= scoreUp) {
