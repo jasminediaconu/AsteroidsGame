@@ -13,6 +13,8 @@ public class Player extends SpaceEntity {
     //acceleration modifier, very sensitive.
     private transient double acceleration = 0.069;
 
+    private Shield shield;
+
     /**
      * Constructor for Player.
      * Initial values: lives = 3, totalScore = 0, currentScore = 0.
@@ -199,6 +201,7 @@ public class Player extends SpaceEntity {
     public double getCurrentFireCooldown() {
         return currentFireCooldown;
     }
+
     public double getFireCooldownTime() {
         return fireCooldown;
     }
@@ -208,5 +211,21 @@ public class Player extends SpaceEntity {
      */
     public String getUrl() {
         return "/game/sprites/playerShip.png";
+    }
+
+    /**
+     * Returns the shield of the player.
+     * @return Shield
+     */
+    public Shield getShield() {
+        return this.shield;
+    }
+
+    /**
+     * Setter for the Shield.
+     * @param shield new value of Shield
+     */
+    public void setShield(Shield shield) {
+        this.shield = shield;
     }
 }

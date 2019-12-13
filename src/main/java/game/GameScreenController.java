@@ -2,6 +2,7 @@ package game;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javafx.animation.AnimationTimer;
 import javafx.geometry.Point2D;
@@ -18,6 +19,10 @@ import javafx.scene.layout.AnchorPane;
 public class GameScreenController {
 
     public static final int screenSize = 800;
+
+    public transient boolean isPaused = false;
+
+    public transient boolean soundEffect = false;
 
     public static int scoreUp = 10000;
 
@@ -39,6 +44,9 @@ public class GameScreenController {
     private transient boolean left = false;
     private transient boolean down = false;
     private transient boolean space = false;
+    private transient boolean fKey = false;
+    private transient boolean pKey = false;
+    private transient boolean sKey = false;
 
 
     /**
@@ -58,6 +66,14 @@ public class GameScreenController {
                 up = true;
             } else if (e.getCode() == KeyCode.SPACE) {
                 space = true;
+            } else if (e.getCode() == KeyCode.F) {
+                fKey = true;
+            } else if (e.getCode() == KeyCode.DOWN) {
+                down = true;
+            } else if (e.getCode() == KeyCode.P) {
+                pKey = true;
+            } else if (e.getCode() == KeyCode.S) {
+                sKey = true;
             }
         });
 
@@ -70,6 +86,14 @@ public class GameScreenController {
                 up = false;
             } else if (e.getCode() == KeyCode.SPACE) {
                 space = false;
+            } else if (e.getCode() == KeyCode.F) {
+                fKey = false;
+            } else if (e.getCode() == KeyCode.DOWN) {
+                down = false;
+            } else if (e.getCode() == KeyCode.P) {
+                pKey = false;
+            } else if (e.getCode() == KeyCode.S) {
+                sKey = false;
             }
         });
     }
@@ -230,6 +254,34 @@ public class GameScreenController {
         }
         if (space && player.canFire()) {
             addBullet(player.shoot(), player);
+        }
+        if (fKey) {
+            Random rand = new Random();
+            int x = rand.nextInt(screenSize);
+            int y = rand.nextInt(screenSize);
+            player.setLocation(new Point2D(x, y));
+        }
+        if (down) {
+            player.getShield().activateShield();
+        }
+        if (pKey) {
+            if (!isPaused) {
+                isPaused = true;
+                //TODO go to Pause menu
+            } else {
+                isPaused = false;
+            }
+            //TODO pause game: only call onUpdate if !isPaused
+
+        }
+        if (sKey) {
+            if (!soundEffect) {
+                soundEffect = true;
+                //TODO turn on sound
+            } else {
+                soundEffect = false;
+                //TODO turn off sound
+            }
         }
     }
 
