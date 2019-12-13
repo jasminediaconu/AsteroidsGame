@@ -182,7 +182,7 @@ public class GameScreenController {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
 
-                    if (bullet.getFiredByPlayer()) {
+                    if (bullet.getOrigin() == player) {
                         player.incrementScore(asteroid.getScore());
                     }
 
@@ -203,7 +203,7 @@ public class GameScreenController {
 
         //check if player collided with an enemy bullet.
         for (Bullet bullet: bullets) {
-            if (!bullet.getFiredByPlayer() && player.isColliding(bullet)) {
+            if (bullet.getOrigin() != player && player.isColliding(bullet)) {
                 player.removeLife();
                 player.respawn();
             }
