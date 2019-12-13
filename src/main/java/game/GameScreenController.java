@@ -44,9 +44,9 @@ public class GameScreenController {
     private transient boolean left = false;
     private transient boolean down = false;
     private transient boolean space = false;
-    private transient boolean fKey = false;
-    private transient boolean pKey = false;
-    private transient boolean sKey = false;
+    private transient boolean fkey = false;
+    private transient boolean pkey = false;
+    private transient boolean skey = false;
 
 
     /**
@@ -67,13 +67,13 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.SPACE) {
                 space = true;
             } else if (e.getCode() == KeyCode.F) {
-                fKey = true;
+                fkey = true;
             } else if (e.getCode() == KeyCode.DOWN) {
                 down = true;
             } else if (e.getCode() == KeyCode.P) {
-                pKey = true;
+                pkey = true;
             } else if (e.getCode() == KeyCode.S) {
-                sKey = true;
+                skey = true;
             }
         });
 
@@ -87,13 +87,13 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.SPACE) {
                 space = false;
             } else if (e.getCode() == KeyCode.F) {
-                fKey = false;
+                fkey = false;
             } else if (e.getCode() == KeyCode.DOWN) {
                 down = false;
             } else if (e.getCode() == KeyCode.P) {
-                pKey = false;
+                pkey = false;
             } else if (e.getCode() == KeyCode.S) {
-                sKey = false;
+                skey = false;
             }
         });
     }
@@ -122,7 +122,10 @@ public class GameScreenController {
 
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long now) {
-                onUpdate();
+                checkButtons();
+                if (!isPaused) {
+                    onUpdate();
+                }
             }
         };
         timer.start();
@@ -171,7 +174,7 @@ public class GameScreenController {
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void onUpdate() {
 
-        checkButtons();
+        //checkButtons();
 
         for (Bullet bullet : bullets) {
             for (Asteroid asteroid : asteroids) {
@@ -255,7 +258,7 @@ public class GameScreenController {
         if (space && player.canFire()) {
             addBullet(player.shoot(), player);
         }
-        if (fKey) {
+        if (fkey) {
             Random rand = new Random();
             int x = rand.nextInt(screenSize);
             int y = rand.nextInt(screenSize);
@@ -264,17 +267,16 @@ public class GameScreenController {
         if (down) {
             player.getShield().activateShield();
         }
-        if (pKey) {
+        if (pkey) {
             if (!isPaused) {
                 isPaused = true;
                 //TODO go to Pause menu
             } else {
                 isPaused = false;
             }
-            //TODO pause game: only call onUpdate if !isPaused
 
         }
-        if (sKey) {
+        if (skey) {
             if (!soundEffect) {
                 soundEffect = true;
                 //TODO turn on sound
