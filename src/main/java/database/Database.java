@@ -278,8 +278,8 @@ public class Database {
         try {
             Connection conn = DriverManager.getConnection(this.getUrl());
 
-            PreparedStatement statement = conn.prepareStatement("select top 5 "
-                + "* from game order by score desc");
+            PreparedStatement statement = conn.prepareStatement("select "
+                + "* from game order by score desc limit 5");
 
             ResultSet resultSet = statement.executeQuery();
 
