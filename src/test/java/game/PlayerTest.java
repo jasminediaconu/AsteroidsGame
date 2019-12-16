@@ -122,7 +122,8 @@ public class PlayerTest {
         assertEquals(player.getLocation().getX(), GameScreenController.screenSize);
         assertEquals(player.getLocation().getY(), GameScreenController.screenSize);
 
-        player.setLocation(new Point2D(GameScreenController.screenSize + 1, GameScreenController.screenSize + 2));
+        player.setLocation(new Point2D(GameScreenController.screenSize + 1,
+            GameScreenController.screenSize + 2));
         player.checkMove();
         assertEquals(player.getLocation().getX(), 0);
         assertEquals(player.getLocation().getY(), 0);
