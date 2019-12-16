@@ -46,14 +46,9 @@ public class AuthenticationService {
 
         try {
             byte [] passwordAttempted = encryptPassword(salt, attemptedUser.getPassword());
-
             byte[] passwordActual = userFromDB.getPassword();
-            //byte[] passwordActual = pwString.getBytes();
 
-            String pwAttempted;
-            //pwAttempted = new String(passwordAttempted, "UTF-8");
             return Arrays.equals(passwordActual, passwordAttempted);
-
         } catch (NoSuchAlgorithmException
                 | InvalidKeySpecException
                 | UnsupportedEncodingException e) {
@@ -61,7 +56,6 @@ public class AuthenticationService {
         }
 
         return false;
-        //return Arrays.equals(passwordAttempted, passwordActual);
     }
 
     /**

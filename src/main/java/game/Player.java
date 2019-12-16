@@ -98,7 +98,7 @@ public class Player extends SpaceEntity {
      * Removes a life.
      */
     public void removeLife() {
-        if(invulnerabilityTime <= 0) {
+        if (invulnerabilityTime <= 0) {
             this.lives--;
             this.respawn();
         }
@@ -266,6 +266,6 @@ public class Player extends SpaceEntity {
      * Decreases invulnerability time by 1 frame.
      */
     public void updateInvulnerabilityTime() {
-        this.invulnerabilityTime -= 1d/60d;
+        this.invulnerabilityTime -= 1d / 60d;
     }
 }
