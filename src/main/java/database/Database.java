@@ -278,8 +278,8 @@ public class Database {
         try {
             Connection conn = DriverManager.getConnection(this.getUrl());
 
-            PreparedStatement statement = conn.prepareStatement("select top 5 "
-                + "* from game order by score desc");
+            PreparedStatement statement = conn.prepareStatement("select "
+                + "* from game order by score desc limit 5");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -290,12 +290,9 @@ public class Database {
                 Date timestamp = resultSet.getDate("timestamp");
                 int id = resultSet.getInt("id");
 
-                Game game = new Game();
-                game.setId(id);
-                game.setScore(score);
-                game.setTimestamp(timestamp);
-                game.setAlias(alias);
-                game.setUsername(username);
+                Game game = new Game(id, username, alias, timestamp, score);
+
+                highScores.add(game);
             }
 
             statement.close();
