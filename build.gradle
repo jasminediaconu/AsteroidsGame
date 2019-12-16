@@ -44,8 +44,23 @@ test {
 
     jacoco {
         enabled = true
-        includes = ['nl.tudelft.cse.sem.*']
-        excludes = []
+        includes = []
+        excludes = ['**.menu.*', '**.game.GameScreenController', '**.database.*', '**.MainScreen']
+    }
+}
+
+jacocoTestReport {
+    reports{
+        xml.enabled true
+        csv.enabled true
+        csv.destination file("${buildDir}/jacoco/jacoco.csv")
+        html.destination file("${buildDir}/jacoco/jacoco")
+    }
+
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/menu/*', '**/game/GameScreenController', '**/database/*', '**/MainScreen'])
+        })
     }
 }
 
@@ -62,10 +77,10 @@ jacocoTestCoverageVerification {
         rule {
             enabled = true
             element = 'CLASS'
-            includes = ['nl.tudelft.cse.sem.*']
-
+            includes = []
+            excludes = ['**.menu.*', '**.game.GameScreenController', '**.database.*', '**.MainScreen']
             limit {
-                maximum = 0.5
+                minimum = 0.5
             }
         }
     }

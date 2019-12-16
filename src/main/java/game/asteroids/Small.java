@@ -20,6 +20,14 @@ public class Small extends Asteroid {
     /**
      * {@inheritDoc}
      */
+    @Override
+    public int getScore() {
+        return 100;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public String getUrl() {
 
         if (Math.round(Math.random()) == 0) {

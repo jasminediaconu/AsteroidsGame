@@ -47,6 +47,7 @@ public class AuthenticationService {
         try {
             byte [] passwordAttempted = encryptPassword(salt, attemptedUser.getPassword());
             byte[] passwordActual = userFromDB.getPassword();
+
             String pwAttempted;
 
             return Arrays.equals(passwordActual, passwordAttempted);

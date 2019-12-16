@@ -20,6 +20,14 @@ public class Medium extends Asteroid {
     /**
      * {@inheritDoc}
      */
+    @Override
+    public int getScore() {
+        return 50;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public String getUrl() {
 
         if (Math.round(Math.random()) == 0) {

@@ -22,6 +22,14 @@ public class Large extends Asteroid {
     }
 
     /**
+     *{@inheritDoc}
+     */
+    @Override
+    public int getScore() {
+        return 20;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public String getUrl() {
