@@ -17,6 +17,16 @@ public class Player extends SpaceEntity {
 
     private transient double invulnerabilityTime;
 
+    private int lives;
+
+    private int totalScore;
+    /**
+     * Current score of player.
+     * Needed to keep count of the 10000 points, so the extra life can be added.
+     * Gets reset to 0 when the extra life has been added.
+     */
+    private int currentScore;
+
     /**
      * Constructor for Player.
      * Initial values: lives = 3, totalScore = 0, currentScore = 0.
@@ -27,22 +37,6 @@ public class Player extends SpaceEntity {
         this.totalScore = 0;
         this.currentScore = 0;
     }
-
-    /**
-     * Number of lives the player has.
-     */
-    private int lives;
-    /**
-     * Total score of player.
-     */
-    private int totalScore;
-    /**
-     * Current score of player.
-     * Needed to keep count of the 10000 points, so the extra life can be added.
-     * Gets reset to 0 when the extra life has been added.
-     */
-    private int currentScore;
-
 
     /**
      * respawns the player in the middle of the screen,
@@ -260,6 +254,14 @@ public class Player extends SpaceEntity {
      */
     public double getInvulnerabilityTime() {
         return invulnerabilityTime;
+    }
+
+    /**
+     * Setter for invulnerabilityTime, needed for testing.
+     * @param ivt new value
+     */
+    public void setInvulnerabilityTime(double ivt){
+        this.invulnerabilityTime = ivt;
     }
 
     /**

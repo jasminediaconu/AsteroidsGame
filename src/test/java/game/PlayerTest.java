@@ -74,4 +74,77 @@ public class PlayerTest {
 
         assertTrue(player.canFire());
     }
+
+    @Test
+    void lifeTest() {
+        Player player = new Player();
+
+        assertEquals(3, player.getLives());
+        assertTrue(player.hasLives());
+
+        player.removeLife();
+        assertEquals(2, player.getLives());
+
+        player.setInvulnerabilityTime(0);
+
+        player.removeLife();
+
+        player.setInvulnerabilityTime(0);
+
+        player.removeLife();
+        assertEquals(0, player.getLives());
+        assertFalse(player.hasLives());
+
+        player.addLife();
+        assertEquals(1, player.getLives());
+        assertTrue(player.hasLives());
+    }
+
+    @Test
+    void scoreTest() {
+        Player player = new Player();
+
+        assertEquals(player.getCurrentScore(), player.getTotalScore());
+
+        player.incrementScore(15);
+        assertEquals(15, player.getCurrentScore());
+
+        player.incrementScore(10000);
+        assertEquals(10015, player.getTotalScore());
+    }
+
+    @Test
+    void wrapAroundTest() {
+        Player player = new Player();
+
+        player.setLocation(new Point2D(-1, -1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), GameScreenController.screenSize);
+        assertEquals(player.getLocation().getY(), GameScreenController.screenSize);
+
+        player.setLocation(new Point2D(GameScreenController.screenSize + 1, GameScreenController.screenSize + 2));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), 0);
+        assertEquals(player.getLocation().getY(), 0);
+
+        player.setLocation(new Point2D(GameScreenController.screenSize + 1, 1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), 0);
+        assertEquals(player.getLocation().getY(), 1);
+
+        player.setLocation(new Point2D(1, GameScreenController.screenSize + 1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), 1);
+        assertEquals(player.getLocation().getY(), 0);
+
+        player.setLocation(new Point2D(-1, 1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), GameScreenController.screenSize);
+        assertEquals(player.getLocation().getY(), 1);
+
+        player.setLocation(new Point2D(1, -1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), 1);
+        assertEquals(player.getLocation().getY(), GameScreenController.screenSize);
+    }
 }

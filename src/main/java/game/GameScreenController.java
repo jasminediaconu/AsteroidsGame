@@ -191,8 +191,6 @@ public class GameScreenController {
             }
         }
 
-        //TODO check if needed to check if player died inside collision checking.
-
         //check if player collided with an asteroid.
         for (SpaceEntity asteroid: asteroids) {
             if (player.isColliding(asteroid)) {
