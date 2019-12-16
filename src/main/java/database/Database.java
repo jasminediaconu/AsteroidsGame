@@ -290,12 +290,9 @@ public class Database {
                 Date timestamp = resultSet.getDate("timestamp");
                 int id = resultSet.getInt("id");
 
-                Game game = new Game();
-                game.setId(id);
-                game.setScore(score);
-                game.setTimestamp(timestamp);
-                game.setAlias(alias);
-                game.setUsername(username);
+                Game game = new Game(id, username, alias, timestamp, score);
+
+                highScores.add(game);
             }
 
             statement.close();
