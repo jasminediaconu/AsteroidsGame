@@ -1,11 +1,11 @@
 package game;
 
-import javafx.geometry.Point2D;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import javafx.geometry.Point2D;
+import org.junit.jupiter.api.Test;
 
 public class PlayerTest {
     @Test
@@ -67,7 +67,7 @@ public class PlayerTest {
 
         System.out.println(player.getCurrentFireCooldown());
         System.out.println(cooldownFrames);
-        for(int i = 0; i < cooldownFrames; i++) {
+        for (int i = 0; i < cooldownFrames; i++) {
             System.out.println(player.getCurrentFireCooldown());
             player.cooldown();
         }
