@@ -110,12 +110,11 @@ public class GameScreenController {
     private void addBullet(SpaceEntity bullet, SpaceEntity firedFrom) {
         bullets.add(bullet);
         addSpaceEntity(bullet);
+
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
         bullet.setLocation(new Point2D(x, y));
-
-
     }
 
 
@@ -152,7 +151,14 @@ public class GameScreenController {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
-                    anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
+                }
+
+                if (bullet.isDead()) {
+                    anchorPane.getChildren().removeAll(bullet.getView());
+                }
+
+                if (asteroid.isDead()) {
+                    anchorPane.getChildren().removeAll(asteroid.getView());
                 }
             }
         }

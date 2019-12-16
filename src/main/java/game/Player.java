@@ -45,8 +45,6 @@ public class Player extends SpaceEntity {
      */
     public void rotateRight() {
         setRotation(getRotation() + 4);
-
-        //setRotationSpeed(getRotationSpeed() + 1.0 / 20);
     }
 
     /**
@@ -55,8 +53,6 @@ public class Player extends SpaceEntity {
      */
     public void rotateLeft() {
         setRotation(getRotation() - 4);
-
-        //setRotationSpeed(getRotationSpeed() - 1.0 / 20);
     }
 
     /**
@@ -84,13 +80,10 @@ public class Player extends SpaceEntity {
         }
     }
 
-    public void checkMove() {
-
-    }
-
     public double getCurrentFireCooldown() {
         return currentFireCooldown;
     }
+
     public double getFireCooldownTime() {
         return fireCooldown;
     }

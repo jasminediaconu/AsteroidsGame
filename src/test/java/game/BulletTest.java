@@ -1,27 +1,35 @@
 package game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import game.asteroids.Small;
+import game.hostiles.Ufo;
 import javafx.geometry.Point2D;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 class BulletTest {
-    @Test
-    void originTest() {
-        Asteroid origin = new Small();
-        Bullet b = new Bullet(origin);
 
-        assertEquals(origin,b.getOrigin());
+    private transient Player player;
+    private transient Bullet playerBullet;
+    private transient Hostile ufo;
+    private transient Bullet hostileBullet;
+
+    @BeforeEach
+    void setUp() {
+        player = new Player();
+        playerBullet = new Bullet(player);
+
+        ufo = new Ufo();
+        hostileBullet = new Bullet(ufo);
     }
 
     @Test
-    void defaultSpeedTest() {
-        Asteroid origin = new Small();
-        Bullet b = new Bullet(origin);
-
-        assertEquals(12.0,b.getDefaultSpeed());
+    void originTest() {
+        assertEquals(player, playerBullet.getOrigin());
+        assertEquals(ufo, hostileBullet.getOrigin());
     }
 
     @Test
@@ -38,27 +46,38 @@ class BulletTest {
 
     @Test
     void getUrlTest() {
-        SpaceEntity player = new Player();
-        player.setVelocity(new Point2D(10,0));
-        Bullet b = new Bullet(player);
+        assertEquals("/game/sprites/laserBlue16.png", playerBullet.getUrl());
+        assertEquals("/game/sprites/laserGreen16.png", hostileBullet.getUrl());
+    }
 
-        assertEquals("/game/sprites/laserBlue16.png",b.getUrl());
+    @Test
+    void testSpeed() {
+        assertEquals(Bullet.getDefaultSpeed(), playerBullet.getSpeed());
+        assertEquals(Bullet.getHostileSpeed(), hostileBullet.getSpeed());
+    }
 
-        SpaceEntity hostile = new Hostile() {
-            @Override
-            public void checkMove() {
+    @Test
+    void checkDistanceTest() {
+        playerBullet.checkDistance();
+        assertTrue(player.isAlive());
 
-            }
+        playerBullet.setDistanceTravelled(playerBullet.getMaxDistance() + 1);
 
-            @Override
-            public String getUrl() {
-                return null;
-            }
-        };
+        playerBullet.checkDistance();
+        assertFalse(playerBullet.isAlive());
+    }
 
-        hostile.setVelocity(new Point2D(10,0));
-        Bullet b2 = new Bullet(hostile);
+    @Test
+    void get_set_DistanceTravelledTest() {
+        assertEquals(0, playerBullet.getDistanceTravelled());
 
-        assertEquals("/game/sprites/laserGreen16.png",b2.getUrl());
+        playerBullet.setDistanceTravelled(20);
+        assertEquals(20, playerBullet.getDistanceTravelled());
+    }
+
+    @Test
+    void get_set_MaxDistanceTest() {
+        playerBullet.setMaxDistance(10.2);
+        assertEquals(10.2, playerBullet.getMaxDistance());
     }
 }

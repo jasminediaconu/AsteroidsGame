@@ -33,8 +33,6 @@ public abstract class SpaceEntity {
         //Call a checkMove function implemented by child's,
         //To check if the new position of the spaceEntity is valid.
         //Asteroids and bullets should be removed if out of screen, player should wrap around.
-        //checkMove();
-
     }
 
     /**
@@ -45,11 +43,6 @@ public abstract class SpaceEntity {
         getView().setTranslateY(getLocation().getY());
         getView().setRotate(getRotation());
     }
-
-    /**
-     * A function to check if the new position of the spaceEntity is valid.
-     */
-    public abstract void checkMove();
 
     /**
      * A function that makes use of javaFX intersects method.
