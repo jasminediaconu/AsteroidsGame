@@ -49,6 +49,15 @@ test {
     }
 }
 
+jacocoTestReport {
+    reports{
+        xml.enabled false
+        csv.enabled true
+        csv.destination file("${buildDir}/jacoco/jacoco.csv")
+        html.destination file("${buildDir}/jacoco/jacoco")
+    }
+}
+
 dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
     spotbugsPlugins 'com.h3xstream.findsecbugs:findsecbugs-plugin:1.7.1'
