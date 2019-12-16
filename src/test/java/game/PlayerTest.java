@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class PlayerTest {
-    private Player player;
+    private transient Player player;
 
     @BeforeEach
     void setUp() {

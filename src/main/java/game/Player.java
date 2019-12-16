@@ -260,7 +260,7 @@ public class Player extends SpaceEntity {
      * Setter for invulnerabilityTime, needed for testing.
      * @param ivt new value
      */
-    public void setInvulnerabilityTime (double ivt){
+    public void setInvulnerabilityTime(double ivt) {
         this.invulnerabilityTime = ivt;
     }
 
