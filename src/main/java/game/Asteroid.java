@@ -23,6 +23,12 @@ public abstract class Asteroid extends SpaceEntity {
     private transient int caseNr = -1;
 
     /**
+     * Method to retrieve the point value of an asteroid.
+     * @return int representing points awarded to player if they hit this asteroid.
+     */
+    public abstract int getScore();
+
+    /**
      * Asteroid constructor, further instantiates an asteroid subclass.
      * gives it a random location outside the screen,
      * a random rotation between -maxRotation and maxRotation,

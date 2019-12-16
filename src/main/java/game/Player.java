@@ -6,15 +6,36 @@ public class Player extends SpaceEntity {
 
     private static final int center = GameScreenController.screenSize / 2;
 
-    //amount of time (in seconds roughly) the player has to wait until it can fine again
+    //amount of time (in seconds roughly) the player has to wait until it can fire again
     private transient double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
 
     //acceleration modifier, very sensitive.
     private transient double acceleration = 0.069;
 
+    private Shield shield;
+
+    private transient double invulnerabilityTime;
+
+    private int lives;
+
+    private int totalScore;
+    /**
+     * Current score of player.
+     * Needed to keep count of the 10000 points, so the extra life can be added.
+     * Gets reset to 0 when the extra life has been added.
+     */
+    private int currentScore;
+
+    /**
+     * Constructor for Player.
+     * Initial values: lives = 3, totalScore = 0, currentScore = 0.
+     */
     Player() {
         setLocation(new Point2D(center, center));
+        this.lives = 3;
+        this.totalScore = 0;
+        this.currentScore = 0;
     }
 
     /**
@@ -26,7 +47,7 @@ public class Player extends SpaceEntity {
         setLocation(new Point2D(center, center));
         setRotation(0);
         setAlive(true);
-        //TODO: make invulnerable
+        this.invulnerabilityTime = 2.0;
     }
 
     /**
@@ -60,6 +81,94 @@ public class Player extends SpaceEntity {
     }
 
     /**
+     * Adds a life to this player.
+     * Increments the lives field by one.
+     */
+    public void addLife() {
+        this.lives++;
+    }
+
+    /**
+     * Removes a life.
+     */
+    public void removeLife() {
+        if (invulnerabilityTime <= 0) {
+            this.lives--;
+            this.respawn();
+        }
+    }
+
+    /**
+     * Checks if the player has lives left.
+     * @return false is the player has 0 lives, true if they have more.
+     */
+    public boolean hasLives() {
+        if (this.lives <= 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Getter for the lives.
+     * @return how many lives the player has.
+     */
+    public int getLives() {
+        return lives;
+    }
+
+    /**
+     * Setter for the life.
+     * @param lives new value of life.
+     */
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    /**
+     * Increments the player's score by the value passed.
+     * @param value value.
+     */
+    public void incrementScore(int value) {
+        this.currentScore += value;
+        this.totalScore += value;
+    }
+
+    /**
+     * Getter for totalScore.
+     * @return total score of player.
+     */
+    public int getTotalScore() {
+        return totalScore;
+    }
+
+    /**
+     * Setter for totalScore.
+     * @param totalScore new value for totalScore.
+     */
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    /**
+     * Getter for currentScore.
+     * @return current score of the player.
+     */
+    public int getCurrentScore() {
+        return currentScore;
+    }
+
+    /**
+     * Setter of currentScore.
+     * @param currentScore new value for currentScore.
+     */
+    public void setCurrentScore(int currentScore) {
+        this.currentScore = currentScore;
+    }
+
+
+    /**
      * Function to be called when the player shoots.
      */
     public Bullet shoot() {
@@ -84,8 +193,28 @@ public class Player extends SpaceEntity {
         }
     }
 
+    /**
+     * If player if off screen, they wrap around.
+     * Else nothing happens.
+     */
     public void checkMove() {
+        double x = this.getLocation().getX();
+        double y = this.getLocation().getY();
 
+        if (x < 0 && y < 0) {
+            this.setLocation(new Point2D(GameScreenController.screenSize,
+                GameScreenController.screenSize));
+        } else if (x > GameScreenController.screenSize && y > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(0, 0));
+        } else if (x > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(0, y));
+        } else if (y > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(x, 0));
+        } else if (x < 0) {
+            this.setLocation(new Point2D(GameScreenController.screenSize, y));
+        } else if (y < 0) {
+            this.setLocation(new Point2D(x, GameScreenController.screenSize));
+        }
     }
 
     public double getCurrentFireCooldown() {
@@ -101,5 +230,44 @@ public class Player extends SpaceEntity {
      */
     public String getUrl() {
         return "/game/sprites/playerShip.png";
+    }
+
+    /**
+     * Returns the shield of the player.
+     * @return Shield
+     */
+    public Shield getShield() {
+        return this.shield;
+    }
+
+    /**
+     * Setter for the Shield.
+     * @param shield new value of Shield
+     */
+    public void setShield(Shield shield) {
+        this.shield = shield;
+    }
+
+    /**
+     * Returns seconds left of invulnerability.
+     * @return current invulnerabilityTime
+     */
+    public double getInvulnerabilityTime() {
+        return invulnerabilityTime;
+    }
+
+    /**
+     * Setter for invulnerabilityTime, needed for testing.
+     * @param ivt new value
+     */
+    public void setInvulnerabilityTime(double ivt) {
+        this.invulnerabilityTime = ivt;
+    }
+
+    /**
+     * Decreases invulnerability time by 1 frame.
+     */
+    public void updateInvulnerabilityTime() {
+        this.invulnerabilityTime -= 1d / 60d;
     }
 }

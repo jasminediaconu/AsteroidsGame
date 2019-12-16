@@ -33,7 +33,7 @@ public abstract class SpaceEntity {
         //Call a checkMove function implemented by child's,
         //To check if the new position of the spaceEntity is valid.
         //Asteroids and bullets should be removed if out of screen, player should wrap around.
-        //checkMove();
+        checkMove();
 
     }
 

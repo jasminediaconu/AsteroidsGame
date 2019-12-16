@@ -5,6 +5,11 @@ import javafx.geometry.Point2D;
 public class Bullet extends SpaceEntity {
 
     /**
+     * Boolean that represents whether bullet was shot by player or enemy ship.
+     */
+    private boolean firedByPlayer;
+
+    /**
      * Speed of bullets is relative to its origin.
      */
     private static final transient double defaultSpeed = 12.0;
@@ -19,8 +24,8 @@ public class Bullet extends SpaceEntity {
         origin = firedFrom;
 
         setVelocity(new Point2D(
-                Math.cos(Math.toRadians(firedFrom.getRotation())),
-                Math.sin(Math.toRadians(firedFrom.getRotation()))
+            Math.cos(Math.toRadians(firedFrom.getRotation())),
+            Math.sin(Math.toRadians(firedFrom.getRotation()))
         ).normalize().multiply(defaultSpeed).add(firedFrom.getVelocity()));
 
         setRotation(firedFrom.getRotation() + 90);
@@ -31,12 +36,31 @@ public class Bullet extends SpaceEntity {
     }
 
     /**
+     * Getter for firedByPlayer.
+     * @return true if bullet was fired by player, false otherwise.
+     */
+    public boolean getFiredByPlayer() {
+        return this.firedByPlayer;
+    }
+
+    /**
+     * Setter for firedByPlayer.
+     * @param shot new value for firedByPlayer.
+     */
+    public void setFiredByPlayer(boolean shot) {
+        this.firedByPlayer = shot;
+    }
+
+    
+    /**
      * Gets the origin of the bullet (the SpaceEntity that fired it).
      * @return SpaceEntity origin
      */
     public SpaceEntity getOrigin() {
         return origin;
     }
+
+    
 
     /**
      * Gets the default speed of the bullet.
