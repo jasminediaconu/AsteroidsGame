@@ -131,10 +131,6 @@ public abstract class Asteroid extends SpaceEntity {
         //TODO: kill the asteroid if it flies of the screen. (further away than the margin)
     }
 
-    public int getScore() {
-        return this.score;
-    }
-    
     public int caseTest() {
         return caseNr;
     }
