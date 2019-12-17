@@ -50,7 +50,7 @@ test {
 }
 
 jacocoTestReport {
-    reports{
+    reports {
         xml.enabled true
         csv.enabled true
         csv.destination file("${buildDir}/jacoco/jacoco.csv")

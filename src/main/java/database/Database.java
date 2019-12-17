@@ -247,16 +247,10 @@ public class Database {
                 Date timestamp = resultSet.getDate(4);
                 int score = resultSet.getInt(5);
 
-                //we expect only one row to be returned,
+                // we expect only one row to be returned,
                 // so the while loop only iterates once
-
-                game.setId(gameId);
-                game.setUsername(username);
-                game.setAlias(alias);
-                game.setTimestamp(timestamp);
-                game.setScore(score);
+                game = new Game(gameId, username, alias, timestamp, score);
             }
-
 
             statement.close();
             resultSet.close();
