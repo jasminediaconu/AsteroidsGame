@@ -2,6 +2,7 @@ package menu;
 
 import java.io.IOException;
 
+import game.GameScreenController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -158,6 +159,15 @@ public class ViewController {
         LeaderBoardScreenController leaderBoardScreenController
                 = leaderBoardScreenLoader.getController();
         leaderBoardScreenController.setMenuScreen(menuScene);
+    }
+
+    /**
+     * This method makes it possible to switch from the Pause Screen to
+     * the Menu Screen.
+     */
+    public void injectGameScreenScenes() {
+        GameScreenController gameScreenController = gameScreenLoader.getController();
+        gameScreenController.setMenuScreen(menuScene);
     }
 
     /**

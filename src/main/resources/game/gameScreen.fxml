@@ -12,6 +12,30 @@
 
 <fx:root fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" stylesheets="@../defaultStyle.css" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
+      <Pane fx:id="pauseMenu" layoutX="111.0" layoutY="151.0" prefHeight="498.0" prefWidth="578.0" style="-fx-background-color: black; -fx-opacity: 0;">
+         <children>
+            <Text id="title" fill="WHITE" layoutX="184.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pause" wrappingWidth="210.20001220703125">
+               <font>
+                  <Font name="Century Gothic" size="64.0" />
+               </font>
+            </Text>
+            <Button layoutX="140.0" layoutY="199.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="298.0" text="Continue">
+               <font>
+                  <Font name="Century Gothic" size="25.0" />
+               </font>
+            </Button>
+            <Button layoutX="140.0" layoutY="365.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="50.0" prefWidth="298.0" text="Exit">
+               <font>
+                  <Font name="Century Gothic" size="25.0" />
+               </font>
+            </Button>
+            <Button layoutX="140.0" layoutY="281.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="298.0" text="Quit">
+               <font>
+                  <Font name="Century Gothic" size="25.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
       <ImageView fitHeight="800.0" fitWidth="800.0">
          <image>
             <Image url="@../menu/images/stars.png" />
@@ -52,29 +76,5 @@
             <Image url="@sprites/playerShip.png" />
          </image>
       </ImageView>
-      <Pane fx:id="pauseMenu" layoutX="111.0" layoutY="151.0" prefHeight="498.0" prefWidth="578.0" style="-fx-background-color: black; -fx-opacity: 0;">
-         <children>
-            <Text id="title" fill="WHITE" layoutX="184.0" layoutY="106.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pause" wrappingWidth="210.20001220703125">
-               <font>
-                  <Font name="Century Gothic" size="64.0" />
-               </font>
-            </Text>
-            <Button layoutX="140.0" layoutY="199.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="298.0" text="Continue">
-               <font>
-                  <Font name="Century Gothic" size="25.0" />
-               </font>
-            </Button>
-            <Button layoutX="140.0" layoutY="365.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="50.0" prefWidth="298.0" text="Exit">
-               <font>
-                  <Font name="Century Gothic" size="25.0" />
-               </font>
-            </Button>
-            <Button layoutX="140.0" layoutY="281.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="298.0" text="Quit">
-               <font>
-                  <Font name="Century Gothic" size="25.0" />
-               </font>
-            </Button>
-         </children>
-      </Pane>
    </children>
 </fx:root>

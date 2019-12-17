@@ -37,6 +37,7 @@ public class MainScreen extends Application {
             viewController.injectRegisterScreenScenes();
             viewController.injectMenuScreenScenes();
             viewController.injectLeaderBoardScenes();
+            viewController.injectGameScreenScenes();
 
             //Database db = new Database();
             Database.createDatabase();
@@ -46,8 +47,8 @@ public class MainScreen extends Application {
 
             // Changes the cursor type of the application
             //mainScene.setCursor(Cursor.CROSSHAIR);
-            // Sets default icon of the application
 
+            // Sets default icon of the application
             stage.getIcons().add(new Image("menu/images/asteroid.png"));
         } catch (Exception e) {
             e.printStackTrace();
