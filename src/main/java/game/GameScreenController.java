@@ -22,6 +22,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import menu.MenuScreenController;
@@ -96,6 +97,8 @@ public class GameScreenController {
                 pkey = true;
             } else if (e.getCode() == KeyCode.S) {
                 skey = true;
+            } else if (e.getCode() == KeyCode.Q) {
+                gameEnd();
             }
         });
 
@@ -280,7 +283,6 @@ public class GameScreenController {
      * Method to call functions that execute behaviour of buttons.
      */
     private void checkButtons() throws IOException {
-
         if (up) {
             player.thrust();
         }
@@ -315,7 +317,7 @@ public class GameScreenController {
                 isPaused = false;
                 anchorPane.getChildren().remove(pauseScreen);
             }
-
+            pkey = false;
         }
         if (skey) {
             if (!soundEffect) {
@@ -333,8 +335,9 @@ public class GameScreenController {
      * This method will resume the game.
      */
     @FXML
-    public void resumeGame() throws IOException {
-        checkButtons();
+    public void resumeGame() {
+        Robot robot = new Robot();
+        robot.keyPress(KeyCode.P);
     }
 
     /**
@@ -359,10 +362,8 @@ public class GameScreenController {
      */
     @FXML
     public void quitGame(ActionEvent actionEvent) {
-        isPaused = false;
-
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
-        primaryStage.setScene(menuScreen);
+        Robot robot = new Robot();
+        robot.keyPress(KeyCode.Q);
     }
 
     /**
@@ -373,6 +374,8 @@ public class GameScreenController {
      * The highscore/leaderboard screen gets shown(??).
      */
     private void gameEnd() {
+        System.out.println("Game end");
+        isPaused = true;
         //TODO get alias value
         //TODO add Game to game database
     }
