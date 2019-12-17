@@ -54,16 +54,21 @@ public class Bullet extends SpaceEntity {
         Point2D newLoc = this.getLocation();
         this.distanceTravelled += oldLoc.distance(newLoc);
 
+        checkDistance();
+        checkMove();
+
         //Can't test this method unless this line is commented out,
         //updateView needs the Node which doesnt work in a test suite.
         updateView();
-        checkDistance();
     }
 
-
+    /**
+     * Checks if the Bullet move is valid.
+     * Wraps bullet around if it goes out of screen
+     */
     @Override
     public void checkMove() {
-
+        checkWrapAround();
     }
 
     /**

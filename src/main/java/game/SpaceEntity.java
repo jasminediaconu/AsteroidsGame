@@ -41,6 +41,30 @@ public abstract class SpaceEntity {
      */
     public abstract void checkMove();
 
+    /**
+     * If SpaceEntity is off screen, they wrap around.
+     * Else nothing happens.
+     */
+    public void checkWrapAround() {
+        double x = this.getLocation().getX();
+        double y = this.getLocation().getY();
+
+        if (x < 0 && y < 0) {
+            this.setLocation(new Point2D(GameScreenController.screenSize,
+                    GameScreenController.screenSize));
+        } else if (x > GameScreenController.screenSize && y > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(0, 0));
+        } else if (x > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(0, y));
+        } else if (y > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(x, 0));
+        } else if (x < 0) {
+            this.setLocation(new Point2D(GameScreenController.screenSize, y));
+        } else if (y < 0) {
+            this.setLocation(new Point2D(x, GameScreenController.screenSize));
+        }
+    }
+
 
     /**
      * helper function of move, which updates te view of the spaceEntity.

@@ -302,5 +302,4 @@ public class GameScreenController {
         //TODO get alias value
         //TODO add Game to game database
     }
-
 }
