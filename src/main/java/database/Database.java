@@ -279,9 +279,8 @@ public class Database {
     /**
      * Main method that connects to the database and creates the user and
      * games table if they are not created yet.
-     * @param args String[] args
      */
-    public static void main(String[] args) {
+    public static void createDatabase() {
         Database db = new Database(defaultURL);
         db.connect();
         String create_table_game =
