@@ -1,8 +1,7 @@
 package menu;
 
-import java.io.IOException;
-
 import game.GameScreenController;
+import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
