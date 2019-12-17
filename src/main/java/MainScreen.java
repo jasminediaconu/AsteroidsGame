@@ -1,3 +1,5 @@
+import com.sun.javafx.application.PlatformImpl;
+import com.sun.javafx.css.StyleManager;
 import database.Database;
 import game.SpaceEntity;
 import javafx.application.Application;

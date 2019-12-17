@@ -48,13 +48,14 @@ public class AuthenticationService {
             byte [] passwordAttempted = encryptPassword(salt, attemptedUser.getPassword());
             byte[] passwordActual = userFromDB.getPassword();
 
+            String pwAttempted;
+
             return Arrays.equals(passwordActual, passwordAttempted);
         } catch (NoSuchAlgorithmException
                 | InvalidKeySpecException
                 | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
         return false;
     }
 
@@ -90,16 +91,4 @@ public class AuthenticationService {
 
         return salt;
     }
-
-    /*private byte[] getEncryptedPassword(User user)
-            throws InvalidKeySpecException, NoSuchAlgorithmException {
-
-        Database db = new Database();
-        User userFromDB = db.getUserByUsername(user.getUsername());
-
-        String attemptedPw = user.getPassword();
-        byte[] salt = userFromDB.getSalt();
-
-        return encryptPassword(salt, attemptedPw);
-    }*/
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
+
 import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,6 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  * The type GameScreen ViewController.
@@ -32,10 +35,14 @@ public class GameScreenController {
 
     private transient AnchorPane anchorPane;
     private transient Scene gameScene;
-
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<SpaceEntity> ufos = new ArrayList<>();
+
+    private transient Text score;
+
+    //TODO: change text to icon
+    private transient Text playerLives;
 
     private transient Player player;
 
@@ -47,7 +54,6 @@ public class GameScreenController {
     private transient boolean fkey = false;
     private transient boolean pkey = false;
     private transient boolean skey = false;
-
 
     /**
      * GameScreenController constructor.
@@ -111,15 +117,26 @@ public class GameScreenController {
      * @return The generated parent
      */
     private Parent createContent() {
-
-        anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
-
         player = new Player();
         addSpaceEntity(player);
 
         player.getView().setScaleX(0.69);
         player.getView().setScaleY(0.69);
-
+        
+        // Set the background of the game
+        anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
+        // Add labels to the screen
+        score = new Text("Score: " + player.getCurrentScore());
+        playerLives = new Text("Lives: " + player.getLives());
+        playerLives.setX(200.0);
+        playerLives.setY(100.0);
+        playerLives.setFill(Color.WHITE);
+        score.setX(400.0);
+        score.setY(100.0);
+        score.setFill(Color.WHITE);
+        score.setStyle("-fx-background-color: white;");
+        anchorPane.getChildren().add(score);
+        anchorPane.getChildren().add(playerLives);
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long now) {
                 checkButtons();
@@ -184,6 +201,7 @@ public class GameScreenController {
 
                     if (bullet.getOrigin() == player) {
                         player.incrementScore(asteroid.getScore());
+                        score.setText("Score: " + player.getCurrentScore());
                     }
 
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
@@ -195,6 +213,7 @@ public class GameScreenController {
         for (SpaceEntity asteroid: asteroids) {
             if (player.isColliding(asteroid)) {
                 player.removeLife();
+                playerLives.setText("Lives: " + player.getLives());
             }
         }
 
@@ -294,5 +313,5 @@ public class GameScreenController {
         //TODO get alias value
         //TODO add Game to game database
     }
-
 }
+
