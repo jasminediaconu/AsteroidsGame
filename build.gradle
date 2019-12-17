@@ -47,6 +47,9 @@ test {
         includes = []
         excludes = ['**.menu.*', '**.game.GameScreenController', '**.database.*', '**.MainScreen']
     }
+
+    repositories { jcenter() }
+    dependencies { testCompile "org.mockito:mockito-core:1.+" }
 }
 
 jacocoTestReport {

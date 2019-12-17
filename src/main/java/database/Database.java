@@ -47,6 +47,7 @@ public class Database {
      */
     public Database(Connection connection){
         this.connection = connection;
+        this.url = defaultURL;
     }
 
     /**
@@ -157,7 +158,7 @@ public class Database {
 
             ResultSet resultSet = stm.executeQuery();
 
-            if (resultSet.next() == false) {
+            if (!resultSet.next()) {
                 System.out.println("no user found");
                 return null;
             }
@@ -182,33 +183,26 @@ public class Database {
      * @return true iff user removed successfully (and was present before)
      */
     public boolean removeUserByUsername(String username) {
-        boolean removed = false;
         try {
-            User toRemove;
-
-            // check if there is a user with the provided username
-            if (getUserByUsername(username) == null) {
-                return false;
-            }
-
             PreparedStatement stm = connection.prepareStatement("delete from user where username = ?");
 
             stm.setString(1, username);
-            stm.executeUpdate();
-
-            // check if user is not present in the db anymore
-            if (getUserByUsername(username) == null) {
-                removed = true;
-            }
+            int rowsAffected = stm.executeUpdate();
 
             stm.close();
+
+            if (rowsAffected == 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
 
         } catch (SQLException e) {
             System.out.println("error: connection couldn't be established,"
                     + " item wasn't removed");
             return false;
         }
-        return removed;
     }
 
 
