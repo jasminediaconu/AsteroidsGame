@@ -5,12 +5,19 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javafx.geometry.Point2D;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class PlayerTest {
+    private transient Player player;
+
+    @BeforeEach
+    void setUp() {
+        player = new Player();
+    }
+
     @Test
     void respawnTest() {
-        Player player = new Player();
         player.setLocation(new Point2D(100,100));
         assertTrue(player.isAlive());
         assertEquals(new Point2D(100,100), player.getLocation());
@@ -28,7 +35,6 @@ public class PlayerTest {
 
     @Test
     void thrust() {
-        Player player = new Player();
         Point2D velocity = new Point2D(10,0);
         player.setVelocity(velocity);
 
@@ -42,7 +48,6 @@ public class PlayerTest {
 
     @Test
     void rotationTest() {
-        Player player = new Player();
         assertEquals(0,player.getRotation());
 
         player.rotateRight();
@@ -55,7 +60,6 @@ public class PlayerTest {
 
     @Test
     void fireTest() {
-        Player player = new Player();
         Bullet bullet = player.shoot();
 
         assertTrue(bullet.getOrigin() instanceof Player);
@@ -74,4 +78,107 @@ public class PlayerTest {
 
         assertTrue(player.canFire());
     }
+
+    @Test
+    void lifeTest() {
+        assertEquals(3, player.getLives());
+        assertTrue(player.hasLives());
+
+        player.removeLife();
+        assertEquals(2, player.getLives());
+
+        player.setInvulnerabilityTime(0);
+
+        player.removeLife();
+
+        player.setInvulnerabilityTime(0);
+
+        player.removeLife();
+        assertEquals(0, player.getLives());
+        assertFalse(player.hasLives());
+
+        player.addLife();
+        assertEquals(1, player.getLives());
+        assertTrue(player.hasLives());
+
+        player.setLives(10);
+        assertEquals(10, player.getLives());
+    }
+
+    @Test
+    void scoreTest() {
+        assertEquals(player.getCurrentScore(), player.getTotalScore());
+
+        player.incrementScore(15);
+        assertEquals(15, player.getCurrentScore());
+
+        player.incrementScore(10000);
+        assertEquals(10015, player.getTotalScore());
+
+        player.setTotalScore(10);
+        assertEquals(10, player.getTotalScore());
+
+        player.setCurrentScore(10);
+        assertEquals(10, player.getCurrentScore());
+    }
+
+    @Test
+    void wrapAroundTest() {
+        player.setLocation(new Point2D(-1, -1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), GameScreenController.screenSize);
+        assertEquals(player.getLocation().getY(), GameScreenController.screenSize);
+
+        player.setLocation(new Point2D(GameScreenController.screenSize + 1,
+            GameScreenController.screenSize + 2));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), 0);
+        assertEquals(player.getLocation().getY(), 0);
+
+        player.setLocation(new Point2D(GameScreenController.screenSize + 1, 1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), 0);
+        assertEquals(player.getLocation().getY(), 1);
+
+        player.setLocation(new Point2D(1, GameScreenController.screenSize + 1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), 1);
+        assertEquals(player.getLocation().getY(), 0);
+
+        player.setLocation(new Point2D(-1, 1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), GameScreenController.screenSize);
+        assertEquals(player.getLocation().getY(), 1);
+
+        player.setLocation(new Point2D(1, -1));
+        player.checkMove();
+        assertEquals(player.getLocation().getX(), 1);
+        assertEquals(player.getLocation().getY(), GameScreenController.screenSize);
+    }
+
+    @Test
+    void setGetShield() {
+        Shield testShield = new Shield();
+        player.setShield(testShield);
+
+        assertEquals(testShield, player.getShield());
+    }
+
+    @Test
+    void setGetInvulnerabilityTime() {
+        player.setInvulnerabilityTime(1.0);
+
+        assertEquals(1.0, player.getInvulnerabilityTime());
+    }
+
+    @Test
+    void updateInvulnerabilityTime() {
+        player.setInvulnerabilityTime(1.0);
+        player.updateInvulnerabilityTime();
+        double expected = 1.0 - 1d / 60d;
+        assertEquals(expected, player.getInvulnerabilityTime());
+    }
+
+
+
 }

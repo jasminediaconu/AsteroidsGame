@@ -6,6 +6,11 @@ import javafx.geometry.Point2D;
 public class Bullet extends SpaceEntity {
 
     /**
+     * Boolean that represents whether bullet was shot by player or enemy ship.
+     */
+    private boolean firedByPlayer;
+
+    /**
      * Speed of bullets is relative to its origin.
      */
     private static final transient double defaultSpeed = 12.0;
@@ -55,6 +60,12 @@ public class Bullet extends SpaceEntity {
         checkDistance();
     }
 
+
+    @Override
+    public void checkMove() {
+
+    }
+
     /**
      * Checks if the bullet has covered the max distance.
      * If the bullet has travelled more than this distance it is removed.
@@ -74,12 +85,31 @@ public class Bullet extends SpaceEntity {
     }
 
     /**
+     * Getter for firedByPlayer.
+     * @return true if bullet was fired by player, false otherwise.
+     */
+    public boolean getFiredByPlayer() {
+        return this.firedByPlayer;
+    }
+
+    /**
+     * Setter for firedByPlayer.
+     * @param shot new value for firedByPlayer.
+     */
+    public void setFiredByPlayer(boolean shot) {
+        this.firedByPlayer = shot;
+    }
+
+    
+    /**
      * Gets the origin of the bullet (the SpaceEntity that fired it).
      * @return SpaceEntity origin
      */
     public SpaceEntity getOrigin() {
         return origin;
     }
+
+    
 
     /**
      * Gets the speed of the bullet.
