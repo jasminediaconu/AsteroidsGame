@@ -37,7 +37,6 @@ public class MainScreen extends Application {
             viewController.injectRegisterScreenScenes();
             viewController.injectMenuScreenScenes();
             viewController.injectLeaderBoardScenes();
-            viewController.injectGameScreenScenes();
 
             //Database db = new Database();
             Database.createDatabase();

@@ -21,11 +21,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
+
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import menu.MenuScreenController;
 
 /**
  * The type GameScreen ViewController.
@@ -49,8 +47,7 @@ public class GameScreenController {
     private transient AnchorPane anchorPane;
     @FXML private transient Pane pauseScreen;
 
-    private transient URL url;
-    private transient String path = "/game/fxml/pauseScreenLoader.fxml";
+    private transient URL pauseScreenFile;
     private transient Scene gameScene;
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
@@ -60,7 +57,6 @@ public class GameScreenController {
 
     //TODO: change text to icon
     private transient Text playerLives;
-
     private transient Player player;
 
     private transient boolean up = false;
@@ -75,7 +71,7 @@ public class GameScreenController {
     /**
      * GameScreenController constructor.
      */
-    public GameScreenController() {
+    public GameScreenController() throws IOException {
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
@@ -143,17 +139,21 @@ public class GameScreenController {
         player.getView().setScaleY(0.69);
         
         // Set the background of the game
-        anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
+        anchorPane.getStylesheets().add(new File("src/main/resources/defaultStyle.css")
+                .toURI().toString());
+
         // Add labels to the screen
         score = new Text("Score: " + player.getCurrentScore());
         playerLives = new Text("Lives: " + player.getLives());
-        playerLives.setX(200.0);
+
+        playerLives.setStyle("-fx-font-size: 28px;");
+        playerLives.setX(100.0);
         playerLives.setY(100.0);
-        playerLives.setFill(Color.WHITE);
+
+        score.setStyle("-fx-font-size: 28px;");
         score.setX(400.0);
         score.setY(100.0);
-        score.setFill(Color.WHITE);
-        score.setStyle("-fx-background-color: white;");
+
         anchorPane.getChildren().add(score);
         anchorPane.getChildren().add(playerLives);
         AnimationTimer timer = new AnimationTimer() {
@@ -305,19 +305,7 @@ public class GameScreenController {
             player.getShield().activateShield();
         }
         if (pkey) {
-            if (!isPaused) {
-                isPaused = true;
-                //TODO go to Pause menu
-                url = new File("src/main/resources/game/fxml/pauseScreen.fxml").toURI().toURL();
-                pauseScreen =  FXMLLoader.load(url);
-                pauseScreen.setTranslateX(100.0);
-                pauseScreen.setTranslateY(100.0);
-                anchorPane.getChildren().add(pauseScreen);
-            } else {
-                isPaused = false;
-                anchorPane.getChildren().remove(pauseScreen);
-            }
-            pkey = false;
+            checkPause();
         }
         if (skey) {
             if (!soundEffect) {
@@ -327,6 +315,25 @@ public class GameScreenController {
                 soundEffect = false;
                 //TODO turn off sound
             }
+        }
+    }
+
+    /**
+     * Method that checks if the Pause Menu is showing on the screen or not.
+     * @throws IOException type
+     */
+    public void checkPause() throws IOException {
+        if (!isPaused) {
+            isPaused = true;
+            pauseScreenFile = new File("src/main/resources/game/fxml/pauseScreen.fxml")
+                    .toURI().toURL();
+            pauseScreen =  FXMLLoader.load(pauseScreenFile);
+            pauseScreen.setTranslateX(100.0);
+            pauseScreen.setTranslateY(100.0);
+            anchorPane.getChildren().add(pauseScreen);
+        } else {
+            isPaused = false;
+            anchorPane.getChildren().remove(pauseScreen);
         }
     }
 

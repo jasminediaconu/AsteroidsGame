@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 /**
  * The type LoginScreen ViewController.
  */
@@ -63,7 +65,7 @@ public class MenuScreenController {
      * It returns the Game Screen scene.
      * @param actionEvent type ActionEvent
      */
-    public void openGameScreen(ActionEvent actionEvent) {
+    public void openGameScreen(ActionEvent actionEvent) throws IOException {
         GameScreenController gameScreenController = new GameScreenController();
         Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(gameScreenController.getGameScene());

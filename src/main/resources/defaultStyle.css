@@ -4,6 +4,10 @@
      -fx-font-family: 'Russo One';
  }
 
+AnchorPane {
+    -fx-background-image: url("/menu/images/stars.png");
+}
+
 Button {
     -fx-font-size: 25px;
     -fx-text-fill: white;
@@ -19,3 +23,7 @@ TextField, PasswordField {
 }
 
 Pane { -fx-content-display: none;}
+
+Text {
+    -fx-fill: white;
+}

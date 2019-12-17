@@ -161,15 +161,6 @@ public class ViewController {
     }
 
     /**
-     * This method makes it possible to switch from the Pause Screen to
-     * the Menu Screen.
-     */
-    public void injectGameScreenScenes() {
-        GameScreenController gameScreenController = gameScreenLoader.getController();
-        gameScreenController.setMenuScreen(menuScene);
-    }
-
-    /**
      * When the screen is changed this function will be called to update the screen.
      */
     public void update() {
