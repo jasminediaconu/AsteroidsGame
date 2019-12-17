@@ -33,16 +33,13 @@ public class GameScreenController {
     private static final double asteroidSpawnChance = 0.03;
     private static final double hostileSpawnChance = 0.0001;
 
-    private String defaultStyle = "";
-    private transient int score = 0;
-
     private transient AnchorPane anchorPane;
     private transient Scene gameScene;
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<SpaceEntity> ufos = new ArrayList<>();
 
-    private transient Text points;
+    private transient Text score;
 
     //TODO: change text to icon
     private transient Text playerLives;
@@ -125,21 +122,20 @@ public class GameScreenController {
 
         player.getView().setScaleX(0.69);
         player.getView().setScaleY(0.69);
-        //gameScene.getStylesheets().add(getClass().getResource("defaultStyle.css").toExternalForm());
-        //gameScene.getStylesheets().add(defaultStyle);
+        
         // Set the background of the game
         anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
         // Add labels to the screen
-        points = new Text("Score: " + score);
+        score = new Text("Score: " + player.getCurrentScore());
         playerLives = new Text("Lives: " + player.getLives());
         playerLives.setX(200.0);
         playerLives.setY(100.0);
         playerLives.setFill(Color.WHITE);
-        points.setX(400.0);
-        points.setY(100.0);
-        points.setFill(Color.WHITE);
-        points.setStyle("-fx-background-color: white;");
-        anchorPane.getChildren().add(points);
+        score.setX(400.0);
+        score.setY(100.0);
+        score.setFill(Color.WHITE);
+        score.setStyle("-fx-background-color: white;");
+        anchorPane.getChildren().add(score);
         anchorPane.getChildren().add(playerLives);
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long now) {
@@ -205,8 +201,7 @@ public class GameScreenController {
 
                     if (bullet.getOrigin() == player) {
                         player.incrementScore(asteroid.getScore());
-                        points.setText("Score: " + score);
-                        System.out.println(score);
+                        score.setText("Score: " + player.getCurrentScore());
                     }
 
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
