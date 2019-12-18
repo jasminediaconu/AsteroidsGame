@@ -1,6 +1,7 @@
 package game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -90,5 +91,16 @@ class GameTest {
 
         game.setScore(201);
         assertEquals(201, game.getScore());
+    }
+
+    @Test
+    void testHash() {
+        int hash = game.hashCode();
+        int hash2 = new Game(id, username, alias, date, score).hashCode();
+
+        assertEquals(hash, hash2);
+
+        game.setScore(120);
+        assertNotEquals(hash2, game.hashCode());
     }
 }

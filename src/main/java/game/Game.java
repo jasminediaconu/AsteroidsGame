@@ -40,6 +40,15 @@ public class Game {
     }
 
     /**
+     * Standard IntelliJ generated hashCode.
+     * @return int hash
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUsername(), getAlias(), getTimestamp(), getScore());
+    }
+
+    /**
      * Alias of the user playing.
      */
     private String alias;
