@@ -14,6 +14,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -109,6 +113,18 @@ public class Database {
     }
 
     /**
+     * Inserts Game object into the database.
+     * @param game object to insert
+     */
+    public void insertGame(Game game) {
+        insertGame(game.getId(),
+                game.getUsername(),
+                game.getAlias(),
+                game.getTimestamp(),
+                game.getScore());
+    }
+
+    /**
      * Inserts a record into the game table.
      *
      * @param id        id of game
@@ -121,7 +137,7 @@ public class Database {
 
         try {
             Connection conn = DriverManager.getConnection(this.getUrl());
-            PreparedStatement stm = conn.prepareStatement("insert into game values(? ? ? ? ?)");
+            PreparedStatement stm = conn.prepareStatement("insert into game values(?, ?, ?, ?, ?)");
             stm.setInt(1, id);
             stm.setString(2, username);
             stm.setString(3, alias);
@@ -133,7 +149,8 @@ public class Database {
             stm.close();
             conn.close();
         } catch (SQLException e) {
-            System.out.println("error: connection couldn't be established");
+            e.printStackTrace();
+            System.out.println("error: connection couldn't be established: " + e.getMessage());
         }
     }
 
@@ -348,7 +365,7 @@ public class Database {
         Database db = new Database(defaultURL);
         db.connect();
         String createTableGame =
-                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
+                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY KEY,"
                         + "username TEXT NOT NULL, alias TEXT NOT NULL, "
                         + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
         String createTableUser =
@@ -372,10 +389,56 @@ public class Database {
                 "src/main/resources/database/standard_data/users.txt");
 
         for (User user : userList) {
-            System.out.println(user.getUsername() + "\t\t" + user.getPasswordAsString());
             database.insertUser(user);
         }
+
+        ArrayList<Game> gamesList = makeGamesFromFile(
+                "src/main/resources/database/standard_data/games.txt");
+
         // TODO insert Game rows
+        for (Game game : gamesList) {
+            database.insertGame(game);
+        }
+    }
+
+    protected static ArrayList<Game> makeGamesFromFile(String filepath) {
+        ArrayList<Game> gamesList = new ArrayList<>();
+        Scanner sc;
+
+        try {
+            sc = new Scanner(new File(filepath)).useDelimiter(",|\\n");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return gamesList;
+        }
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+        sc.nextLine(); // ignore first line (has format of data)
+        int numberOfGames = sc.nextInt();
+        sc.nextLine();
+
+        for (int i = 0; i < numberOfGames; i++) {
+            String line = sc.nextLine();
+            String[] values = line.split(",");
+
+            String username = values[0];
+            String alias = values[1];
+            Date date = null;
+
+            try {
+                java.util.Date javaDate = format.parse(values[2]);
+                date = new Date(javaDate.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            int score = Integer.parseInt(values[3]);
+
+            gamesList.add(new Game(i + 1, username, alias, date, score));
+        }
+
+        return gamesList;
     }
 
     /**
@@ -386,12 +449,13 @@ public class Database {
     protected static ArrayList<User> makeUsersFromFile(String filepath) {
         ArrayList<User> userList = new ArrayList<>();
         File userFile = new File(filepath);
-        Scanner sc = null;
+        Scanner sc;
 
         try {
             sc = new Scanner(userFile).useDelimiter(",|\\n");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return userList;
         }
 
         AuthenticationService as = new AuthenticationService();

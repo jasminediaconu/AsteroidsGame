@@ -1,0 +1,23 @@
+username, alias, timestamp(yyyy-dd-mm hh:mm:ss), score
+15,
+jasmine,Jasmine,2019-11-14 17:47:32,1020
+jasmine,jasmine,2019-10-11 09:12:32,2010
+jasmine,123456780,2019-09-11 22:12:10,520
+timea,Timea,2019-11-11 17:43:32,1420
+timea,12,2019-02-11 23:43:54,200
+timea,timea,2019-11-11 17:34:32,5020
+nathan,Nathan,2019-12-11 17:34:32,1245
+nathan,nathan,2018-12-11 11:21:32,2010
+nathan,nathan,2019-11-11 23:34:54,1420
+marijn,Mac,2019-12-11 17:34:32,1240
+marijn,Mac,2019-12-11 03:34:32,200
+marijn,mac,2019-06-10 21:34:32,4320
+pepijn,Pepijn,2019-11-12 08:12:32,20
+pepijn,Pepijn,2019-10-12 08:12:32,1250
+pepijn,Pep,2019-12-2 08:12:32,3820
+
+
+
+
+
+

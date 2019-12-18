@@ -2,6 +2,7 @@ package database;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import game.Game;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -44,5 +45,18 @@ class DatabaseTest {
         int length = sc.nextInt();
 
         assertEquals(length, users.size());
+    }
+
+    @Test
+    void testGamesFromFile() throws FileNotFoundException {
+        String filepath = "src/main/resources/database/standard_data/games.txt";
+        ArrayList<Game> games = Database.makeGamesFromFile(filepath);
+
+        Scanner sc = new Scanner(new File(filepath)).useDelimiter(",|\\n");
+        // first int in the text file is the number of users specified in the file
+        sc.nextLine();
+        int length = sc.nextInt();
+
+        assertEquals(length, games.size());
     }
 }
