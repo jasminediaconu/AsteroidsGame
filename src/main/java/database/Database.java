@@ -1,6 +1,12 @@
 package database;
 
 import game.Game;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -11,6 +17,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
+import user.AuthenticationService;
 import user.User;
 
 @SuppressWarnings("PMD")
@@ -27,6 +35,7 @@ public class Database {
 
     /**
      * Constructor.
+     *
      * @param url String to the path where the db is stored
      */
     public Database(String url) {
@@ -44,6 +53,7 @@ public class Database {
 
     /**
      * Getter for the url.
+     *
      * @return String url
      */
     public String getUrl() {
@@ -52,6 +62,7 @@ public class Database {
 
     /**
      * Setter for the url.
+     *
      * @param url String url
      */
     public void setUrl(String url) {
@@ -77,6 +88,7 @@ public class Database {
 
     /**
      * Create a new table in the databased specified in the url.
+     *
      * @param sql statement for creating a new table
      */
     public void createNewTable(String sql) {
@@ -89,27 +101,28 @@ public class Database {
         } catch (SQLException e) {
             System.out.println("table couldn't be created");
             System.out.println("possible reasons for the error: invalid sql "
-                + "statement passed as input or connection couldn't be "
-                + "established because of"
-                + "invalid path to the database");
+                    + "statement passed as input or connection couldn't be "
+                    + "established because of"
+                    + "invalid path to the database");
             //System.out.println(e.getMessage());
         }
     }
 
     /**
      * Inserts a record into the game table.
-     * @param id  id of game
-     * @param username username of player
-     * @param alias alias of player
+     *
+     * @param id        id of game
+     * @param username  username of player
+     * @param alias     alias of player
      * @param timestamp timestamp of game
-     * @param score score of player
+     * @param score     score of player
      */
-    public void insertGame(int id, String username, String alias, Date timestamp, int score)  {
+    public void insertGame(int id, String username, String alias, Date timestamp, int score) {
 
         try {
             Connection conn = DriverManager.getConnection(this.getUrl());
             PreparedStatement stm = conn.prepareStatement("insert into game values(? ? ? ? ?)");
-            stm.setInt(1,id);
+            stm.setInt(1, id);
             stm.setString(2, username);
             stm.setString(3, alias);
             stm.setDate(4, timestamp);
@@ -126,6 +139,7 @@ public class Database {
 
     /**
      * Inserts a record into the user table.
+     *
      * @param user the User that will be added to the database
      */
     public void insertUser(User user) {
@@ -144,12 +158,15 @@ public class Database {
             statement.close();
             conn.close();
         } catch (SQLException e) {
-            System.out.println("error: connection couldn't be established");
+            System.out.println("error when inserting user, user"
+                    + "already in database or connection could not be established: "
+                    + e.getMessage());
         }
     }
 
     /**
      * Retrieves a user.User from the user table based on the username.
+     *
      * @param username username of user.User
      * @return User object created from values retrieved from database
      */
@@ -180,7 +197,7 @@ public class Database {
 
         } catch (SQLException e) {
             System.out.println("error: connection couldn't be established"
-                + "couldn't find user");
+                    + "couldn't find user");
             user = null;
         }
 
@@ -189,6 +206,7 @@ public class Database {
 
     /**
      * Removes user from the database.
+     *
      * @param username Username of the user to remove
      * @return true iff user removed successfully (and was present before)
      */
@@ -228,6 +246,7 @@ public class Database {
 
     /**
      * Retrieves a Game from the game table based on the id.
+     *
      * @param id id of Game
      */
     public Game getGameById(int id) {
@@ -265,6 +284,7 @@ public class Database {
 
     /**
      * Gets the Games with the top 5 highscores.
+     *
      * @return ArrayList containing the top 5 games.
      */
     public ArrayList<Game> getTop5Scores() {
@@ -273,7 +293,7 @@ public class Database {
             Connection conn = DriverManager.getConnection(this.getUrl());
 
             PreparedStatement statement = conn.prepareStatement("select "
-                + "* from game order by score desc limit 5");
+                    + "* from game order by score desc limit 5");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -303,27 +323,10 @@ public class Database {
     /**
      * Main method that connects to the database and creates the user and
      * games table if they are not created yet.
+     *
      * @param args String[] args
      */
     public static void main(String[] args) {
-        Database db = new Database(defaultURL);
-        db.connect();
-        //        String create_table_game =
-        //        "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY," +
-        //            "username TEXT NOT NULL, alias TEXT NOT NULL,
-        //             timestamp DATE NOT NULL, score INTEGER NOT NULL)";
-        String createTableUser =
-            "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
-            + "password BLOB NOT NULL, salt BLOB NOT NULL)";
-
-        db.createNewTable(createTableUser);
-    }
-
-    /**
-     * Main method that connects to the database and creates the user and
-     * games table if they are not created yet.
-     */
-    public static void createDatabase() {
         Database db = new Database(defaultURL);
         db.connect();
         //        String create_table_game =
@@ -335,5 +338,72 @@ public class Database {
                         + "password BLOB NOT NULL, salt BLOB NOT NULL)";
 
         db.createNewTable(createTableUser);
+    }
+
+    /**
+     * Main method that connects to the database and creates the user and
+     * games table if they are not created yet.
+     */
+    public static void createDatabase() {
+        Database db = new Database(defaultURL);
+        db.connect();
+        String createTableGame =
+                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
+                        + "username TEXT NOT NULL, alias TEXT NOT NULL, "
+                        + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
+        String createTableUser =
+                "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
+                        + "password BLOB NOT NULL, salt BLOB NOT NULL)";
+
+        db.createNewTable(createTableUser);
+        db.createNewTable(createTableGame);
+        populateDatabase();
+    }
+
+    /**
+     * Populates the database with standard data from resources/database/standard_data.
+     */
+    private static void populateDatabase() {
+        // TODO insert User rows
+        Database database = new Database(defaultURL);
+        database.connect();
+
+        ArrayList<User> userList = makeUsersFromFile(
+                "src/main/resources/database/standard_data/users.txt");
+
+        for (User user : userList) {
+            database.insertUser(user);
+        }
+        // TODO insert Game rows
+    }
+
+    /**
+     * Turns a csv file located at specified path to an ArrayList of Users.
+     * @param filepath location of csv User file
+     * @return ArrayList of Users.
+     */
+    protected static ArrayList<User> makeUsersFromFile(String filepath) {
+        ArrayList<User> userList = new ArrayList<>();
+        File userFile = new File(filepath);
+        Scanner sc = null;
+
+        try {
+            sc = new Scanner(userFile).useDelimiter(",|\\n");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        AuthenticationService as = new AuthenticationService();
+
+        while (sc.hasNextLine()) {
+            String username = sc.next();
+            String password = sc.next();
+            System.out.println(username + ", " + password);
+            User user = as.encryptUser(username, password, as.generateSalt());
+            userList.add(user);
+        }
+
+        sc.close();
+        return userList;
     }
 }

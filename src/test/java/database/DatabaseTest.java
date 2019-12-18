@@ -1,5 +1,8 @@
 package database;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.ArrayList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,15 +19,15 @@ class DatabaseTest {
 
     @Test
     void getUrl() {
-        Assertions.assertEquals("jdbc:sqlite:C:/sqlite/db/semdatabase.db", db.getUrl());
+        assertEquals("jdbc:sqlite:C:/sqlite/db/semdatabase.db", db.getUrl());
     }
 
     @Test
     void setUrl() {
-        Assertions.assertEquals("jdbc:sqlite:C:/sqlite/db/semdatabase.db", db.getUrl());
+        assertEquals("jdbc:sqlite:C:/sqlite/db/semdatabase.db", db.getUrl());
 
         db.setUrl("testurl");
 
-        Assertions.assertEquals("testurl", db.getUrl());
+        assertEquals("testurl", db.getUrl());
     }
 }
