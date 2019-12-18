@@ -1,6 +1,7 @@
-username,password,
-jasmine,jasmine,
-timea,timea,
-nathan,nathan,
-marijn,marijn,
-pepijn,pepijn,
+6,
+username,password
+jasmine,jasmine
+timea,timea
+nathan,nathan
+marijn,marijn
+pepijn,pepijn

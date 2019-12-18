@@ -372,6 +372,7 @@ public class Database {
                 "src/main/resources/database/standard_data/users.txt");
 
         for (User user : userList) {
+            System.out.println(user.getUsername() + "\t\t" + user.getPasswordAsString());
             database.insertUser(user);
         }
         // TODO insert Game rows
@@ -395,10 +396,14 @@ public class Database {
 
         AuthenticationService as = new AuthenticationService();
 
-        while (sc.hasNextLine()) {
-            String username = sc.next();
-            String password = sc.next();
-            System.out.println(username + ", " + password);
+        int numberOfUsers = sc.nextInt();
+        sc.nextLine();
+        for (int i = 0; i < numberOfUsers; i++) {
+            String line = sc.nextLine();
+            String[] credentials = line.split(",");
+            String username = credentials[0];
+            String password = credentials[1];
+
             User user = as.encryptUser(username, password, as.generateSalt());
             userList.add(user);
         }
