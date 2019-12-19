@@ -48,13 +48,14 @@ public class AuthenticationService {
             byte[] passwordAttempted = encryptPassword(salt, attemptedUser.getPassword());
             byte[] passwordActual = userFromDB.getPassword();
 
+            String pwAttempted;
+
             return Arrays.equals(passwordActual, passwordAttempted);
         } catch (NoSuchAlgorithmException
                 | InvalidKeySpecException
                 | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
         return false;
     }
 
@@ -96,7 +97,7 @@ public class AuthenticationService {
         }
         return new byte[0];
     }
-
+    
     /**
      * Takes a user without a salt and with a non-encrypted password and
      * encrypts the password using a randomly generated salt.

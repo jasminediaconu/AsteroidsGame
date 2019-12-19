@@ -14,6 +14,7 @@ public class Small extends Asteroid {
 
     public Small() {
         super(maxVelocity, maxRotation);
+        this.score = 200;
     }
 
     /**

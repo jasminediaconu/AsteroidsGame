@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css?family=Russo+One&display=swap');
+
+* {
+     -fx-font-family: 'Russo One';
+ }
+
+AnchorPane {
+    -fx-background-image: url("/menu/images/stars.png");
+}
+
+Button {
+    -fx-font-size: 25px;
+    -fx-text-fill: white;
+    -fx-background-color: #5fdae6;
+}
+
+Button:hover {
+    -fx-background-color: #00b0e6;
+}
+
+TextField, PasswordField {
+    -fx-font-size: 18px;
+}
+
+Pane { -fx-content-display: none;}
+
+Text {
+    -fx-fill: white;
+}

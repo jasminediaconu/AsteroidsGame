@@ -1,26 +1,45 @@
 package game;
 
+import database.Database;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
+
+import javafx.scene.robot.Robot;
+import javafx.scene.text.Text;
 
 /**
  * The type GameScreen ViewController.
  */
 public class GameScreenController {
 
+    private Scene menuScreen;
+
     public static final int screenSize = 800;
 
     public transient boolean isPaused = false;
+
+    public transient boolean isStopped = false;
 
     public transient boolean soundEffect = false;
 
@@ -31,12 +50,18 @@ public class GameScreenController {
     private static final double hostileSpawnChance = 0.0001;
 
     private transient AnchorPane anchorPane;
-    private transient Scene gameScene;
+    @FXML private transient Pane pauseScreen;
 
+    private transient URL pauseScreenFile;
+    private transient Scene gameScene;
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<SpaceEntity> ufos = new ArrayList<>();
 
+    private transient Text score;
+
+    //TODO: change text to icon
+    private transient Text playerLives;
     private transient Player player;
 
     private transient boolean up = false;
@@ -48,11 +73,10 @@ public class GameScreenController {
     private transient boolean pkey = false;
     private transient boolean skey = false;
 
-
     /**
      * GameScreenController constructor.
      */
-    public GameScreenController() {
+    public GameScreenController() throws IOException {
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
@@ -74,6 +98,8 @@ public class GameScreenController {
                 pkey = true;
             } else if (e.getCode() == KeyCode.S) {
                 skey = true;
+            } else if (e.getCode() == KeyCode.Q) {
+                gameEnd();
             }
         });
 
@@ -111,18 +137,37 @@ public class GameScreenController {
      * @return The generated parent
      */
     private Parent createContent() {
-
-        anchorPane.setStyle("-fx-background-image: url('/menu/images/stars.png')");
-
         player = new Player();
         addSpaceEntity(player);
 
         player.getView().setScaleX(0.69);
         player.getView().setScaleY(0.69);
+        
+        // Set the background of the game
+        anchorPane.getStylesheets().add(new File("src/main/resources/defaultStyle.css")
+                .toURI().toString());
 
+        // Add labels to the screen
+        score = new Text("Score: " + player.getCurrentScore());
+        playerLives = new Text("Lives: " + player.getLives());
+
+        playerLives.setStyle("-fx-font-size: 28px;");
+        playerLives.setX(100.0);
+        playerLives.setY(100.0);
+
+        score.setStyle("-fx-font-size: 28px;");
+        score.setX(400.0);
+        score.setY(100.0);
+
+        anchorPane.getChildren().add(score);
+        anchorPane.getChildren().add(playerLives);
         AnimationTimer timer = new AnimationTimer() {
             public void handle(long now) {
-                checkButtons();
+                try {
+                    checkButtons();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 if (!isPaused) {
                     onUpdate();
                 }
@@ -141,7 +186,6 @@ public class GameScreenController {
     private void addBullet(Bullet bullet, SpaceEntity firedFrom) {
         bullets.add(bullet);
         addSpaceEntity(bullet);
-
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
@@ -174,6 +218,9 @@ public class GameScreenController {
      */
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void onUpdate() {
+        if (isStopped) {
+            return;
+        }
 
         //checkButtons();
 
@@ -182,27 +229,30 @@ public class GameScreenController {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
+
+                    if (bullet.getOrigin() == player) {
+                        player.incrementScore(asteroid.getScore());
+                        score.setText("Score: " + player.getCurrentScore());
+                    }
                 }
 
                 if (bullet.isDead()) {
                     anchorPane.getChildren().removeAll(bullet.getView());
+                    bullets.remove(bullet);
                 }
 
                 if (asteroid.isDead()) {
                     anchorPane.getChildren().removeAll(asteroid.getView());
-                }
-
-                if (bullet.getOrigin() == player) {
-                    player.incrementScore(asteroid.getScore());
+                    asteroids.remove(asteroid);
                 }
             }
         }
-
 
         //check if player collided with an asteroid.
         for (SpaceEntity asteroid: asteroids) {
             if (player.isColliding(asteroid)) {
                 player.removeLife();
+                playerLives.setText("Lives: " + player.getLives());
             }
         }
 
@@ -219,9 +269,6 @@ public class GameScreenController {
                 player.removeLife();
             }
         }
-
-        bullets.removeIf(SpaceEntity::isDead);
-        asteroids.removeIf(SpaceEntity::isDead);
 
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
@@ -248,8 +295,7 @@ public class GameScreenController {
     /**
      * Method to call functions that execute behaviour of buttons.
      */
-    private void checkButtons() {
-
+    private void checkButtons() throws IOException {
         if (up) {
             player.thrust();
         }
@@ -272,13 +318,7 @@ public class GameScreenController {
             player.getShield().activateShield();
         }
         if (pkey) {
-            if (!isPaused) {
-                isPaused = true;
-                //TODO go to Pause menu
-            } else {
-                isPaused = false;
-            }
-
+            checkPause();
         }
         if (skey) {
             if (!soundEffect) {
@@ -292,6 +332,61 @@ public class GameScreenController {
     }
 
     /**
+     * Method that checks if the Pause Menu is showing on the screen or not.
+     * @throws IOException type
+     */
+    public void checkPause() throws IOException {
+        if (!isPaused) {
+            isPaused = true;
+            pauseScreenFile = new File("src/main/resources/game/fxml/pauseScreen.fxml")
+                    .toURI().toURL();
+            pauseScreen =  FXMLLoader.load(pauseScreenFile);
+            pauseScreen.setTranslateX(100.0);
+            pauseScreen.setTranslateY(100.0);
+            anchorPane.getChildren().add(pauseScreen);
+        } else {
+            isPaused = false;
+            anchorPane.getChildren().remove(pauseScreen);
+        }
+    }
+
+    /**
+     * Method triggered by the pause menu when clicking on the 'Continue' button.
+     * This method will resume the game.
+     */
+    @FXML
+    public void resumeGame() {
+        Robot robot = new Robot();
+        robot.keyPress(KeyCode.P);
+    }
+
+    /**
+     * Getter for Menu Screen scene.
+     * @return menuScreen
+     */
+    public Scene getMenuScreen() {
+        return menuScreen;
+    }
+
+    /**
+     * Setter for Main Screen Scene.
+     * @param scene type Scene
+     */
+    public void setMenuScreen(Scene scene) {
+        menuScreen = scene;
+    }
+
+    /**
+     * Method triggered by the pause menu when clicking on the 'Quit' button.
+     * This method will end the game and return to the MenuScreen.
+     */
+    @FXML
+    public void quitGame(ActionEvent actionEvent) {
+        Robot robot = new Robot();
+        robot.keyPress(KeyCode.Q);
+    }
+
+    /**
      * This method gets called when the player died.
      * Or when the game ends for whatever different reason.
      * Player is prompted to type in an alias.
@@ -299,7 +394,20 @@ public class GameScreenController {
      * The highscore/leaderboard screen gets shown(??).
      */
     private void gameEnd() {
+        System.out.println("Game end");
+        isPaused = true;
+        isStopped = true;
         //TODO get alias value
         //TODO add Game to game database
+
+        Game game  = new Game(120,
+                "username",
+                "standardAlias",
+                new Date(Calendar.getInstance().getTime().getTime()),
+                player.getTotalScore());
+
+        Database d = new Database();
+        d.insertGame(game);
     }
 }
+
