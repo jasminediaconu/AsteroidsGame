@@ -181,6 +181,7 @@ public class GameScreenController {
     private void addBullet(Bullet bullet, SpaceEntity firedFrom) {
         bullets.add(bullet);
         addSpaceEntity(bullet);
+
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
@@ -221,29 +222,11 @@ public class GameScreenController {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
-
-                    if (bullet.getOrigin() == player) {
-                        player.incrementScore(asteroid.getScore());
-                        score.setText("Score: " + player.getCurrentScore());
-                    }
-
-                    anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
-            }
-        }
-
-        //check if player collided with an asteroid.
-        for (SpaceEntity asteroid: asteroids) {
-            if (player.isColliding(asteroid)) {
-                player.removeLife();
-                playerLives.setText("Lives: " + player.getLives());
-            }
-        }
-
-        //check if player collided with an enemy bullet.
-        for (Bullet bullet: bullets) {
-            if (bullet.getOrigin() != player && player.isColliding(bullet)) {
-                player.removeLife();
+                if (bullet.getOrigin() == player) {
+                    player.incrementScore(asteroid.getScore());
+                    score.setText("Score: " + player.getCurrentScore());
+                }
             }
         }
 

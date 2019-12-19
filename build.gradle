@@ -47,10 +47,13 @@ test {
         includes = []
         excludes = ['**.menu.*', '**.game.GameScreenController', '**.database.*', '**.MainScreen']
     }
+
+    repositories { jcenter() }
+    dependencies { testCompile "org.mockito:mockito-core:1.+" }
 }
 
 jacocoTestReport {
-    reports{
+    reports {
         xml.enabled true
         csv.enabled true
         csv.destination file("${buildDir}/jacoco/jacoco.csv")

@@ -66,8 +66,6 @@ public class Player extends SpaceEntity {
      */
     public void rotateRight() {
         setRotation(getRotation() + 4);
-
-        //setRotationSpeed(getRotationSpeed() + 1.0 / 20);
     }
 
     /**
@@ -76,8 +74,6 @@ public class Player extends SpaceEntity {
      */
     public void rotateLeft() {
         setRotation(getRotation() - 4);
-
-        //setRotationSpeed(getRotationSpeed() - 1.0 / 20);
     }
 
     /**
@@ -198,23 +194,7 @@ public class Player extends SpaceEntity {
      * Else nothing happens.
      */
     public void checkMove() {
-        double x = this.getLocation().getX();
-        double y = this.getLocation().getY();
-
-        if (x < 0 && y < 0) {
-            this.setLocation(new Point2D(GameScreenController.screenSize,
-                GameScreenController.screenSize));
-        } else if (x > GameScreenController.screenSize && y > GameScreenController.screenSize) {
-            this.setLocation(new Point2D(0, 0));
-        } else if (x > GameScreenController.screenSize) {
-            this.setLocation(new Point2D(0, y));
-        } else if (y > GameScreenController.screenSize) {
-            this.setLocation(new Point2D(x, 0));
-        } else if (x < 0) {
-            this.setLocation(new Point2D(GameScreenController.screenSize, y));
-        } else if (y < 0) {
-            this.setLocation(new Point2D(x, GameScreenController.screenSize));
-        }
+        checkWrapAround();
     }
 
     public double getCurrentFireCooldown() {
