@@ -211,9 +211,9 @@ public class GameScreenController {
 
     private void updateLives(boolean addLife) {
         if (addLife) {
-            player.removeLife();
-        } else {
             player.addLife();
+        } else {
+            player.removeLife();
         }
         playerLives.setText("Lives: " + player.getLives());
     }
@@ -239,6 +239,9 @@ public class GameScreenController {
 
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
+                if (!bullet.checkDistance()) {
+                    anchorPane.getChildren().remove(bullet.getView());
+                }
             }
         }
         //check if player collided with an asteroid.
@@ -252,6 +255,9 @@ public class GameScreenController {
         for (Bullet bullet: bullets) {
             if (bullet.getOrigin() != player && player.isColliding(bullet)) {
                 updateLives(false);
+            }
+            if (!bullet.checkDistance()) {
+                anchorPane.getChildren().remove(bullet.getView());
             }
         }
 
