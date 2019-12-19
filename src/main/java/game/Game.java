@@ -1,6 +1,7 @@
 package game;
 
 import java.sql.Date;
+import java.util.Objects;
 
 /**
  * Class that represents a play.
@@ -14,6 +15,39 @@ public class Game {
      * Username of the user playing.
      */
     private String username;
+
+    /**
+     * Equals method for Game object.
+     * @param o Object other
+     * @return true iff all fields are equal
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Game game = (Game) o;
+        return getId() == game.getId()
+                && getScore() == game.getScore()
+                && Objects.equals(getUsername(), game.getUsername())
+                && Objects.equals(getAlias(), game.getAlias())
+                && Objects.equals(getTimestamp(), game.getTimestamp());
+    }
+
+    /**
+     * Standard IntelliJ generated hashCode.
+     * @return int hash
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getUsername(), getAlias(), getTimestamp(), getScore());
+    }
+
     /**
      * Alias of the user playing.
      */
