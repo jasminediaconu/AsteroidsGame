@@ -209,6 +209,15 @@ public class GameScreenController {
         anchorPane.getChildren().add(object.getView());
     }
 
+    private void updateLives(boolean addLife) {
+        if (addLife) {
+            player.removeLife();
+        } else {
+            player.addLife();
+        }
+        playerLives.setText("Lives: " + player.getLives());
+    }
+
     /**
      * This method updates the objects on the screen according to the Timer.
      */
@@ -222,18 +231,34 @@ public class GameScreenController {
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
+
+                    if (bullet.getOrigin() == player) {
+                        player.incrementScore(asteroid.getScore());
+                        score.setText("Score: " + player.getCurrentScore());
+                    }
+
+                    anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
-                if (bullet.getOrigin() == player) {
-                    player.incrementScore(asteroid.getScore());
-                    score.setText("Score: " + player.getCurrentScore());
-                }
+            }
+        }
+        //check if player collided with an asteroid.
+        for (SpaceEntity asteroid: asteroids) {
+            if (player.isColliding(asteroid)) {
+                updateLives(false);
+            }
+        }
+
+        //check if player collided with an enemy bullet.
+        for (Bullet bullet: bullets) {
+            if (bullet.getOrigin() != player && player.isColliding(bullet)) {
+                updateLives(false);
             }
         }
 
         //check if player collided with an enemy ship.
         for (SpaceEntity ufo: ufos) {
             if (player.isColliding(ufo)) {
-                player.removeLife();
+                updateLives(false);
             }
         }
 
@@ -248,7 +273,7 @@ public class GameScreenController {
 
         //checks if player is qualified to get a life.
         if (player.getCurrentScore() >= scoreUp) {
-            player.addLife();
+            updateLives(true);
             player.setCurrentScore(player.getCurrentScore() - scoreUp);
         }
 
