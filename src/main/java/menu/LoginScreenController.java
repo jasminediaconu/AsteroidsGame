@@ -131,7 +131,7 @@ public class LoginScreenController {
 
     /**
      * Adds a listener to the TextField that checks if the input is valid.
-     * (contains no disallowd characters)
+     * (contains no disallowed characters)
      * @param textField TextField to add listener to
      */
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")

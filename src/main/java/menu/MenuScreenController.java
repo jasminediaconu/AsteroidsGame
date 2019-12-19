@@ -1,6 +1,7 @@
 package menu;
 
 import game.GameScreenController;
+import java.io.IOException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -63,7 +64,7 @@ public class MenuScreenController {
      * It returns the Game Screen scene.
      * @param actionEvent type ActionEvent
      */
-    public void openGameScreen(ActionEvent actionEvent) {
+    public void openGameScreen(ActionEvent actionEvent) throws IOException {
         GameScreenController gameScreenController = new GameScreenController();
         Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(gameScreenController.getGameScene());

@@ -127,8 +127,8 @@ public class Database {
      */
     public void insertGame(int id, String username, String alias, Date timestamp, int score)  {
 
-        try (PreparedStatement stm = connection.prepareStatement(
-                "insert into game values(?, ?, ?, ?, ?)")) {
+        try (PreparedStatement stm = connection
+                .prepareStatement("insert into game values(?, ?, ?, ?, ?)")) {
 
             if (id != 0) {
                 stm.setInt(1,id);
@@ -151,8 +151,9 @@ public class Database {
      * @param user the User that will be added to the database
      */
     public void insertUser(User user) {
-        try (PreparedStatement statement = connection.prepareStatement(
-                "insert into user values(?,?,?)")) {
+
+        try (PreparedStatement statement = connection
+                .prepareStatement("insert into user values(?,?,?)")) {
 
             statement.setString(1, user.getUsername());
             statement.setBytes(2, user.getPassword());
@@ -171,13 +172,33 @@ public class Database {
      * Retrieves a user.User from the user table based on the username.
      *
      * @param username username of user.User
-     * @return User object created from values retrieved from database
+     * @return User object created from
+     *                 if (bullet.isDead())
+     *                     anchorPane.getChildren().removeAll(bullet.getView());
+     *                 if (asteroid.isDead())
+     *                     anchorPane.getChildren().removeAll(asteroid.getView());
+     *             }
+     *         }
+     *
+     *
+     *         //check if player collided with an asteroid.
+     *         for (SpaceEntity asteroid: asteroids) {
+     *             if (player.isColliding(asteroid)) {
+     *                 player.removeLife();
+     *                 playerLives.setText("Lives: " + player.getLives());
+     *             }
+     *         }
+     *
+     *         //check if player collided with an enemy bullet.
+     *         for (Bullet bullet: bullets) {
+     *             if (bullet.getOrigin() != player && player.isColliding(bullet)) {
+     *                 player.removeLife();values retrieved from database
      */
     public User getUserByUsername(String username) {
         User user = new User(username);
 
-        try (PreparedStatement stm = connection.prepareStatement(
-                "select * from user where username = ?")) {
+        try (PreparedStatement stm = connection
+                .prepareStatement("select * from user where username = ?")) {
 
             stm.setString(1, username);
 
@@ -198,7 +219,6 @@ public class Database {
                     + "couldn't find user");
             user = null;
         }
-
         return user;
     }
 
@@ -210,8 +230,8 @@ public class Database {
      */
     public boolean removeUserByUsername(String username) {
         try {
-            PreparedStatement stm = connection.prepareStatement(
-                    "delete from user where username = ?");
+            PreparedStatement stm = connection
+                    .prepareStatement("delete from user where username = ?");
 
             stm.setString(1, username);
             int rowsAffected = stm.executeUpdate();
@@ -240,8 +260,8 @@ public class Database {
     public Game getGameById(int id) {
         Game game = new Game();
 
-        try (PreparedStatement statement = connection.prepareStatement(
-                "select * from game where id = ?")) {
+        try (PreparedStatement statement = connection
+                .prepareStatement("select * from game where id = ?")) {
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -258,7 +278,6 @@ public class Database {
             }
 
             resultSet.close();
-
         } catch (SQLException e) {
             System.out.print("error: connection couldn't be established\n");
         }
@@ -307,15 +326,17 @@ public class Database {
         Database db = new Database();
         db.connect();
         String createTableGame =
-                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY KEY,"
-                        + "username TEXT NOT NULL, alias TEXT NOT NULL, "
-                        + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
+                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
+                  + "username TEXT NOT NULL, alias TEXT NOT NULL,"
+                    + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
+
         String createTableUser =
                 "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
                         + "password BLOB NOT NULL, salt BLOB NOT NULL)";
 
         db.createNewTable(createTableUser);
         db.createNewTable(createTableGame);
+
         db.populateDatabase(db);
     }
 

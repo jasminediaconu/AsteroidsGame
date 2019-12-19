@@ -75,10 +75,13 @@ public class Bullet extends SpaceEntity {
      * Checks if the bullet has covered the max distance.
      * If the bullet has travelled more than this distance it is removed.
      */
-    public void checkDistance() {
+    public boolean checkDistance() {
         if (this.distanceTravelled > maxDistance) {
             this.setAlive(false);
+            return false;
         }
+
+        return true;
     }
 
     /**

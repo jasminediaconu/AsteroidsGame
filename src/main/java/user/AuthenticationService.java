@@ -48,13 +48,14 @@ public class AuthenticationService {
             byte[] passwordAttempted = encryptPassword(salt, attemptedUser.getPassword());
             byte[] passwordActual = userFromDB.getPassword();
 
+            String pwAttempted;
+
             return Arrays.equals(passwordActual, passwordAttempted);
         } catch (NoSuchAlgorithmException
                 | InvalidKeySpecException
                 | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
         return false;
     }
 

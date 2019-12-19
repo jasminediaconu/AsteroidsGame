@@ -1,3 +1,5 @@
+import com.sun.javafx.application.PlatformImpl;
+import com.sun.javafx.css.StyleManager;
 import database.Database;
 import game.SpaceEntity;
 import javafx.application.Application;
@@ -44,8 +46,8 @@ public class MainScreen extends Application {
 
             // Changes the cursor type of the application
             //mainScene.setCursor(Cursor.CROSSHAIR);
-            // Sets default icon of the application
 
+            // Sets default icon of the application
             stage.getIcons().add(new Image("menu/images/asteroid.png"));
         } catch (Exception e) {
             e.printStackTrace();
