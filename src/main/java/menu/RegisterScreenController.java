@@ -61,24 +61,14 @@ public class RegisterScreenController {
 
         if (validateInput() && password.equals(passwordCheck)) {
             if (db.getUserByUsername(usernameField.getText()) == null) {
-                User user = new User(usernameField.getText());
+                User user = authService.encryptUser(usernameField.getText(),
+                        passwordField.getText(), authService.generateSalt());
 
-                try {
-                    user.setSalt(authService.generateSalt());
-                    user.setPassword(authService.encryptPassword(user.getSalt(),
-                            password.getBytes()));
+                db.insertUser(user);
 
-                    db.insertUser(user);
-
-                    errorMessage.setStyle("-fx-opacity: 0;");
-                    errorMessage2.setStyle("-fx-opacity: 0;");
-                    openMenuScreen(actionEvent);
-                    System.out.println("user inserted into db");
-                } catch (NoSuchAlgorithmException
-                        | InvalidKeySpecException
-                        | UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
+                errorMessage.setStyle("-fx-opacity: 0;");
+                errorMessage2.setStyle("-fx-opacity: 0;");
+                openMenuScreen(actionEvent);
 
             } else {
                 // user already in database
