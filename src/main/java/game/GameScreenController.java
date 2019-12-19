@@ -302,7 +302,8 @@ public class GameScreenController {
             player.setLocation(new Point2D(x, y));
         }
         if (down) {
-            player.getShield().activateShield();
+            // TODO: Implement shield activation
+            player.getShield();
         }
         if (pkey) {
             checkPause();
