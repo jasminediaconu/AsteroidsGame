@@ -103,6 +103,8 @@ public class Database {
 
     /**
      * Inserts Game object into the database.
+     * If the game id = 0 it will be added to the database with
+     * the next available id.
      * @param game object to insert
      */
     public void insertGame(Game game) {
@@ -115,7 +117,8 @@ public class Database {
 
     /**
      * Inserts a record into the game table.
-     *
+     * If the game id = 0 it will be added to the database with
+     * the next available id.
      * @param id        id of game
      * @param username  username of player
      * @param alias     alias of player
@@ -127,7 +130,9 @@ public class Database {
         try (PreparedStatement stm = connection.prepareStatement(
                 "insert into game values(?, ?, ?, ?, ?)")) {
 
-            stm.setInt(1,id);
+            if (id != 0) {
+                stm.setInt(1,id);
+            }
             stm.setString(2, username);
             stm.setString(3, alias);
             stm.setDate(4, timestamp);
