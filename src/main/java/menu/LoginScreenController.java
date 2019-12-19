@@ -27,7 +27,6 @@ import user.User;
 public class LoginScreenController {
     private static final int minPasswordLength = 5;
     private static final int minUsernameLength = 4;
-    private transient User user;
 
     private Scene mainScreen;
 
@@ -62,7 +61,6 @@ public class LoginScreenController {
         String username = usernameField.getText();
 
         User attemptedUser = new User(username, password.getBytes());
-        this.user = attemptedUser;
         AuthenticationService authService = new AuthenticationService();
 
         validateInput();
@@ -194,7 +192,6 @@ public class LoginScreenController {
      * It returns the Menu Screen scene.
      */
     public void openMenuScreen(ActionEvent actionEvent) {
-        this.user = user;
         Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(menuScreen);
     }

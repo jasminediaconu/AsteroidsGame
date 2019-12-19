@@ -9,22 +9,21 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-
 import javafx.animation.AnimationTimer;
-
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
 
@@ -44,6 +43,8 @@ public class GameScreenController {
     public transient boolean soundEffect = false;
 
     public static int scoreUp = 10000;
+
+    private transient ActionEvent event;
 
     //TODO: make spawn chances increase with a higher score.
     private static final double asteroidSpawnChance = 0.03;
@@ -397,17 +398,44 @@ public class GameScreenController {
         System.out.println("Game end");
         isPaused = true;
         isStopped = true;
-        //TODO get alias value
-        //TODO add Game to game database
 
-        Game game  = new Game(120,
-                "username",
-                "standardAlias",
-                new Date(Calendar.getInstance().getTime().getTime()),
-                player.getTotalScore());
+        Text text = new Text("Fill in your alias");
+        text.setLayoutX(251);
+        text.setLayoutY(280);
+        text.setStyle("-fx-font-size: 28px;");
 
-        Database d = new Database();
-        d.insertGame(game);
+        TextField aliasField = new TextField();
+        aliasField.setPromptText("Alias");
+        aliasField.setLayoutX(251);
+        aliasField.setLayoutY(300);
+
+        Button button = new Button("Save score");
+        button.setLayoutX(251);
+        button.setLayoutY(350);
+        button.setOnAction((ActionEvent event) -> saveScore(aliasField.getText()));
+        anchorPane.getChildren().addAll(text, aliasField, button);
+    }
+
+
+    /**
+     * Adds a new game to the database with the score and provided alias.
+     * @param alias String alias
+     */
+    private void saveScore(String alias) {
+        if (!alias.isBlank() && !alias.isEmpty()) {
+
+            Game game = new Game(0,
+                    "username",
+                    alias,
+                    new Date(Calendar.getInstance().getTime().getTime()),
+                    player.getTotalScore());
+
+            Database d = new Database();
+            d.insertGame(game);
+
+            // TODO go to Leaderboard screen
+            Platform.exit();
+        }
     }
 }
 
