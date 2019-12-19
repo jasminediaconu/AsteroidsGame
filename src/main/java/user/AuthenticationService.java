@@ -97,7 +97,7 @@ public class AuthenticationService {
         }
         return new byte[0];
     }
-    
+
     /**
      * Takes a user without a salt and with a non-encrypted password and
      * encrypts the password using a randomly generated salt.

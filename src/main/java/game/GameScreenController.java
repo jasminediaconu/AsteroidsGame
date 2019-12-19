@@ -214,6 +214,15 @@ public class GameScreenController {
         anchorPane.getChildren().add(object.getView());
     }
 
+    private void updateLives(boolean addLife) {
+        if (addLife) {
+            player.addLife();
+        } else {
+            player.removeLife();
+        }
+        playerLives.setText("Lives: " + player.getLives());
+    }
+
     /**
      * This method updates the objects on the screen according to the Timer.
      */
@@ -235,41 +244,40 @@ public class GameScreenController {
                         player.incrementScore(asteroid.getScore());
                         score.setText("Score: " + player.getCurrentScore());
                     }
-                }
 
-                if (bullet.isDead()) {
-                    anchorPane.getChildren().removeAll(bullet.getView());
-                    bullets.remove(bullet);
+                    anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
-
-                if (asteroid.isDead()) {
-                    anchorPane.getChildren().removeAll(asteroid.getView());
-                    asteroids.remove(asteroid);
+                if (!bullet.checkDistance()) {
+                    anchorPane.getChildren().remove(bullet.getView());
                 }
             }
         }
-
         //check if player collided with an asteroid.
         for (SpaceEntity asteroid: asteroids) {
             if (player.isColliding(asteroid)) {
-                player.removeLife();
-                playerLives.setText("Lives: " + player.getLives());
+                updateLives(false);
             }
         }
 
         //check if player collided with an enemy bullet.
         for (Bullet bullet: bullets) {
             if (bullet.getOrigin() != player && player.isColliding(bullet)) {
-                player.removeLife();
+                updateLives(false);
+            }
+            if (!bullet.checkDistance()) {
+                anchorPane.getChildren().remove(bullet.getView());
             }
         }
 
         //check if player collided with an enemy ship.
         for (SpaceEntity ufo: ufos) {
             if (player.isColliding(ufo)) {
-                player.removeLife();
+                updateLives(false);
             }
         }
+
+        bullets.removeIf(SpaceEntity::isDead);
+        asteroids.removeIf(SpaceEntity::isDead);
 
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
@@ -279,7 +287,7 @@ public class GameScreenController {
 
         //checks if player is qualified to get a life.
         if (player.getCurrentScore() >= scoreUp) {
-            player.addLife();
+            updateLives(true);
             player.setCurrentScore(player.getCurrentScore() - scoreUp);
         }
 
@@ -292,6 +300,7 @@ public class GameScreenController {
             addAsteroid(Asteroid.spawnAsteroid());
         }
     }
+
 
     /**
      * Method to call functions that execute behaviour of buttons.
@@ -316,7 +325,8 @@ public class GameScreenController {
             player.setLocation(new Point2D(x, y));
         }
         if (down) {
-            player.getShield().activateShield();
+            // TODO: Implement shield activation
+            player.getShield();
         }
         if (pkey) {
             checkPause();
