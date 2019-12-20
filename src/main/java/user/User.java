@@ -1,6 +1,10 @@
 package user;
 
 import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class User {
     /**
@@ -95,8 +99,13 @@ public class User {
      * Getter for the password.
      * @return password String
      */
-    public String getPasswordAsString() throws UnsupportedEncodingException {
-        return new String(password, "UTF-8");
+    public String getPasswordAsString() {
+        try {
+            return new String(password, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     /**

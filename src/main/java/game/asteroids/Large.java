@@ -15,10 +15,18 @@ public class Large extends Asteroid {
 
     private static final int maxRotation = 2;
     private static final int maxVelocity = 2;
-    public static final int score = 100;
 
     public Large() {
         super(maxVelocity, maxRotation);
+        this.score = 100;
+    }
+
+    /**
+     *{@inheritDoc}
+     */
+    @Override
+    public int getScore() {
+        return 20;
     }
 
     /**

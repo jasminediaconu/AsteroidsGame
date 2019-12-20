@@ -7,10 +7,10 @@ import javafx.scene.image.ImageView;
 
 public abstract class SpaceEntity {
 
-    //javaFX node
+    // JavaFX node
     protected transient Node view;
 
-    //spaceEntity Data.
+    // spaceEntity Data.
     private Point2D location = new Point2D(0, 0);
     private Point2D velocity = new Point2D(0, 0);
     private double rotation = 0;
@@ -21,6 +21,7 @@ public abstract class SpaceEntity {
      * function that updates the location and rotation of the spaceEntity,
      * to be called every frame.
      */
+    @Generated(message = "")
     public void move() {
         setLocation(getLocation().add(getVelocity()));
         setRotation(getRotation() + getRotationSpeed());
@@ -33,9 +34,38 @@ public abstract class SpaceEntity {
         //Call a checkMove function implemented by child's,
         //To check if the new position of the spaceEntity is valid.
         //Asteroids and bullets should be removed if out of screen, player should wrap around.
-        //checkMove();
-
+        checkMove();
     }
+
+    /**
+     * A function to check if the new position of the spaceEntity is valid.
+     */
+    public abstract void checkMove();
+
+    /**
+     * If SpaceEntity is off screen, they wrap around.
+     * Else nothing happens.
+     */
+    public void checkWrapAround() {
+        double x = this.getLocation().getX();
+        double y = this.getLocation().getY();
+
+        if (x < 0 && y < 0) {
+            this.setLocation(new Point2D(GameScreenController.screenSize,
+                    GameScreenController.screenSize));
+        } else if (x > GameScreenController.screenSize && y > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(0, 0));
+        } else if (x > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(0, y));
+        } else if (y > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(x, 0));
+        } else if (x < 0) {
+            this.setLocation(new Point2D(GameScreenController.screenSize, y));
+        } else if (y < 0) {
+            this.setLocation(new Point2D(x, GameScreenController.screenSize));
+        }
+    }
+
 
     /**
      * helper function of move, which updates te view of the spaceEntity.
@@ -45,11 +75,6 @@ public abstract class SpaceEntity {
         getView().setTranslateY(getLocation().getY());
         getView().setRotate(getRotation());
     }
-
-    /**
-     * A function to check if the new position of the spaceEntity is valid.
-     */
-    public abstract void checkMove();
 
     /**
      * A function that makes use of javaFX intersects method.
@@ -126,4 +151,10 @@ public abstract class SpaceEntity {
         this.alive = alive;
     }
 
+    /**
+     * Excludes the method move() from test coverage as it cannot be tested.
+     */
+    @interface Generated {
+        String message();
+    }
 }

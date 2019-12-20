@@ -4,11 +4,14 @@
      -fx-font-family: 'Russo One';
  }
 
+AnchorPane {
+    -fx-background-image: url("/menu/images/stars.png");
+}
+
 Button {
     -fx-font-size: 25px;
     -fx-text-fill: white;
     -fx-background-color: #5fdae6;
-/*    -fx-effect: dropshadow(three-pass-box, purple, 10, 0, 0, 0);*/
 }
 
 Button:hover {
@@ -20,3 +23,7 @@ TextField, PasswordField {
 }
 
 Pane { -fx-content-display: none;}
+
+Text {
+    -fx-fill: white;
+}

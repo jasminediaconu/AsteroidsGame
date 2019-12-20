@@ -18,9 +18,16 @@ public abstract class Asteroid extends SpaceEntity {
 
     private static final double minVelocity = 1;
     private static final int spawnMargin = 100;
+    public static int score = 0;
     private static final int courseMargin = 5;
 
     private transient int caseNr = -1;
+
+    /**
+     * Method to retrieve the point value of an asteroid.
+     * @return int representing points awarded to player if they hit this asteroid.
+     */
+    public abstract int getScore();
 
     /**
      * Asteroid constructor, further instantiates an asteroid subclass.
