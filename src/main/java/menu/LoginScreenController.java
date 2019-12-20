@@ -197,7 +197,6 @@ public class LoginScreenController {
     }
 
     private void fillScene(Parent root) {
-
         Stage stage = (Stage) menuScreen.getWindow();
         Scene scene = new Scene(root);
         stage.setScene(scene);

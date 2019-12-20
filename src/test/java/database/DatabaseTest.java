@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
@@ -353,7 +354,7 @@ class DatabaseTest {
         Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
         db.insertGame(0, "", "", null, 0);
 
-        assertEquals("error: connection couldn't be established\n", outContent.toString());
+        assertTrue(outContent.toString().contains("error: connection couldn't be established\n"));
     }
 
     @Test
