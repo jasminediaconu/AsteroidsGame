@@ -13,6 +13,7 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Scanner;
 import user.AuthenticationService;
 import user.User;
@@ -133,6 +134,7 @@ public class Database {
             if (id != 0) {
                 stm.setInt(1,id);
             }
+
             stm.setString(2, username);
             stm.setString(3, alias);
             stm.setDate(4, timestamp);
@@ -140,6 +142,7 @@ public class Database {
 
             stm.execute();
         } catch (SQLException e) {
+            System.out.print("Message: ");
             System.out.print("error: connection couldn't be established\n");
         }
     }

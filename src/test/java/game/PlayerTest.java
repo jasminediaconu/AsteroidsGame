@@ -158,7 +158,7 @@ public class PlayerTest {
 
     @Test
     void setGetShield() {
-        Shield testShield = new Shield();
+        Shield testShield = new Shield(player);
         player.setShield(testShield);
 
         assertEquals(testShield, player.getShield());

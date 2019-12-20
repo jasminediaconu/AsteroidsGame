@@ -81,7 +81,7 @@ jacocoTestCoverageVerification {
             enabled = true
             element = 'CLASS'
             includes = ['**']
-            excludes = ['**menu*', '**game.GameScreenController*', '**MainScreen']
+            excludes = ['**menu*', '**game.GameScreenController*', '**MainScreen', "**Shield*"]
             limit {
                 minimum = 0.5
             }

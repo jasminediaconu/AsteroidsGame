@@ -1,27 +1,29 @@
 package game;
 
+import database.Database;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-
 import javafx.animation.AnimationTimer;
-
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
 
@@ -36,9 +38,13 @@ public class GameScreenController {
 
     public transient boolean isPaused = false;
 
+    public transient boolean isStopped = false;
+
     public transient boolean soundEffect = false;
 
     public static int scoreUp = 10000;
+
+    private transient ActionEvent event;
 
     //TODO: make spawn chances increase with a higher score.
     private static final double asteroidSpawnChance = 0.03;
@@ -52,6 +58,8 @@ public class GameScreenController {
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<SpaceEntity> ufos = new ArrayList<>();
+
+    private transient Robot robot = new Robot();
 
     private transient Text score;
 
@@ -68,10 +76,12 @@ public class GameScreenController {
     private transient boolean pkey = false;
     private transient boolean skey = false;
 
+    private transient boolean isShieldActive = false;
+
     /**
      * GameScreenController constructor.
      */
-    public GameScreenController() throws IOException {
+    public GameScreenController() {
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
@@ -88,11 +98,12 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.F) {
                 fkey = true;
             } else if (e.getCode() == KeyCode.DOWN) {
+                System.out.println("Invulnerability time: " + player.getInvulnerabilityTime());
                 down = true;
-            } else if (e.getCode() == KeyCode.P) {
-                pkey = true;
+            } else if ((e.getCode() == KeyCode.P)) {
+                pkey = pkey ? false : true;
             } else if (e.getCode() == KeyCode.S) {
-                skey = true;
+                skey = skey ? false : true;
             } else if (e.getCode() == KeyCode.Q) {
                 gameEnd();
             }
@@ -111,8 +122,6 @@ public class GameScreenController {
                 fkey = false;
             } else if (e.getCode() == KeyCode.DOWN) {
                 down = false;
-            } else if (e.getCode() == KeyCode.P) {
-                pkey = false;
             } else if (e.getCode() == KeyCode.S) {
                 skey = false;
             }
@@ -138,7 +147,7 @@ public class GameScreenController {
         player.getView().setScaleX(0.69);
         player.getView().setScaleY(0.69);
         
-        // Set the background of the game
+        // Attach the default style sheet to the Game Screen
         anchorPane.getStylesheets().add(new File("src/main/resources/defaultStyle.css")
                 .toURI().toString());
 
@@ -181,13 +190,24 @@ public class GameScreenController {
     private void addBullet(Bullet bullet, SpaceEntity firedFrom) {
         bullets.add(bullet);
         addSpaceEntity(bullet);
-
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
 
         bullet.setLocation(new Point2D(x, y));
     }
 
+    /**
+     * This method adds a Shield object when the user press the DOWN key.
+     * @param shield Shield type
+     */
+    private void addShield(Shield shield) {
+        addSpaceEntity(shield);
+
+        double x = player.getView().getTranslateX() + player.getView().getTranslateY();
+        double y = player.getView().getTranslateY() + player.getView().getTranslateY();
+
+        shield.setLocation(new Point2D(x, y));
+    }
 
     /**
      * This method adds an Asteroid object on the screen.
@@ -214,6 +234,8 @@ public class GameScreenController {
             player.addLife();
         } else {
             player.removeLife();
+            isShieldActive = true;
+            addShield(player.activateShield());
         }
         playerLives.setText("Lives: " + player.getLives());
     }
@@ -223,6 +245,9 @@ public class GameScreenController {
      */
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void onUpdate() {
+        if (isStopped) {
+            return;
+        }
 
         //checkButtons();
 
@@ -246,14 +271,14 @@ public class GameScreenController {
         }
         //check if player collided with an asteroid.
         for (SpaceEntity asteroid: asteroids) {
-            if (player.isColliding(asteroid)) {
+            if (player.isColliding(asteroid) && !isShieldActive) {
                 updateLives(false);
             }
         }
 
         //check if player collided with an enemy bullet.
         for (Bullet bullet: bullets) {
-            if (bullet.getOrigin() != player && player.isColliding(bullet)) {
+            if (bullet.getOrigin() != player && player.isColliding(bullet) && !isShieldActive) {
                 updateLives(false);
             }
             if (!bullet.checkDistance()) {
@@ -263,7 +288,7 @@ public class GameScreenController {
 
         //check if player collided with an enemy ship.
         for (SpaceEntity ufo: ufos) {
-            if (player.isColliding(ufo)) {
+            if (player.isColliding(ufo) && !isShieldActive) {
                 updateLives(false);
             }
         }
@@ -283,6 +308,16 @@ public class GameScreenController {
             player.setCurrentScore(player.getCurrentScore() - scoreUp);
         }
 
+        if (isShieldActive) {
+            player.getShield().move();
+            System.out.println("The shield is moving with the player.");
+        }
+
+        // checks if the shield time has expired
+        if ((player.getInvulnerabilityTime() <= 0) && isShieldActive) {
+            anchorPane.getChildren().remove(player.getShield().getView());
+            isShieldActive = false;
+        }
         //checks if player died.
         if (!player.hasLives()) {
             gameEnd();
@@ -292,6 +327,7 @@ public class GameScreenController {
             addAsteroid(Asteroid.spawnAsteroid());
         }
     }
+
 
     /**
      * Method to call functions that execute behaviour of buttons.
@@ -315,9 +351,9 @@ public class GameScreenController {
             int y = rand.nextInt(screenSize);
             player.setLocation(new Point2D(x, y));
         }
-        if (down) {
-            // TODO: Implement shield activation
-            player.getShield();
+        if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
+            addShield(player.activateShield());
+            isShieldActive = true;
         }
         if (pkey) {
             checkPause();
@@ -358,7 +394,6 @@ public class GameScreenController {
      */
     @FXML
     public void resumeGame() {
-        Robot robot = new Robot();
         robot.keyPress(KeyCode.P);
     }
 
@@ -384,7 +419,6 @@ public class GameScreenController {
      */
     @FXML
     public void quitGame(ActionEvent actionEvent) {
-        Robot robot = new Robot();
         robot.keyPress(KeyCode.Q);
     }
 
@@ -398,8 +432,45 @@ public class GameScreenController {
     private void gameEnd() {
         System.out.println("Game end");
         isPaused = true;
-        //TODO get alias value
-        //TODO add Game to game database
+        isStopped = true;
+
+        Text text = new Text("Fill in your alias");
+        text.setLayoutX(251);
+        text.setLayoutY(280);
+        text.setStyle("-fx-font-size: 28px;");
+
+        TextField aliasField = new TextField();
+        aliasField.setPromptText("Alias");
+        aliasField.setLayoutX(251);
+        aliasField.setLayoutY(300);
+
+        Button button = new Button("Save score");
+        button.setLayoutX(251);
+        button.setLayoutY(350);
+        button.setOnAction((ActionEvent event) -> saveScore(aliasField.getText()));
+        anchorPane.getChildren().addAll(text, aliasField, button);
+    }
+
+
+    /**
+     * Adds a new game to the database with the score and provided alias.
+     * @param alias String alias
+     */
+    private void saveScore(String alias) {
+        if (!alias.isBlank() && !alias.isEmpty()) {
+
+            Game game = new Game(0,
+                    "username",
+                    alias,
+                    new Date(Calendar.getInstance().getTime().getTime()),
+                    player.getTotalScore());
+
+            Database d = new Database();
+            d.insertGame(game);
+
+            // TODO go to Leaderboard screen
+            Platform.exit();
+        }
     }
 }
 

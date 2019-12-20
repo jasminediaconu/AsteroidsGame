@@ -1,6 +1,5 @@
 package game;
 
-import game.hostiles.Ufo;
 import javafx.geometry.Point2D;
 
 public class Bullet extends SpaceEntity {
@@ -116,8 +115,6 @@ public class Bullet extends SpaceEntity {
     public SpaceEntity getOrigin() {
         return origin;
     }
-
-    
 
     /**
      * Gets the speed of the bullet.
