@@ -55,7 +55,7 @@ PMD:
 
 jacoco:
   stage: test
-  coverage: '/\d+.\d+ \% covered/'
+  coverage: '/^Coverage *: (\d+\.\d+%)/'
   script:
     - gradle check
     - gradle test jacocoTestReport

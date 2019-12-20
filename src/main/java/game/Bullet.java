@@ -2,6 +2,8 @@ package game;
 
 import javafx.geometry.Point2D;
 
+import javax.annotation.processing.Generated;
+
 public class Bullet extends SpaceEntity {
 
     /**
@@ -45,6 +47,7 @@ public class Bullet extends SpaceEntity {
      * Overrides SpaceEntity move method to also keep track of distance travelled.
      */
     @Override
+    @Generated(message = "")
     public void move() {
         Point2D oldLoc = this.getLocation();
         setLocation(oldLoc.add(getVelocity()));

@@ -2,6 +2,8 @@ package game;
 
 import javafx.geometry.Point2D;
 
+import javax.annotation.processing.Generated;
+
 public class Shield extends SpaceEntity {
 
     private transient SpaceEntity origin;
@@ -18,6 +20,7 @@ public class Shield extends SpaceEntity {
      * Overrides SpaceEntity move to take player's movements.
      */
     @Override
+    @Generated(message = "")
     public void move() {
         setLocation(origin.getLocation());
         setRotation(origin.getRotation());
