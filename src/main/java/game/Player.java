@@ -47,7 +47,7 @@ public class Player extends SpaceEntity {
         setLocation(new Point2D(center, center));
         setRotation(0);
         setAlive(true);
-        this.invulnerabilityTime = 2.0;
+        this.invulnerabilityTime = 5.0;
     }
 
     /**
@@ -226,6 +226,15 @@ public class Player extends SpaceEntity {
      */
     public void setShield(Shield shield) {
         this.shield = shield;
+    }
+
+    /**
+     * This method creates a new Shield for the player.
+     * @return shield.
+     */
+    public Shield activateShield() {
+        shield = new Shield(this);
+        return shield;
     }
 
     /**

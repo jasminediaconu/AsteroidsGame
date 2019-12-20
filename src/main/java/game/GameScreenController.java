@@ -13,7 +13,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -53,6 +52,8 @@ public class GameScreenController {
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<SpaceEntity> ufos = new ArrayList<>();
 
+    private transient Robot robot = new Robot();
+
     private transient Text score;
 
     //TODO: change text to icon
@@ -68,10 +69,12 @@ public class GameScreenController {
     private transient boolean pkey = false;
     private transient boolean skey = false;
 
+    private transient boolean isShieldActive = false;
+
     /**
      * GameScreenController constructor.
      */
-    public GameScreenController() throws IOException {
+    public GameScreenController() {
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
@@ -88,11 +91,12 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.F) {
                 fkey = true;
             } else if (e.getCode() == KeyCode.DOWN) {
+                System.out.println("Invulnerability time: " + player.getInvulnerabilityTime());
                 down = true;
-            } else if (e.getCode() == KeyCode.P) {
-                pkey = true;
+            } else if ((e.getCode() == KeyCode.P)) {
+                pkey = pkey ? false : true;
             } else if (e.getCode() == KeyCode.S) {
-                skey = true;
+                skey = skey ? false : true;
             } else if (e.getCode() == KeyCode.Q) {
                 gameEnd();
             }
@@ -111,8 +115,6 @@ public class GameScreenController {
                 fkey = false;
             } else if (e.getCode() == KeyCode.DOWN) {
                 down = false;
-            } else if (e.getCode() == KeyCode.P) {
-                pkey = false;
             } else if (e.getCode() == KeyCode.S) {
                 skey = false;
             }
@@ -138,7 +140,7 @@ public class GameScreenController {
         player.getView().setScaleX(0.69);
         player.getView().setScaleY(0.69);
         
-        // Set the background of the game
+        // Attach the default style sheet to the Game Screen
         anchorPane.getStylesheets().add(new File("src/main/resources/defaultStyle.css")
                 .toURI().toString());
 
@@ -188,6 +190,18 @@ public class GameScreenController {
         bullet.setLocation(new Point2D(x, y));
     }
 
+    /**
+     * This method adds a Shield object when the user press the DOWN key.
+     * @param shield Shield type
+     */
+    private void addShield(Shield shield) {
+        addSpaceEntity(shield);
+
+        double x = player.getView().getTranslateX() + player.getView().getTranslateY();
+        double y = player.getView().getTranslateY() + player.getView().getTranslateY();
+
+        shield.setLocation(new Point2D(x, y));
+    }
 
     /**
      * This method adds an Asteroid object on the screen.
@@ -214,6 +228,8 @@ public class GameScreenController {
             player.addLife();
         } else {
             player.removeLife();
+            isShieldActive = true;
+            addShield(player.activateShield());
         }
         playerLives.setText("Lives: " + player.getLives());
     }
@@ -246,14 +262,14 @@ public class GameScreenController {
         }
         //check if player collided with an asteroid.
         for (SpaceEntity asteroid: asteroids) {
-            if (player.isColliding(asteroid)) {
+            if (player.isColliding(asteroid) && !isShieldActive) {
                 updateLives(false);
             }
         }
 
         //check if player collided with an enemy bullet.
         for (Bullet bullet: bullets) {
-            if (bullet.getOrigin() != player && player.isColliding(bullet)) {
+            if (bullet.getOrigin() != player && player.isColliding(bullet) && !isShieldActive) {
                 updateLives(false);
             }
             if (!bullet.checkDistance()) {
@@ -263,7 +279,7 @@ public class GameScreenController {
 
         //check if player collided with an enemy ship.
         for (SpaceEntity ufo: ufos) {
-            if (player.isColliding(ufo)) {
+            if (player.isColliding(ufo) && !isShieldActive) {
                 updateLives(false);
             }
         }
@@ -283,6 +299,16 @@ public class GameScreenController {
             player.setCurrentScore(player.getCurrentScore() - scoreUp);
         }
 
+        if (isShieldActive) {
+            player.getShield().move();
+            System.out.println("The shield is moving with the player.");
+        }
+
+        // checks if the shield time has expired
+        if ((player.getInvulnerabilityTime() <= 0) && isShieldActive) {
+            anchorPane.getChildren().remove(player.getShield().getView());
+            isShieldActive = false;
+        }
         //checks if player died.
         if (!player.hasLives()) {
             gameEnd();
@@ -315,9 +341,9 @@ public class GameScreenController {
             int y = rand.nextInt(screenSize);
             player.setLocation(new Point2D(x, y));
         }
-        if (down) {
-            // TODO: Implement shield activation
-            player.getShield();
+        if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
+            addShield(player.activateShield());
+            isShieldActive = true;
         }
         if (pkey) {
             checkPause();
@@ -358,7 +384,6 @@ public class GameScreenController {
      */
     @FXML
     public void resumeGame() {
-        Robot robot = new Robot();
         robot.keyPress(KeyCode.P);
     }
 
@@ -384,7 +409,6 @@ public class GameScreenController {
      */
     @FXML
     public void quitGame(ActionEvent actionEvent) {
-        Robot robot = new Robot();
         robot.keyPress(KeyCode.Q);
     }
 
