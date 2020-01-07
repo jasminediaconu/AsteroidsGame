@@ -109,7 +109,8 @@ public class LeaderBoardScreenController implements Initializable {
         dateColumn.setCellValueFactory(
                 new PropertyValueFactory<LeaderBoardGame, Date>("timestamp"));
 
-        ObservableList<LeaderBoardGame> topScores = FXCollections.observableArrayList(leaderBoardGame);
+        ObservableList<LeaderBoardGame> topScores =
+                FXCollections.observableArrayList(leaderBoardGame);
         leaderBoard.setItems(topScores);
     }
 }
