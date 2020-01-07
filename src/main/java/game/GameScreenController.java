@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+
+import game.asteroids.Small;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -26,6 +28,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
+import game.asteroids.Large;
+import game.asteroids.Medium;
 
 /**
  * The type GameScreen ViewController.
@@ -262,6 +266,9 @@ public class GameScreenController {
 
         //checkButtons();
 
+        ArrayList<Medium> newMeds = new ArrayList<>();
+        ArrayList<Small> newSmalls = new ArrayList<>();
+
         for (Bullet bullet : bullets) {
             for (Asteroid asteroid : asteroids) {
                 if (bullet.isColliding(asteroid)) {
@@ -273,6 +280,23 @@ public class GameScreenController {
                         score.setText("Score: " + player.getCurrentScore());
                     }
 
+                    if (asteroid instanceof Large) {
+                        Medium md1 = new Medium();
+                        Medium md2 = new Medium();
+                        md1.setLocation(asteroid.getLocation());
+                        md2.setLocation(asteroid.getLocation());
+                        newMeds.add(md1);
+                        newMeds.add(md2);
+                    }
+                    else if (asteroid instanceof Medium) {
+                        Small sm1 = new Small();
+                        Small sm2 = new Small();
+                        sm1.setLocation(asteroid.getLocation());
+                        sm2.setLocation(asteroid.getLocation());
+                        newSmalls.add(sm1);
+                        newSmalls.add(sm2);
+                    }
+
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
                 if (!bullet.checkDistance()) {
@@ -280,6 +304,14 @@ public class GameScreenController {
                 }
             }
         }
+
+        for (Small sm : newSmalls) {
+            addAsteroid(sm);
+        }
+        for (Medium md : newMeds) {
+            addAsteroid(md);
+        }
+
         //check if player collided with an asteroid.
         for (SpaceEntity asteroid: asteroids) {
             if (player.isColliding(asteroid) && !isShieldActive) {
