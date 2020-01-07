@@ -287,7 +287,7 @@ class DatabaseTest {
     @Test
     void getTop5ScoresTest() {
         String statement = "select "
-                + "* from game order by score desc limit 5";
+                + "* from game order by score desc limit 12";
 
         try {
             PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
