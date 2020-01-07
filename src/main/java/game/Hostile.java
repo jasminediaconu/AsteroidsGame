@@ -1,10 +1,7 @@
 package game;
 
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import game.hostiles.LargeUfo;
-import game.hostiles.SmallUfo;
+import game.hostiles.Juggernaut;
+import game.hostiles.Sniper;
 
 public abstract class Hostile extends SpaceEntity {
 
@@ -20,10 +17,10 @@ public abstract class Hostile extends SpaceEntity {
         double rand = Math.random();
 
         if(rand < 0.5) {
-            return new SmallUfo();
+            return new Sniper();
         }
         else {
-            return new LargeUfo();
+            return new Juggernaut();
         }
 
     }

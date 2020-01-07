@@ -309,6 +309,7 @@ public class GameScreenController {
 
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
+        hostiles.forEach(SpaceEntity::move);
         player.move();
         player.cooldown();
         player.updateInvulnerabilityTime();
@@ -365,6 +366,7 @@ public class GameScreenController {
             int x = rand.nextInt(screenSize);
             int y = rand.nextInt(screenSize);
             player.setLocation(new Point2D(x, y));
+            Hostile.spawnHostile();
         }
         if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
             addShield(player.activateShield());
