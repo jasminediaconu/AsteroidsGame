@@ -3,6 +3,10 @@ package menu;
 import database.Database;
 import game.Game;
 import game.LeaderBoardGame;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,11 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.ResourceBundle;
-
 /**
  * The type LoginScreen ViewController.
  */
@@ -28,7 +27,7 @@ public class LeaderBoardScreenController implements Initializable {
 
     private Scene menuScreen;
 
-    private ArrayList<Game> top5Scores;
+    private ArrayList<Game> topScores;
 
     private transient ArrayList<LeaderBoardGame> leaderBoardGame = new ArrayList<>();
 
@@ -44,6 +43,7 @@ public class LeaderBoardScreenController implements Initializable {
     private transient ArrayList<Game> top5;
 
     private transient Database db = new Database();
+
     /**
      * Getter for Menu Screen scene.
      * @return menuScreen
@@ -82,20 +82,34 @@ public class LeaderBoardScreenController implements Initializable {
         stage.close();
     }
 
+    /**
+     * Initializes leaderboard screen.
+     * @param url URL
+     * @param resourceBundle ResourceBundle
+     */
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public void initialize(URL url, ResourceBundle resourceBundle) {
         top5 = db.getTop5Scores();
-        for(Game game : top5) {
-            if(game.getAlias() == null)
-                leaderBoardGame.add(new LeaderBoardGame(game.getUsername(), game.getScore(), game.getTimestamp()));
-            else
-                leaderBoardGame.add(new LeaderBoardGame(game.getAlias(), game.getScore(), game.getTimestamp()));
+        for (Game game : top5) {
+            if (game.getAlias() == null) {
+                leaderBoardGame.add(new LeaderBoardGame(game.getUsername(),
+                        game.getScore(),
+                        game.getTimestamp()));
+            } else {
+                leaderBoardGame.add(new LeaderBoardGame(game.getAlias(),
+                        game.getScore(),
+                        game.getTimestamp()));
+            }
         }
 
-        usernameColumn.setCellValueFactory(new PropertyValueFactory<LeaderBoardGame, String>("username"));
-        scoreColumn.setCellValueFactory(new PropertyValueFactory<LeaderBoardGame, Integer>("score"));
-        dateColumn.setCellValueFactory(new PropertyValueFactory<LeaderBoardGame, Date>("date"));
-        ObservableList<LeaderBoardGame> top5Scores = FXCollections.observableArrayList(leaderBoardGame);
-        leaderBoard.setItems(top5Scores);
+        usernameColumn.setCellValueFactory(
+                new PropertyValueFactory<LeaderBoardGame, String>("username"));
+        scoreColumn.setCellValueFactory(
+                new PropertyValueFactory<LeaderBoardGame, Integer>("score"));
+        dateColumn.setCellValueFactory(
+                new PropertyValueFactory<LeaderBoardGame, Date>("timestamp"));
+
+        ObservableList<LeaderBoardGame> topScores = FXCollections.observableArrayList(leaderBoardGame);
+        leaderBoard.setItems(topScores);
     }
 }
