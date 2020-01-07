@@ -48,7 +48,7 @@ public class GameScreenController {
 
     //TODO: make spawn chances increase with a higher score.
     private static final double asteroidSpawnChance = 0.03;
-    private static final double hostileSpawnChance = 0.0005;
+    private static final double hostileSpawnChance = 0.005;
     private static final int hostileCount = 0;
 
     private transient AnchorPane anchorPane;
@@ -309,7 +309,8 @@ public class GameScreenController {
 
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
-        hostiles.forEach(SpaceEntity::move);
+        hostiles.forEach(Hostile::thrust);
+        hostiles.forEach(Hostile::move);
         player.move();
         player.cooldown();
         player.updateInvulnerabilityTime();

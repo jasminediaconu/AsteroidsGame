@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import game.hostiles.SmallUfo;
+import game.hostiles.Sniper;
 import javafx.geometry.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ class BulletTest {
         player = new Player();
         playerBullet = new Bullet(player);
 
-        ufo = new SmallUfo();
+        ufo = new Sniper();
         hostileBullet = new Bullet(ufo);
     }
 
