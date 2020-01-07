@@ -333,7 +333,7 @@ public class Database {
         Database db = new Database();
         db.connect();
         String createTableGame =
-                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
+                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY KEY,"
                   + "username TEXT NOT NULL, alias TEXT NOT NULL,"
                     + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
 

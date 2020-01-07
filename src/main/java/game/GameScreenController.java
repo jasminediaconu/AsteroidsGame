@@ -26,6 +26,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
+import menu.LoginScreenController;
 
 /**
  * The type GameScreen ViewController.
@@ -453,7 +454,8 @@ public class GameScreenController {
 
 
     /**
-     * Adds a new game to the database with the score and provided alias.
+     * Adds a new game to the database with the score and provided alias
+     * and shows the menu screen.
      * @param alias String alias
      */
     private void saveScore(String alias) {
@@ -468,7 +470,7 @@ public class GameScreenController {
             Database d = new Database();
             d.insertGame(game);
 
-            // TODO go to Leaderboard screen
+            // TODO go to menu screen
             Platform.exit();
         }
     }
