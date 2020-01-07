@@ -2,7 +2,7 @@ package game.hostiles;
 
 import game.Hostile;
 
-public class SmallUfo extends Hostile {
+public class LargeUfo extends Hostile {
 
     @Override
     public void checkMove() {

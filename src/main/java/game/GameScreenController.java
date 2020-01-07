@@ -29,12 +29,14 @@ public class GameScreenController {
     //TODO: make spawn chances increase with a higher score.
     private static final double asteroidSpawnChance = 0.03;
     private static final double hostileSpawnChance = 0.0001;
+    private static final int hostileCount = 0;
 
     private transient AnchorPane anchorPane;
     private transient Scene gameScene;
 
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
+    private transient List<Hostile> hostiles = new ArrayList<>();
     private transient List<SpaceEntity> ufos = new ArrayList<>();
 
     private transient Player player;
@@ -159,6 +161,15 @@ public class GameScreenController {
     }
 
     /**
+     * This method adds a hostile UFO object on the screen.
+     * @param hostile Hostile type
+     */
+    private void addHostile(Hostile hostile) {
+        hostiles.add(hostile);
+        addSpaceEntity(hostile);
+    }
+
+    /**
      * This method adds a generic SpaceEntity on the screen.
      * @param object SpaceEntity type
      */
@@ -242,6 +253,10 @@ public class GameScreenController {
 
         if (Math.random() < asteroidSpawnChance) {
             addAsteroid(Asteroid.spawnAsteroid());
+        }
+
+        if (Math.random() < hostileSpawnChance && hostileCount < 2) {
+            addHostile(Hostile.spawnHostile());
         }
     }
 

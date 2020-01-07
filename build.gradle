@@ -59,7 +59,8 @@ jacocoTestReport {
 
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['**/menu/*', '**/game/GameScreenController', '**/database/*', '**/MainScreen'])
+            fileTree(dir: it, exclude: ['**/menu/*', '**/game/GameScreenController*',
+                                        '**/database/*', '**/MainScreen'])
         })
     }
 }
@@ -78,9 +79,10 @@ jacocoTestCoverageVerification {
             enabled = true
             element = 'CLASS'
             includes = []
-            excludes = ['**.menu.*', '**.game.GameScreenController', '**.database.*', '**.MainScreen']
+            excludes = ['**.menu.*', '**.game.GameScreenController*', '**.database.*', '**' +
+                    '.MainScreen']
             limit {
-                minimum = 0.5
+                minimum = 1
             }
         }
     }

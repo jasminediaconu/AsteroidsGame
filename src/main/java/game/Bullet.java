@@ -1,6 +1,6 @@
 package game;
 
-import game.hostiles.Ufo;
+import game.Hostile;
 import javafx.geometry.Point2D;
 
 public class Bullet extends SpaceEntity {
