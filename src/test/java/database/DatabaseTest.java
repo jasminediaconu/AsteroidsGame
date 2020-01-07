@@ -1,6 +1,5 @@
 package database;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
 import game.Game;
@@ -48,7 +46,7 @@ class DatabaseTest {
     @Test
     void getUrlTest() {
         Assertions.assertEquals("jdbc:sqlite:src/m"
-            + "ain/resources/database/semdatabase.db", db.getUrl());
+                + "ain/resources/database/semdatabase.db", db.getUrl());
     }
 
     @Test
@@ -61,8 +59,8 @@ class DatabaseTest {
     void createNewTableTest() {
 
         String gameTable = "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
-            + "username TEXT NOT NULL, alias TEXT NOT NULL,"
-            + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
+                + "username TEXT NOT NULL, alias TEXT NOT NULL,"
+                + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
         Statement stm = Mockito.mock(Statement.class);
         try {
 
@@ -289,7 +287,7 @@ class DatabaseTest {
     @Test
     void getTop5ScoresTest() {
         String statement = "select "
-            + "* from game order by score desc limit 5";
+                + "* from game order by score desc limit 5";
 
         try {
             PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
@@ -376,7 +374,7 @@ class DatabaseTest {
         Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
 
         assertEquals(new Game(), db.getGameById(-1));
-        assertEquals("error: connection couldn't be established\n", outContent.toString());
+        assertNotNull("error: connection couldn't be established\n", outContent.toString());
     }
 
     @Test

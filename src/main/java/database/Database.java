@@ -263,8 +263,11 @@ public class Database {
     public Game getGameById(int id) {
         Game game = new Game();
 
-        try (PreparedStatement statement = connection
-                .prepareStatement("select * from game where id = ?")) {
+        try {
+            PreparedStatement statement = connection
+                    .prepareStatement("select * from game where id = ?");
+            statement.setString(1, String.valueOf(id));
+
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -283,6 +286,7 @@ public class Database {
             resultSet.close();
         } catch (SQLException e) {
             System.out.print("error: connection couldn't be established\n");
+            System.out.println(e.getMessage());
         }
 
         return game;
@@ -358,7 +362,9 @@ public class Database {
                 "src/main/resources/database/standard_data/games.txt");
 
         for (Game game : gamesList) {
-            database.insertGame(game);
+            if (database.getGameById(game.getId()).getAlias() == null) {
+                database.insertGame(game);
+            }
         }
     }
 
