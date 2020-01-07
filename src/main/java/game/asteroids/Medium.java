@@ -14,6 +14,7 @@ public class Medium extends Asteroid {
 
     public Medium() {
         super(maxVelocity, maxRotation);
+        this.score = 150;
     }
 
     /**

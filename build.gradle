@@ -45,8 +45,11 @@ test {
     jacoco {
         enabled = true
         includes = []
-        excludes = ['**.menu.*', '**.game.GameScreenController', '**.database.*', '**.MainScreen']
+        excludes = ['**.menu.*', '**.game.GameScreenController*', '**.MainScreen']
     }
+
+    repositories { jcenter() }
+    dependencies { testCompile "org.mockito:mockito-core:1.+" }
 }
 
 jacocoTestReport {
@@ -59,8 +62,7 @@ jacocoTestReport {
 
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['**/menu/*', '**/game/GameScreenController*',
-                                        '**/database/*', '**/MainScreen'])
+            fileTree(dir: it, exclude: ['**/menu/*', '**/game/GameScreenController*', '**/MainScreen'])
         })
     }
 }
@@ -78,15 +80,19 @@ jacocoTestCoverageVerification {
         rule {
             enabled = true
             element = 'CLASS'
-            includes = []
-            excludes = ['**.menu.*', '**.game.GameScreenController*', '**.database.*', '**' +
-                    '.MainScreen']
+            includes = ['**']
+            excludes = ['**menu*', '**game.GameScreenController*', '**MainScreen']
             limit {
-                minimum = 1
+                minimum = 0.5
             }
         }
     }
 }
+
+// to run coverage verification during the build (and fail when appropriate)
+check.dependsOn jacocoTestCoverageVerification
+check.dependsOn test
+check.dependsOn jacocoTestReport
 
 checkstyle {
     toolVersion "8.25"

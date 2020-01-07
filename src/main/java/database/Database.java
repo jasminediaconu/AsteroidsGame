@@ -1,6 +1,8 @@
 package database;
 
 import game.Game;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -8,9 +10,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Calendar;
+import java.util.Scanner;
+import user.AuthenticationService;
 import user.User;
 
 @SuppressWarnings("PMD")
@@ -24,15 +29,7 @@ public class Database {
     private static final String defaultURL =
             "jdbc:sqlite:src/main/resources/database/semdatabase.db";
 
-
-    /**
-     * Constructor.
-     * @param url String to the path where the db is stored
-     */
-    public Database(String url) {
-        this.url = url;
-        this.connect();
-    }
+    private Connection connection;
 
     /**
      * Constructor used when no specific database url is supplied.
@@ -43,7 +40,17 @@ public class Database {
     }
 
     /**
+     * Constructor that aids in testing.
+     * @param connection connection
+     */
+    public Database(Connection connection) {
+        this.connection = connection;
+        this.url = defaultURL;
+    }
+
+    /**
      * Getter for the url.
+     *
      * @return String url
      */
     public String getUrl() {
@@ -52,6 +59,7 @@ public class Database {
 
     /**
      * Setter for the url.
+     *
      * @param url String url
      */
     public void setUrl(String url) {
@@ -64,76 +72,91 @@ public class Database {
     public void connect() {
         try {
             // create a connection to the database
-            Connection conn = DriverManager.getConnection(this.url);
+            connection = DriverManager.getConnection(this.url);
 
             System.out.println("Connection to SQLite has been established.");
 
-            conn.close();
-
         } catch (SQLException e) {
-            System.out.println("invalid path to database");
+            System.out.print("invalid path to database\n");
         }
     }
 
     /**
      * Create a new table in the databased specified in the url.
+     *
      * @param sql statement for creating a new table
      */
     public void createNewTable(String sql) {
-
-        try (Connection conn = DriverManager.getConnection(this.getUrl());
-             Statement stmt = conn.createStatement()) {
+        try {
+            Statement stmt = connection.createStatement();
             // create a new table
             stmt.execute(sql);
             System.out.println("table created");
+
         } catch (SQLException e) {
-            System.out.println("table couldn't be created");
-            System.out.println("possible reasons for the error: invalid sql "
-                + "statement passed as input or connection couldn't be "
-                + "established because of"
-                + "invalid path to the database");
-            //System.out.println(e.getMessage());
+            System.out.print("table couldn't be created\n");
+            System.out.print("possible reasons for the error: invalid sql "
+                    + "statement passed as input or connection couldn't be "
+                    + "established because of"
+                    + "invalid path to the database\n");
         }
     }
 
     /**
+     * Inserts Game object into the database.
+     * If the game id = 0 it will be added to the database with
+     * the next available id.
+     * @param game object to insert
+     */
+    public void insertGame(Game game) {
+        insertGame(game.getId(),
+                game.getUsername(),
+                game.getAlias(),
+                game.getTimestamp(),
+                game.getScore());
+    }
+
+    /**
      * Inserts a record into the game table.
-     * @param id  id of game
-     * @param username username of player
-     * @param alias alias of player
+     * If the game id = 0 it will be added to the database with
+     * the next available id.
+     * @param id        id of game
+     * @param username  username of player
+     * @param alias     alias of player
      * @param timestamp timestamp of game
-     * @param score score of player
+     * @param score     score of player
      */
     public void insertGame(int id, String username, String alias, Date timestamp, int score)  {
 
-        try {
-            Connection conn = DriverManager.getConnection(this.getUrl());
-            PreparedStatement stm = conn.prepareStatement("insert into game values(? ? ? ? ?)");
-            stm.setInt(1,id);
+        try (PreparedStatement stm = connection
+                .prepareStatement("insert into game values(?, ?, ?, ?, ?)")) {
+
+            if (id != 0) {
+                stm.setInt(1,id);
+            }
+
             stm.setString(2, username);
             stm.setString(3, alias);
             stm.setDate(4, timestamp);
             stm.setInt(5, score);
 
             stm.execute();
-
-            stm.close();
-            conn.close();
         } catch (SQLException e) {
-            System.out.println("error: connection couldn't be established");
+            System.out.print("Message: ");
+            System.out.print("error: connection couldn't be established\n");
         }
     }
 
+
     /**
      * Inserts a record into the user table.
+     *
      * @param user the User that will be added to the database
      */
     public void insertUser(User user) {
 
-        try {
-            Connection conn = DriverManager.getConnection(this.getUrl());
-
-            PreparedStatement statement = conn.prepareStatement("insert into user values(?,?,?)");
+        try (PreparedStatement statement = connection
+                .prepareStatement("insert into user values(?,?,?)")) {
 
             statement.setString(1, user.getUsername());
             statement.setBytes(2, user.getPassword());
@@ -141,32 +164,50 @@ public class Database {
 
             statement.execute();
 
-            statement.close();
-            conn.close();
         } catch (SQLException e) {
-            System.out.println("error: connection couldn't be established");
+            System.out.println("error when inserting user, user"
+                    + "already in database or connection could not be established: "
+                    + e.getMessage());
         }
     }
 
     /**
      * Retrieves a user.User from the user table based on the username.
+     *
      * @param username username of user.User
-     * @return User object created from values retrieved from database
+     * @return User object created from
+     *                 if (bullet.isDead())
+     *                     anchorPane.getChildren().removeAll(bullet.getView());
+     *                 if (asteroid.isDead())
+     *                     anchorPane.getChildren().removeAll(asteroid.getView());
+     *             }
+     *         }
+     *
+     *
+     *         //check if player collided with an asteroid.
+     *         for (SpaceEntity asteroid: asteroids) {
+     *             if (player.isColliding(asteroid)) {
+     *                 player.removeLife();
+     *                 playerLives.setText("Lives: " + player.getLives());
+     *             }
+     *         }
+     *
+     *         //check if player collided with an enemy bullet.
+     *         for (Bullet bullet: bullets) {
+     *             if (bullet.getOrigin() != player && player.isColliding(bullet)) {
+     *                 player.removeLife();values retrieved from database
      */
     public User getUserByUsername(String username) {
         User user = new User(username);
 
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(this.getUrl());
-
-            PreparedStatement stm = conn.prepareStatement("select * from user where username = ?");
+        try (PreparedStatement stm = connection
+                .prepareStatement("select * from user where username = ?")) {
 
             stm.setString(1, username);
 
             ResultSet resultSet = stm.executeQuery();
 
-            if (resultSet.next() == false) {
+            if (!resultSet.next()) {
                 System.out.println("no user found");
                 return null;
             }
@@ -174,69 +215,59 @@ public class Database {
             user.setPassword(resultSet.getBytes(2));
             user.setSalt(resultSet.getBytes(3));
 
-            stm.close();
             resultSet.close();
-            conn.close();
 
         } catch (SQLException e) {
             System.out.println("error: connection couldn't be established"
-                + "couldn't find user");
+                    + "couldn't find user");
             user = null;
         }
-
         return user;
     }
 
     /**
      * Removes user from the database.
+     *
      * @param username Username of the user to remove
      * @return true iff user removed successfully (and was present before)
      */
     public boolean removeUserByUsername(String username) {
-        boolean removed = false;
         try {
-            Connection conn = DriverManager.getConnection(this.getUrl());
-
-            User toRemove;
-
-            // check if there is a user with the provided username
-            if (getUserByUsername(username) == null) {
-                return false;
-            }
-
-            PreparedStatement stm = conn.prepareStatement("delete from user where username = ?");
+            PreparedStatement stm = connection
+                    .prepareStatement("delete from user where username = ?");
 
             stm.setString(1, username);
-            stm.executeUpdate();
-
-            // check if user is not present in the db anymore
-            if (getUserByUsername(username) == null) {
-                removed = true;
-            }
+            int rowsAffected = stm.executeUpdate();
 
             stm.close();
-            conn.close();
+
+            if (rowsAffected == 0) {
+                return false;
+            } else {
+                return true;
+            }
 
         } catch (SQLException e) {
             System.out.println("error: connection couldn't be established,"
                     + " item wasn't removed");
             return false;
         }
-        return removed;
     }
 
 
     /**
      * Retrieves a Game from the game table based on the id.
+     *
      * @param id id of Game
      */
     public Game getGameById(int id) {
         Game game = new Game();
 
         try {
-            Connection conn = DriverManager.getConnection(this.getUrl());
+            PreparedStatement statement = connection
+                    .prepareStatement("select * from game where id = ?");
+            statement.setString(1, String.valueOf(id));
 
-            PreparedStatement statement = conn.prepareStatement("select * from game where id = ?");
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -252,12 +283,10 @@ public class Database {
                 game = new Game(gameId, username, alias, timestamp, score);
             }
 
-            statement.close();
             resultSet.close();
-            conn.close();
-
         } catch (SQLException e) {
-            System.out.println("error: connection couldn't be established");
+            System.out.print("error: connection couldn't be established\n");
+            System.out.println(e.getMessage());
         }
 
         return game;
@@ -268,12 +297,9 @@ public class Database {
      * @return ArrayList containing the top 5 games.
      */
     public ArrayList<Game> getTop5Scores() {
-        ArrayList<Game> highScores = new ArrayList<Game>();
-        try {
-            Connection conn = DriverManager.getConnection(this.getUrl());
-
-            PreparedStatement statement = conn.prepareStatement("select "
-                + "* from game order by score desc limit 5");
+        ArrayList<Game> highScores = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement("select "
+                + "* from game order by score desc limit 5")) {
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -289,51 +315,131 @@ public class Database {
                 highScores.add(game);
             }
 
-            statement.close();
             resultSet.close();
-            conn.close();
 
         } catch (SQLException e) {
-            System.out.println("error: connection couldn't be established");
+            System.out.print("error: connection couldn't be established\n");
         }
 
         return highScores;
     }
 
-    /**
-     * Main method that connects to the database and creates the user and
-     * games table if they are not created yet.
-     * @param args String[] args
-     */
-    public static void main(String[] args) {
-        Database db = new Database(defaultURL);
-        db.connect();
-        //        String create_table_game =
-        //        "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY," +
-        //            "username TEXT NOT NULL, alias TEXT NOT NULL,
-        //             timestamp DATE NOT NULL, score INTEGER NOT NULL)";
-        String createTableUser =
-            "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
-            + "password BLOB NOT NULL, salt BLOB NOT NULL)";
-
-        db.createNewTable(createTableUser);
-    }
 
     /**
      * Main method that connects to the database and creates the user and
      * games table if they are not created yet.
      */
     public static void createDatabase() {
-        Database db = new Database(defaultURL);
+        Database db = new Database();
         db.connect();
-        //        String create_table_game =
-        //        "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY," +
-        //            "username TEXT NOT NULL, alias TEXT NOT NULL,
-        //             timestamp DATE NOT NULL, score INTEGER NOT NULL)";
+        String createTableGame =
+                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
+                  + "username TEXT NOT NULL, alias TEXT NOT NULL,"
+                    + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
+
         String createTableUser =
                 "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
                         + "password BLOB NOT NULL, salt BLOB NOT NULL)";
 
         db.createNewTable(createTableUser);
+        db.createNewTable(createTableGame);
+
+        db.populateDatabase(db);
+    }
+
+    /**
+     * Populates the database with standard data from resources/database/standard_data.
+     */
+    protected void populateDatabase(Database database) {
+        ArrayList<User> userList = database.makeUsersFromFile(
+                "src/main/resources/database/standard_data/users.txt");
+
+        for (User user : userList) {
+            database.insertUser(user);
+        }
+
+        ArrayList<Game> gamesList = database.makeGamesFromFile(
+                "src/main/resources/database/standard_data/games.txt");
+
+        for (Game game : gamesList) {
+            if (database.getGameById(game.getId()).getAlias() == null) {
+                database.insertGame(game);
+            }
+        }
+    }
+
+    protected ArrayList<Game> makeGamesFromFile(String filepath) {
+        ArrayList<Game> gamesList = new ArrayList<>();
+        Scanner sc;
+
+        try {
+            sc = new Scanner(new File(filepath)).useDelimiter(",|\\n");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return gamesList;
+        }
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+        sc.nextLine(); // ignore first line (has format of data)
+        int numberOfGames = sc.nextInt();
+        sc.nextLine();
+
+        for (int i = 0; i < numberOfGames; i++) {
+            String line = sc.nextLine();
+            String[] values = line.split(",");
+
+            String username = values[0];
+            String alias = values[1];
+            Date date = null;
+
+            try {
+                java.util.Date javaDate = format.parse(values[2]);
+                date = new Date(javaDate.getTime());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            int score = Integer.parseInt(values[3]);
+
+            gamesList.add(new Game(i + 1, username, alias, date, score));
+        }
+
+        return gamesList;
+    }
+
+    /**
+     * Turns a csv file located at specified path to an ArrayList of Users.
+     * @param filepath location of csv User file
+     * @return ArrayList of Users.
+     */
+    protected ArrayList<User> makeUsersFromFile(String filepath) {
+        ArrayList<User> userList = new ArrayList<>();
+        File userFile = new File(filepath);
+        Scanner sc;
+
+        try {
+            sc = new Scanner(userFile).useDelimiter(",|\\n");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return userList;
+        }
+
+        AuthenticationService as = new AuthenticationService();
+
+        int numberOfUsers = sc.nextInt();
+        sc.nextLine();
+        for (int i = 0; i < numberOfUsers; i++) {
+            String line = sc.nextLine();
+            String[] credentials = line.split(",");
+            String username = credentials[0];
+            String password = credentials[1];
+
+            User user = as.encryptUser(username, password, as.generateSalt());
+            userList.add(user);
+        }
+
+        sc.close();
+        return userList;
     }
 }

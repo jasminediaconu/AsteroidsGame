@@ -1,5 +1,11 @@
 package user;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import database.Database;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
@@ -49,12 +55,12 @@ class AuthenticationServiceTest {
         expectedPwEncrypted = authService.encryptPassword(salt, pw);
         userFromDB.setPassword(expectedPwEncrypted);
 
-        Assertions.assertTrue(authService.authenticate(attemptedUser, userFromDB));
+        assertTrue(authService.authenticate(attemptedUser, userFromDB));
     }
 
     @Test
     void authenticateUserNotRetrievedFromDatabaseCorrect() {
-        Assertions.assertTrue(authService.authenticate(attemptedUser, userFromDB));
+        assertTrue(authService.authenticate(attemptedUser, userFromDB));
     }
 
     @Test
@@ -62,7 +68,7 @@ class AuthenticationServiceTest {
         User wrongpw = new User(username);
         wrongpw.setPassword("wrongPassword".getBytes());
 
-        Assertions.assertFalse(authService.authenticate(wrongpw, userFromDB));
+        assertFalse(authService.authenticate(wrongpw, userFromDB));
     }
 
     @Test
@@ -74,9 +80,9 @@ class AuthenticationServiceTest {
         byte[] encryptedOtherPassword = authService
                 .encryptPassword(saltBytes, "otherpassword".getBytes());
 
-        Assertions.assertArrayEquals(encrypted, expectedPwEncrypted);
-        Assertions.assertFalse(Arrays.equals(encrypted, encryptedOtherSalt));
-        Assertions.assertFalse(Arrays.equals(encrypted, encryptedOtherPassword));
+        assertArrayEquals(encrypted, expectedPwEncrypted);
+        assertFalse(Arrays.equals(encrypted, encryptedOtherSalt));
+        assertFalse(Arrays.equals(encrypted, encryptedOtherPassword));
     }
 
     @Test
@@ -87,11 +93,39 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void generateSalt() throws NoSuchAlgorithmException {
+    void generateSalt() {
         // salts should be random
         byte[] salt1 = authService.generateSalt();
         byte[] salt2 = authService.generateSalt();
 
-        Assertions.assertFalse(Arrays.equals(salt1, salt2));
+        assertFalse(Arrays.equals(salt1, salt2));
+    }
+
+    @Test
+    void encryptUser() throws NoSuchAlgorithmException,
+            UnsupportedEncodingException,
+            InvalidKeySpecException {
+        User encrypted = authService.encryptUser(username, password, saltBytes);
+
+        assertEquals("username", encrypted.getUsername());
+        assertEquals(saltBytes, encrypted.getSalt());
+        assertNotEquals(password, encrypted.getPassword());
+
+        byte[] encryptedPW = authService.encryptPassword(saltBytes, password.getBytes());
+
+        assertArrayEquals(encryptedPW, encrypted.getPassword());
+    }
+
+    @Test
+    void authenticateEncryptedUser() throws NoSuchAlgorithmException,
+            UnsupportedEncodingException,
+            InvalidKeySpecException {
+        User encrypted = authService.encryptUser(username, password, saltBytes);
+
+        User nonEncrypted = new User(username, password.getBytes());
+
+        assertArrayEquals(encrypted.getPassword(),
+                authService.encryptPassword(saltBytes, nonEncrypted.getPassword()));
+        assertTrue(authService.authenticate(nonEncrypted, encrypted));
     }
 }

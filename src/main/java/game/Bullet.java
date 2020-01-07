@@ -3,6 +3,8 @@ package game;
 import game.Hostile;
 import javafx.geometry.Point2D;
 
+import javax.annotation.processing.Generated;
+
 public class Bullet extends SpaceEntity {
 
     /**
@@ -46,6 +48,7 @@ public class Bullet extends SpaceEntity {
      * Overrides SpaceEntity move method to also keep track of distance travelled.
      */
     @Override
+    @Generated(message = "")
     public void move() {
         Point2D oldLoc = this.getLocation();
         setLocation(oldLoc.add(getVelocity()));
@@ -75,10 +78,13 @@ public class Bullet extends SpaceEntity {
      * Checks if the bullet has covered the max distance.
      * If the bullet has travelled more than this distance it is removed.
      */
-    public void checkDistance() {
+    public boolean checkDistance() {
         if (this.distanceTravelled > maxDistance) {
             this.setAlive(false);
+            return false;
         }
+
+        return true;
     }
 
     /**
@@ -113,8 +119,6 @@ public class Bullet extends SpaceEntity {
     public SpaceEntity getOrigin() {
         return origin;
     }
-
-    
 
     /**
      * Gets the speed of the bullet.

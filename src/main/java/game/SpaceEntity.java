@@ -7,10 +7,10 @@ import javafx.scene.image.ImageView;
 
 public abstract class SpaceEntity {
 
-    //javaFX node
+    // JavaFX node
     protected transient Node view;
 
-    //spaceEntity Data.
+    // spaceEntity Data.
     private Point2D location = new Point2D(0, 0);
     private Point2D velocity = new Point2D(0, 0);
     private double rotation = 0;
@@ -21,6 +21,7 @@ public abstract class SpaceEntity {
      * function that updates the location and rotation of the spaceEntity,
      * to be called every frame.
      */
+    @Generated(message = "")
     public void move() {
         setLocation(getLocation().add(getVelocity()));
         setRotation(getRotation() + getRotationSpeed());
@@ -150,4 +151,10 @@ public abstract class SpaceEntity {
         this.alive = alive;
     }
 
+    /**
+     * Excludes the method move() from test coverage as it cannot be tested.
+     */
+    @interface Generated {
+        String message();
+    }
 }
