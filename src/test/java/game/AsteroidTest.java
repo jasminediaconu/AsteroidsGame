@@ -59,6 +59,7 @@ class AsteroidTest {
             if (s instanceof Large) {
                 lgCount++;
             }
+            s.checkMove();
         }
 
         System.out.println("Instances of Small: " + smCount);
