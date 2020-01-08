@@ -26,13 +26,8 @@ public abstract class SpaceEntity {
     public final void move() {
         updateLocation();
 
-        //Can't test this method unless this line is commented out,
-        //updateView needs the Node which doesnt work in a test suite.
         updateView();
 
-        //Call a checkMove function implemented by child's,
-        //To check if the new position of the spaceEntity is valid.
-        //Asteroids and bullets should be removed if out of screen, player should wrap around.
         checkMove();
     }
 
