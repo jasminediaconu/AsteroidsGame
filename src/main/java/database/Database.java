@@ -299,7 +299,7 @@ public class Database {
     public ArrayList<Game> getTop5Scores() {
         ArrayList<Game> highScores = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement("select "
-                + "* from game order by score desc limit 5")) {
+                + "* from game order by score desc limit 12")) {
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -333,7 +333,7 @@ public class Database {
         Database db = new Database();
         db.connect();
         String createTableGame =
-                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
+                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY KEY,"
                   + "username TEXT NOT NULL, alias TEXT NOT NULL,"
                     + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
 
