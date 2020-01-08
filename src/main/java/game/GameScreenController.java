@@ -1,6 +1,9 @@
 package game;
 
 import database.Database;
+import game.asteroids.Large;
+import game.asteroids.Medium;
+import game.asteroids.Small;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -10,7 +13,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-import game.asteroids.Small;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -28,8 +30,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
-import game.asteroids.Large;
-import game.asteroids.Medium;
 
 /**
  * The type GameScreen ViewController.
@@ -287,8 +287,7 @@ public class GameScreenController {
                         md2.setLocation(asteroid.getLocation());
                         newMeds.add(md1);
                         newMeds.add(md2);
-                    }
-                    else if (asteroid instanceof Medium) {
+                    } else if (asteroid instanceof Medium) {
                         Small sm1 = new Small();
                         Small sm2 = new Small();
                         sm1.setLocation(asteroid.getLocation());
