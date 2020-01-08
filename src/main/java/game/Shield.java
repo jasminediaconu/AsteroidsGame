@@ -16,19 +16,22 @@ public class Shield extends SpaceEntity {
         origin = player;
     }
 
+
     /**
-     * Overrides SpaceEntity move to take player's movements.
+     * Updates location to the location of it's origin.
      */
     @Override
-    @Generated(message = "")
-    public void move() {
+    public void updateLocation() {
         setLocation(origin.getLocation());
         setRotation(origin.getRotation());
-        checkMove();
+    }
 
-        //Can't test this method unless this line is commented out,
-        //updateView needs the Node which doesnt work in a test suite.
-        updateView();
+    /**
+     * {@inheritDoc}
+     * Empty because move does not need to be checked.
+     */
+    @Override
+    public void checkMove() {
     }
 
     /**
@@ -39,10 +42,7 @@ public class Shield extends SpaceEntity {
         return origin;
     }
 
-    @Override
-    public void checkMove() {
 
-    }
 
     /**
      * {@inheritDoc}

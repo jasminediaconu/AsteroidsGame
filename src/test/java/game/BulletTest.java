@@ -80,4 +80,27 @@ class BulletTest {
         playerBullet.setMaxDistance(10.2);
         assertEquals(10.2, playerBullet.getMaxDistance());
     }
+
+    @Test
+    void updateLocationTest() {
+        Point2D oldLoc = playerBullet.getLocation();
+        double startDistance = playerBullet.getDistanceTravelled();
+
+        playerBullet.updateLocation();
+
+        Point2D newLoc = oldLoc.add(playerBullet.getVelocity());
+        double endDistance = playerBullet.getDistanceTravelled();
+
+        assertEquals(newLoc, playerBullet.getLocation());
+        assertEquals(endDistance - startDistance, oldLoc.distance(newLoc));
+    }
+
+    @Test
+    void getFiredByPlayerTest() {
+        assertTrue(playerBullet.getFiredByPlayer());
+
+        playerBullet.setFiredByPlayer(false);
+
+        assertFalse(playerBullet.getFiredByPlayer());
+    }
 }
