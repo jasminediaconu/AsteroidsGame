@@ -264,13 +264,13 @@ public class GameScreenController {
             return;
         }
 
-        //checkButtons();
-
         ArrayList<Medium> newMeds = new ArrayList<>();
         ArrayList<Small> newSmalls = new ArrayList<>();
 
         for (Bullet bullet : bullets) {
-            for (Asteroid asteroid : asteroids) {
+            AsteroidIterator asteroidIterator = new AsteroidIterator(asteroids);
+            while (asteroidIterator.hasNext()) {
+                Asteroid asteroid = asteroidIterator.next();
                 if (bullet.isColliding(asteroid)) {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
@@ -280,27 +280,35 @@ public class GameScreenController {
                         score.setText("Score: " + player.getCurrentScore());
                     }
 
-                    if (asteroid instanceof Large) {
-                        Medium md1 = new Medium();
-                        Medium md2 = new Medium();
-                        md1.setLocation(asteroid.getLocation());
-                        md2.setLocation(asteroid.getLocation());
-                        newMeds.add(md1);
-                        newMeds.add(md2);
-                    } else if (asteroid instanceof Medium) {
-                        Small sm1 = new Small();
-                        Small sm2 = new Small();
-                        sm1.setLocation(asteroid.getLocation());
-                        sm2.setLocation(asteroid.getLocation());
-                        newSmalls.add(sm1);
-                        newSmalls.add(sm2);
-                    }
-
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
                 if (!bullet.checkDistance()) {
                     anchorPane.getChildren().remove(bullet.getView());
                 }
+            }
+
+            asteroidIterator = new AsteroidIterator(asteroids, Large.class);
+            while (asteroidIterator.hasNext()) {
+                Large large = (Large) asteroidIterator.next();
+
+                Medium md1 = new Medium();
+                Medium md2 = new Medium();
+                md1.setLocation(large.getLocation());
+                md2.setLocation(large.getLocation());
+                newMeds.add(md1);
+                newMeds.add(md2);
+            }
+
+            asteroidIterator = new AsteroidIterator(asteroids, Medium.class);
+            while (asteroidIterator.hasNext()) {
+                Medium medium = (Medium) asteroidIterator.next();
+
+                Small sm1 = new Small();
+                Small sm2 = new Small();
+                sm1.setLocation(medium.getLocation());
+                sm2.setLocation(medium.getLocation());
+                newSmalls.add(sm1);
+                newSmalls.add(sm2);
             }
         }
 
