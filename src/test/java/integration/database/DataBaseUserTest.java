@@ -7,7 +7,7 @@
 //import org.junit.jupiter.api.BeforeAll;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
-//import user.User;
+//import models.authentication.User;
 //
 //public class DataBaseUserTest {
 //    private static User testUser;

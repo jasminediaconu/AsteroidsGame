@@ -1,6 +1,6 @@
 package database;
 
-import game.Game;
+import models.game.Game;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -13,10 +13,9 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Scanner;
-import user.AuthenticationService;
-import user.User;
+import models.authentication.AuthenticationService;
+import models.authentication.User;
 
 @SuppressWarnings("PMD")
 public class Database {
@@ -172,9 +171,9 @@ public class Database {
     }
 
     /**
-     * Retrieves a user.User from the user table based on the username.
+     * Retrieves a models.authentication.User from the user table based on the username.
      *
-     * @param username username of user.User
+     * @param username username of models.authentication.User
      * @return User object created from
      *                 if (bullet.isDead())
      *                     anchorPane.getChildren().removeAll(bullet.getView());

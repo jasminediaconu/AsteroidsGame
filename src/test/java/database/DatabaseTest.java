@@ -9,7 +9,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.times;
 
-import game.Game;
+import models.game.Game;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.sql.Connection;
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import user.User;
+import models.authentication.User;
 
 @SuppressWarnings({"PMD.CloseResource", "PMD.DataflowAnomalyAnalysis"})
 class DatabaseTest {
