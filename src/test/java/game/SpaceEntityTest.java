@@ -2,6 +2,7 @@ package game;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -69,5 +70,40 @@ class SpaceEntityTest {
         spaceEntity.setAlive(false);
         assertTrue(spaceEntity.isDead());
         assertFalse(spaceEntity.isAlive());
+    }
+
+    @Test
+    void updateLocation_NotMovingTest() {
+        // spaceEntity is not moving yet
+        Point2D startLoc = spaceEntity.getLocation();
+        double startRotation = spaceEntity.getRotation();
+
+        spaceEntity.updateLocation();
+
+        assertEquals(startLoc, spaceEntity.getLocation());
+        assertEquals(startRotation, spaceEntity.getRotation());
+    }
+
+    @Test
+    void updateLocation_MovingTest() {
+        double startRot = 0;
+        double rotSpeed = 10;
+
+        spaceEntity.setRotation(startRot);
+        spaceEntity.setRotationSpeed(rotSpeed);
+
+        Point2D startLoc = new Point2D(0, 0);
+        Point2D velocity = new Point2D(1, 1);
+
+        spaceEntity.setLocation(startLoc);
+        spaceEntity.setVelocity(velocity);
+
+        spaceEntity.updateLocation();
+
+        assertNotEquals(startLoc, spaceEntity.getLocation());
+        assertNotEquals(startRot, spaceEntity.getRotation());
+
+        assertEquals(startLoc.add(velocity), spaceEntity.getLocation());
+        assertEquals(startRot + rotSpeed, spaceEntity.getRotation());
     }
 }
