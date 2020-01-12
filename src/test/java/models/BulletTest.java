@@ -4,12 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import javafx.geometry.Point2D;
 import models.game.Bullet;
 import models.game.Hostile;
 import models.game.Player;
 import models.game.SpaceEntity;
 import models.game.hostiles.Ufo;
-import javafx.geometry.Point2D;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

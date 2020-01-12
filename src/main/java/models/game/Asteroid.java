@@ -2,12 +2,11 @@ package models.game;
 
 import static controllers.GameScreenController.screenSize;
 
+import java.util.Random;
+import javafx.geometry.Point2D;
 import models.game.asteroids.Large;
 import models.game.asteroids.Medium;
 import models.game.asteroids.Small;
-import java.util.Random;
-
-import javafx.geometry.Point2D;
 
 public abstract class Asteroid extends SpaceEntity {
 

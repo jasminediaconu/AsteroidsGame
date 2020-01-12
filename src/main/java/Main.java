@@ -1,8 +1,8 @@
+import controllers.MainController;
 import database.Database;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import controllers.MainController;
 
 
 public class Main extends Application {

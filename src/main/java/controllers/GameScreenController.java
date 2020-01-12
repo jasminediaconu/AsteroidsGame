@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -27,7 +26,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
-import models.game.*;
+import models.game.Asteroid;
+import models.game.Bullet;
+import models.game.Game;
+import models.game.Player;
+import models.game.Shield;
+import models.game.SpaceEntity;
 
 /**
  * The type GameScreen ViewController.

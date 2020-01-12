@@ -1,8 +1,6 @@
 package controllers;
 
 import database.Database;
-import models.game.Game;
-import models.game.LeaderBoardGame;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +17,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import models.game.Game;
+import models.game.LeaderBoardGame;
 
 /**
  * The type LoginScreen ViewController.
