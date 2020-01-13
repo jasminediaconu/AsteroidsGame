@@ -1,8 +1,9 @@
-package models.game;
+package models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import models.game.Hostile;
 import models.game.hostiles.LargeUfo;
 import models.game.hostiles.SmallUfo;
 import org.junit.jupiter.api.Test;
