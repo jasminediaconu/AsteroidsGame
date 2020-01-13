@@ -126,6 +126,8 @@ public abstract class Asteroid extends SpaceEntity {
         }
     }
 
+
+    @Override
     public void checkMove() {
         //TODO: kill the asteroid if it flies of the screen. (further away than the margin)
     }

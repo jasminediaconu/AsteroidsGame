@@ -26,11 +26,13 @@ public class Bullet extends SpaceEntity {
      */
     public Bullet(SpaceEntity firedFrom) {
         origin = firedFrom;
-
         currentSpeed = defaultSpeed;
 
         if (firedFrom instanceof Hostile) {
             currentSpeed = hostileSpeed;
+            this.firedByPlayer = false;
+        } else {
+            this.firedByPlayer = true;
         }
 
         setVelocity(new Point2D(
@@ -41,25 +43,18 @@ public class Bullet extends SpaceEntity {
         setRotation(firedFrom.getRotation() + 90);
     }
 
+
     /**
-     * Overrides SpaceEntity move method to also keep track of distance travelled.
+     * Updates location of the Bullet.
      */
     @Override
-    @Generated(message = "")
-    public void move() {
+    public void updateLocation() {
         Point2D oldLoc = this.getLocation();
         setLocation(oldLoc.add(getVelocity()));
         setRotation(getRotation() + getRotationSpeed());
 
         Point2D newLoc = this.getLocation();
         this.distanceTravelled += oldLoc.distance(newLoc);
-
-        checkDistance();
-        checkMove();
-
-        //Can't test this method unless this line is commented out,
-        //updateView needs the Node which doesnt work in a test suite.
-        updateView();
     }
 
     /**
@@ -80,7 +75,6 @@ public class Bullet extends SpaceEntity {
             this.setAlive(false);
             return false;
         }
-
         return true;
     }
 

@@ -29,9 +29,13 @@ import javafx.scene.text.Text;
 import models.game.Asteroid;
 import models.game.Bullet;
 import models.game.Game;
+import models.game.Hostile;
 import models.game.Player;
 import models.game.Shield;
 import models.game.SpaceEntity;
+import models.game.asteroids.Large;
+import models.game.asteroids.Medium;
+import models.game.asteroids.Small;
 
 /**
  * The type GameScreen ViewController.
@@ -54,7 +58,8 @@ public class GameScreenController {
 
     //TODO: make spawn chances increase with a higher score.
     private static final double asteroidSpawnChance = 0.03;
-    private static final double hostileSpawnChance = 0.0001;
+    private static final double hostileSpawnChance = 0.0005;
+    private static final int hostileCount = 0;
 
     private transient AnchorPane anchorPane;
     @FXML private transient Pane pauseScreen;
@@ -63,6 +68,7 @@ public class GameScreenController {
     private transient Scene gameScene;
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
+    private transient List<Hostile> hostiles = new ArrayList<>();
     private transient List<SpaceEntity> ufos = new ArrayList<>();
 
     private transient Robot robot = new Robot();
@@ -225,6 +231,15 @@ public class GameScreenController {
     }
 
     /**
+     * This method adds a hostile UFO object on the screen.
+     * @param hostile Hostile type
+     */
+    private void addHostile(Hostile hostile) {
+        hostiles.add(hostile);
+        addSpaceEntity(hostile);
+    }
+
+    /**
      * This method adds a generic SpaceEntity on the screen.
      * @param object SpaceEntity type
      */
@@ -257,6 +272,9 @@ public class GameScreenController {
 
         //checkButtons();
 
+        ArrayList<Medium> newMeds = new ArrayList<>();
+        ArrayList<Small> newSmalls = new ArrayList<>();
+
         for (Bullet bullet : bullets) {
             for (Asteroid asteroid : asteroids) {
                 if (bullet.isColliding(asteroid)) {
@@ -268,6 +286,22 @@ public class GameScreenController {
                         score.setText("Score: " + player.getCurrentScore());
                     }
 
+                    if (asteroid instanceof Large) {
+                        Medium md1 = new Medium();
+                        Medium md2 = new Medium();
+                        md1.setLocation(asteroid.getLocation());
+                        md2.setLocation(asteroid.getLocation());
+                        newMeds.add(md1);
+                        newMeds.add(md2);
+                    } else if (asteroid instanceof Medium) {
+                        Small sm1 = new Small();
+                        Small sm2 = new Small();
+                        sm1.setLocation(asteroid.getLocation());
+                        sm2.setLocation(asteroid.getLocation());
+                        newSmalls.add(sm1);
+                        newSmalls.add(sm2);
+                    }
+
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
                 if (!bullet.checkDistance()) {
@@ -275,6 +309,14 @@ public class GameScreenController {
                 }
             }
         }
+
+        for (Small sm : newSmalls) {
+            addAsteroid(sm);
+        }
+        for (Medium md : newMeds) {
+            addAsteroid(md);
+        }
+
         //check if player collided with an asteroid.
         for (SpaceEntity asteroid: asteroids) {
             if (player.isColliding(asteroid) && !isShieldActive) {
@@ -331,6 +373,10 @@ public class GameScreenController {
 
         if (Math.random() < asteroidSpawnChance) {
             addAsteroid(Asteroid.spawnAsteroid());
+        }
+
+        if (Math.random() < hostileSpawnChance && hostileCount < 2) {
+            addHostile(Hostile.spawnHostile());
         }
     }
 

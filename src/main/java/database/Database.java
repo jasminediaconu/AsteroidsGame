@@ -20,11 +20,6 @@ import models.game.Game;
 @SuppressWarnings("PMD")
 public class Database {
 
-    /**
-     * Url containing the path to where the database is stored.
-     */
-    private String url;
-
     private static final String defaultURL =
             "jdbc:sqlite:src/main/resources/database/semdatabase.db";
 
@@ -34,7 +29,6 @@ public class Database {
      * Constructor used when no specific database url is supplied.
      */
     public Database() {
-        this.url = defaultURL;
         this.connect();
     }
 
@@ -44,25 +38,6 @@ public class Database {
      */
     public Database(Connection connection) {
         this.connection = connection;
-        this.url = defaultURL;
-    }
-
-    /**
-     * Getter for the url.
-     *
-     * @return String url
-     */
-    public String getUrl() {
-        return this.url;
-    }
-
-    /**
-     * Setter for the url.
-     *
-     * @param url String url
-     */
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     /**
@@ -71,7 +46,7 @@ public class Database {
     public void connect() {
         try {
             // create a connection to the database
-            connection = DriverManager.getConnection(this.url);
+            connection = DriverManager.getConnection(defaultURL);
 
             System.out.println("Connection to SQLite has been established.");
 
@@ -85,7 +60,7 @@ public class Database {
      *
      * @param sql statement for creating a new table
      */
-    public void createNewTable(String sql) {
+    private void createNewTable(String sql) {
         try {
             Statement stmt = connection.createStatement();
             // create a new table

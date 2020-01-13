@@ -1,5 +1,6 @@
 package models.game;
 
+@SuppressWarnings("PMD.ConstructorCallsOverridableMethod")
 public class Shield extends SpaceEntity {
 
     private transient SpaceEntity origin;
@@ -10,21 +11,26 @@ public class Shield extends SpaceEntity {
      */
     public Shield(SpaceEntity player) {
         origin = player;
+        this.updateLocation();
+    }
+
+
+    /**
+     * Updates location to the location of it's origin.
+     */
+    @Override
+    public void updateLocation() {
+        setLocation(origin.getLocation());
+        setRotation(origin.getRotation());
     }
 
     /**
-     * Overrides SpaceEntity move to take player's movements.
+     * {@inheritDoc}
+     * Empty because move does not need to be checked.
      */
     @Override
-    @Generated(message = "")
-    public void move() {
-        setLocation(origin.getLocation());
-        setRotation(origin.getRotation());
-        checkMove();
-
-        //Can't test this method unless this line is commented out,
-        //updateView needs the Node which doesnt work in a test suite.
-        updateView();
+    public void checkMove() {
+        // do nothing
     }
 
     /**
@@ -33,11 +39,6 @@ public class Shield extends SpaceEntity {
      */
     public SpaceEntity getOrigin() {
         return origin;
-    }
-
-    @Override
-    public void checkMove() {
-
     }
 
     /**

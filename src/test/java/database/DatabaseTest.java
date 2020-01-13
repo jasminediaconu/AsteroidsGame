@@ -44,38 +44,6 @@ class DatabaseTest {
     }
 
     @Test
-    void getUrlTest() {
-        Assertions.assertEquals("jdbc:sqlite:src/m"
-                + "ain/resources/database/semdatabase.db", db.getUrl());
-    }
-
-    @Test
-    void setUrl() {
-        db.setUrl("newUrl");
-        Assertions.assertEquals("newUrl", db.getUrl());
-    }
-
-    @Test
-    void createNewTableTest() {
-
-        String gameTable = "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
-                + "username TEXT NOT NULL, alias TEXT NOT NULL,"
-                + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
-        Statement stm = Mockito.mock(Statement.class);
-        try {
-
-            Mockito.when(conn.createStatement()).thenReturn(stm);
-
-            db.createNewTable(gameTable);
-
-            Mockito.verify(conn, times(1)).createStatement();
-            Mockito.verify(stm, times(1)).execute(gameTable);
-        } catch (SQLException e) {
-            Assertions.fail();
-        }
-    }
-
-    @Test
     void insertGameTest() {
         int id = 1;
         String username = "uname";
@@ -324,27 +292,6 @@ class DatabaseTest {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    void connectWrongPathTest() {
-        db.setUrl("not a valid url");
-        db.connect();
-
-        assertEquals("invalid path to database\n", outContent.toString());
-    }
-
-    @Test
-    void createNewTableException() throws SQLException {
-        Mockito.when(conn.createStatement()).thenThrow(SQLException.class);
-        db.createNewTable("not valid");
-
-        assertEquals("table couldn't be created\n"
-                + "possible reasons for the error: invalid sql "
-                + "statement passed as input or connection couldn't be "
-                + "established because of"
-                + "invalid path to the database\n", outContent.toString());
-
     }
 
     @Test

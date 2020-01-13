@@ -2,7 +2,7 @@ package models.game.hostiles;
 
 import models.game.Hostile;
 
-public class Ufo extends Hostile {
+public class LargeUfo extends Hostile {
 
     @Override
     public void checkMove() {
@@ -11,7 +11,7 @@ public class Ufo extends Hostile {
 
     @Override
     public String getUrl() {
-        return "/views/sprites/enemyBlue1.png";
+        return "/game/sprites/enemyBlue1.png";
     }
 }
 
