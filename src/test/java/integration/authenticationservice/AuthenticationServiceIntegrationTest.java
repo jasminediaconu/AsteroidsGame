@@ -8,8 +8,8 @@
 //import org.junit.jupiter.api.BeforeAll;
 //import org.junit.jupiter.api.BeforeEach;
 //import org.junit.jupiter.api.Test;
-//import user.AuthenticationService;
-//import user.User;
+//import models.authentication.AuthenticationService;
+//import models.authentication.User;
 //
 //public class AuthenticationServiceIntegrationTest {
 //

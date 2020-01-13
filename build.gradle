@@ -33,7 +33,7 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.media' ]
 }
 
-mainClassName = 'MainScreen'
+mainClassName = 'Main'
 group 'nl.tudelft.cse.sem.template'
 version '1.0-SNAPSHOT'
 
@@ -45,7 +45,7 @@ test {
     jacoco {
         enabled = true
         includes = []
-        excludes = ['**.menu.*', '**.game.GameScreenController*', '**.MainScreen']
+        excludes = ['**.controllers.*', '**.Main']
     }
 
     repositories { jcenter() }
@@ -62,7 +62,7 @@ jacocoTestReport {
 
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['**/menu/*', '**/game/GameScreenController*', '**/MainScreen'])
+            fileTree(dir: it, exclude: ['**/controllers/*', '**/Main'])
         })
     }
 }
@@ -81,7 +81,7 @@ jacocoTestCoverageVerification {
             enabled = true
             element = 'CLASS'
             includes = ['**']
-            excludes = ['**menu*', '**game.GameScreenController*', '**MainScreen']
+            excludes = ['**controllers*', '**Main']
             limit {
                 minimum = 0.5
             }
