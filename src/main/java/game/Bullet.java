@@ -2,8 +2,6 @@ package game;
 
 import javafx.geometry.Point2D;
 
-import javax.annotation.processing.Generated;
-
 public class Bullet extends SpaceEntity {
 
     /**
