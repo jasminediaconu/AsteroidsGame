@@ -1,6 +1,9 @@
 package controllers;
 
+import com.sun.tools.javac.Main;
 import database.Database;
+
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -9,12 +12,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,10 +28,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.AnchorPane;;
 import javafx.scene.layout.Pane;
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import models.game.Asteroid;
 import models.game.Bullet;
 import models.game.Game;
@@ -42,8 +49,6 @@ import models.game.asteroids.Small;
  */
 public class GameScreenController {
 
-    private Scene menuScreen;
-
     public static final int screenSize = 800;
 
     public transient boolean isPaused = false;
@@ -56,6 +61,8 @@ public class GameScreenController {
 
     private transient ActionEvent event;
 
+    private transient AnimationTimer timer;
+
     //TODO: make spawn chances increase with a higher score.
     private static final double asteroidSpawnChance = 0.03;
     private static final double hostileSpawnChance = 0.0005;
@@ -63,9 +70,11 @@ public class GameScreenController {
 
     private transient AnchorPane anchorPane;
     @FXML private transient Pane pauseScreen;
+    private transient Scene leaderBoardScreen;
 
     private transient URL pauseScreenFile;
     private transient Scene gameScene;
+    private transient Scene leaderBoardScene;
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<Hostile> hostiles = new ArrayList<>();
@@ -87,13 +96,14 @@ public class GameScreenController {
     private transient boolean fkey = false;
     private transient boolean pkey = false;
     private transient boolean skey = false;
+    private transient boolean qkey = false;
 
     private transient boolean isShieldActive = false;
 
     /**
      * GameScreenController constructor.
      */
-    public GameScreenController() {
+    public GameScreenController() throws IOException {
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
@@ -110,7 +120,6 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.F) {
                 fkey = true;
             } else if (e.getCode() == KeyCode.DOWN) {
-                System.out.println("Invulnerability time: " + player.getInvulnerabilityTime());
                 down = true;
             } else if ((e.getCode() == KeyCode.P)) {
                 pkey = pkey ? false : true;
@@ -138,6 +147,8 @@ public class GameScreenController {
                 skey = false;
             }
         });
+
+        setLeaderBoardScreen(leaderBoardScene);
     }
 
     /**
@@ -146,6 +157,22 @@ public class GameScreenController {
      */
     public Scene getGameScene() {
         return gameScene;
+    }
+
+    /**
+     * Getter for LeaderBoard Screen scene.
+     * @return mainScreen
+     */
+    public Scene getLeaderBoardScreen() {
+        return leaderBoardScreen;
+    }
+
+    /**
+     * Setter for LeaderBoard Screen Scene.
+     * @param scene type Scene
+     */
+    public void setLeaderBoardScreen(Scene scene) {
+        leaderBoardScreen = scene;
     }
 
     /**
@@ -177,7 +204,7 @@ public class GameScreenController {
 
         anchorPane.getChildren().add(score);
         anchorPane.getChildren().add(playerLives);
-        AnimationTimer timer = new AnimationTimer() {
+        timer = new AnimationTimer() {
             public void handle(long now) {
                 try {
                     checkButtons();
@@ -189,8 +216,8 @@ public class GameScreenController {
                 }
             }
         };
-        timer.start();
 
+        timer.start();
         return anchorPane;
     }
 
@@ -358,7 +385,6 @@ public class GameScreenController {
 
         if (isShieldActive) {
             player.getShield().move();
-            System.out.println("The shield is moving with the player.");
         }
 
         // checks if the shield time has expired
@@ -426,7 +452,7 @@ public class GameScreenController {
      * @throws IOException type
      */
     public void checkPause(boolean paused) throws IOException {
-        if(pauseScreen == null || pauseScreenFile == null) {
+        if (pauseScreen == null || pauseScreenFile == null) {
             pauseScreenFile = new File("src/main/resources/views/fxml/pauseScreen.fxml")
                     .toURI().toURL();
             pauseScreen =  FXMLLoader.load(pauseScreenFile);
@@ -452,27 +478,11 @@ public class GameScreenController {
     }
 
     /**
-     * Getter for Menu Screen scene.
-     * @return menuScreen
-     */
-    public Scene getMenuScreen() {
-        return menuScreen;
-    }
-
-    /**
-     * Setter for Main Screen Scene.
-     * @param scene type Scene
-     */
-    public void setMenuScreen(Scene scene) {
-        menuScreen = scene;
-    }
-
-    /**
      * Method triggered by the pause menu when clicking on the 'Quit' button.
      * This method will end the game and return to the MenuScreen.
      */
     @FXML
-    public void quitGame(ActionEvent actionEvent) {
+    public void quitGame() {
         robot.keyPress(KeyCode.Q);
     }
 
@@ -485,33 +495,44 @@ public class GameScreenController {
      */
     private void gameEnd() {
         System.out.println("Game end");
-        isPaused = true;
+        isPaused = false;
+        timer.stop();
         isStopped = true;
+        anchorPane.getChildren().remove(pauseScreen);
+
+        Pane saveScreen = new Pane();
+        saveScreen.setPrefSize(400,270);
+        saveScreen.setStyle("-fx-background-color: black");
+        saveScreen.setTranslateX(200.0);
+        saveScreen.setTranslateY(200.0);
 
         Text text = new Text("Fill in your alias");
-        text.setLayoutX(251);
-        text.setLayoutY(280);
+        text.setLayoutX(90);
+        text.setLayoutY(60);
         text.setStyle("-fx-font-size: 28px;");
 
         TextField aliasField = new TextField();
         aliasField.setPromptText("Alias");
-        aliasField.setLayoutX(251);
-        aliasField.setLayoutY(300);
+        aliasField.setLayoutX(90);
+        aliasField.setLayoutY(110);
 
         Button button = new Button("Save score");
-        button.setLayoutX(251);
-        button.setLayoutY(350);
-        button.setOnAction((ActionEvent event) -> saveScore(aliasField.getText()));
-        anchorPane.getChildren().addAll(text, aliasField, button);
+        button.setLayoutX(90);
+        button.setLayoutY(180);
+
+        saveScreen.getChildren().addAll(text, aliasField, button);
+
+        button.setOnAction((ActionEvent event) -> saveScore(event, aliasField.getText()));
+        anchorPane.getChildren().add(saveScreen);
+        saveScreen.toFront();
     }
 
     /**
      * Adds a new game to the database with the score and provided alias.
      * @param alias String alias
      */
-    private void saveScore(String alias) {
+    private void saveScore(ActionEvent actionEvent, String alias) {
         if (!alias.isBlank() && !alias.isEmpty()) {
-
             Game game = new Game(0,
                     "username",
                     alias,
@@ -521,8 +542,8 @@ public class GameScreenController {
             Database d = new Database();
             d.insertGame(game);
 
-            // TODO go to Leaderboard screen
-            Platform.exit();
+            Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            primaryStage.setScene(getLeaderBoardScreen());
         }
     }
 }

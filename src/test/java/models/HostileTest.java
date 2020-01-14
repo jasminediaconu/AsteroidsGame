@@ -35,9 +35,9 @@ public class HostileTest {
     @Test
     void ufoLinkTest() {
         LargeUfo lg = new LargeUfo();
-        assertEquals("/game/sprites/enemyBlue1.png",lg.getUrl());
+        assertEquals("/views/sprites/enemyBlue1.png",lg.getUrl());
         SmallUfo sm = new SmallUfo();
-        assertEquals("/game/sprites/enemyBlue1.png",sm.getUrl());
+        assertEquals("/views/sprites/enemyBlue1.png",sm.getUrl());
     }
 
 }

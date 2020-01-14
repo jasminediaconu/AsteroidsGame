@@ -11,7 +11,7 @@ public class SmallUfo extends Hostile {
 
     @Override
     public String getUrl() {
-        return "/game/sprites/enemyBlue1.png";
+        return "/views/sprites/enemyBlue1.png";
     }
 }
 

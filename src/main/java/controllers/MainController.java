@@ -21,7 +21,7 @@ public class MainController {
     private transient FXMLLoader mainScreenLoader;
     private transient FXMLLoader loginScreenLoader;
     private transient FXMLLoader registerScreenLoader;
-    private transient FXMLLoader gameScreenLoader;
+
     private transient FXMLLoader leaderBoardScreenLoader;
     private transient FXMLLoader menuScreenLoader;
 
@@ -85,6 +85,10 @@ public class MainController {
                 .getResource("/views/fxml/leaderBoardScreen.fxml"));
         Parent leaderBoard = leaderBoardScreenLoader.load();
         leaderBoardScene = new Scene(leaderBoard);
+    }
+
+    public Scene getLeaderBoardScene() {
+        return leaderBoardScene;
     }
 
     /**
