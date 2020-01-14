@@ -407,9 +407,9 @@ public class GameScreenController {
             addShield(player.activateShield());
             isShieldActive = true;
         }
-        if (pkey) {
-            checkPause();
-        }
+
+        checkPause(pkey);
+
         if (skey) {
             if (!soundEffect) {
                 soundEffect = true;
@@ -425,14 +425,16 @@ public class GameScreenController {
      * Method that checks if the Pause Menu is showing on the screen or not.
      * @throws IOException type
      */
-    public void checkPause() throws IOException {
-        if (!isPaused) {
-            isPaused = true;
+    public void checkPause(boolean paused) throws IOException {
+        if(pauseScreen == null || pauseScreenFile == null) {
             pauseScreenFile = new File("src/main/resources/views/fxml/pauseScreen.fxml")
                     .toURI().toURL();
             pauseScreen =  FXMLLoader.load(pauseScreenFile);
             pauseScreen.setTranslateX(100.0);
             pauseScreen.setTranslateY(100.0);
+        }
+        if (paused) {
+            isPaused = true;
             anchorPane.getChildren().add(pauseScreen);
         } else {
             isPaused = false;
@@ -502,7 +504,6 @@ public class GameScreenController {
         button.setOnAction((ActionEvent event) -> saveScore(aliasField.getText()));
         anchorPane.getChildren().addAll(text, aliasField, button);
     }
-
 
     /**
      * Adds a new game to the database with the score and provided alias.
