@@ -289,7 +289,7 @@ public class GameScreenController {
                     AudioController explosion = new AudioController();
                     Random random = new Random();
                     int track = random.nextInt(4) + 1;
-                    explosion.playSound("src/main/resources/audio/exp_"+track+".wav");
+                    explosion.playSound("src/main/resources/audio/exp_" + track + ".wav");
 
                     if (bullet.getOrigin() == player) {
                         player.incrementScore(asteroid.getScore());
@@ -401,8 +401,7 @@ public class GameScreenController {
             if (thrustSound.getClip() == null) {
                 thrustSound.playSound("src/main/resources/audio/thrust.wav");
                 System.out.println("starting thrust");
-            }
-            else if (thrustSound.getClip() != null && !thrustSound.getClip().isActive()) {
+            } else if (thrustSound.getClip() != null && !thrustSound.getClip().isActive()) {
                 thrustSound.playSound("src/main/resources/audio/thrust.wav");
                 System.out.println("playing thrust");
             }
@@ -417,13 +416,12 @@ public class GameScreenController {
             player.rotateLeft();
         }
 
-        if(left || right) {
+        if (left || right) {
             // Start rotate sound effect
             if (rotateSound.getClip() == null) {
                 rotateSound.playSound("src/main/resources/audio/rotate.wav");
                 System.out.println("starting rrotate");
-            }
-            else if (rotateSound.getClip() != null && !rotateSound.getClip().isActive()) {
+            } else if (rotateSound.getClip() != null && !rotateSound.getClip().isActive()) {
                 rotateSound.playSound("src/main/resources/audio/rotate.wav");
                 System.out.println("playing rrotate");
             }
