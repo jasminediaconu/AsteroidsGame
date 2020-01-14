@@ -46,8 +46,8 @@ javafx {
 }
 
 pitest {
-    targetTests  = ['*test/java*']
-    targetClasses  = ['*main/java*']
+    targetTests  = []
+    targetClasses  = ['models.*', 'database.*', 'controllers.*']
     testPlugin = 'junit5'
     failWhenNoMutations = false
     pitestVersion = '1.4.9' //not needed when a default PIT version should be used
