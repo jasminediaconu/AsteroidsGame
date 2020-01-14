@@ -100,11 +100,7 @@ public class Player extends SpaceEntity {
      * @return false is the player has 0 lives, true if they have more.
      */
     public boolean hasLives() {
-        if (this.lives <= 0) {
-            return false;
-        }
-
-        return true;
+        return this.getLives() > 0;
     }
 
     /**

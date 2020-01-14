@@ -1,7 +1,9 @@
 package controllers;
+
 import database.Database;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -55,6 +57,8 @@ public class GameScreenController {
     private transient ActionEvent event;
 
     private transient AnimationTimer timer;
+
+    private static boolean pauseScreenInitiated = false;
 
     //TODO: make spawn chances increase with a higher score.
     private static final double asteroidSpawnChance = 0.03;
@@ -176,7 +180,7 @@ public class GameScreenController {
 
         player.getView().setScaleX(0.69);
         player.getView().setScaleY(0.69);
-        
+
         // Attach the default style sheet to the Game Screen
         anchorPane.getStylesheets().add(new File("src/main/resources/defaultStyle.css")
                 .toURI().toString());
@@ -202,6 +206,7 @@ public class GameScreenController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 if (!isPaused) {
                     onUpdate();
                 }
@@ -210,6 +215,20 @@ public class GameScreenController {
 
         timer.start();
         return anchorPane;
+    }
+
+    private void createPauseScreen() {
+        if (pauseScreen == null || pauseScreenFile == null) {
+            try {
+                pauseScreenFile = new File("src/main/resources/views/fxml/pauseScreen.fxml")
+                        .toURI().toURL();
+                pauseScreen = FXMLLoader.load(pauseScreenFile);
+                pauseScreen.setTranslateX(100.0);
+                pauseScreen.setTranslateY(100.0);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -284,6 +303,14 @@ public class GameScreenController {
      */
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void onUpdate() {
+
+        if (!pauseScreenInitiated) {
+            System.out.println("pause screen initiating" + pauseScreenInitiated);
+            createPauseScreen();
+            pauseScreenInitiated = true;
+            System.out.println("pause screen initiated" + pauseScreenInitiated);
+        }
+
         if (isStopped) {
             return;
         }
@@ -443,16 +470,11 @@ public class GameScreenController {
      * @throws IOException type
      */
     public void checkPause(boolean paused) throws IOException {
-        if (pauseScreen == null || pauseScreenFile == null) {
-            pauseScreenFile = new File("src/main/resources/views/fxml/pauseScreen.fxml")
-                    .toURI().toURL();
-            pauseScreen =  FXMLLoader.load(pauseScreenFile);
-            pauseScreen.setTranslateX(100.0);
-            pauseScreen.setTranslateY(100.0);
-        }
         if (paused) {
             isPaused = true;
-            anchorPane.getChildren().add(pauseScreen);
+            if (!anchorPane.getChildren().contains(pauseScreen)) {
+                anchorPane.getChildren().add(pauseScreen);
+            }
         } else {
             isPaused = false;
             anchorPane.getChildren().remove(pauseScreen);
