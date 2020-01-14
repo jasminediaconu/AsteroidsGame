@@ -17,21 +17,21 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try {
-            MainController viewController = new MainController();
-            stage = viewController.getMainStage();
+            MainController mainController = new MainController();
+            stage = mainController.getMainStage();
 
             //Loading scenes
-            viewController.setRegisterScene();
-            viewController.setLeaderBoardScene();
-            viewController.setLoginScene();
-            viewController.setMenuScene();
+            mainController.setRegisterScene();
+            mainController.setLeaderBoardScene();
+            mainController.setLoginScene();
+            mainController.setMenuScene();
 
             // Switching scenes
-            viewController.injectMainScreenScenes();
-            viewController.injectLoginScreenScenes();
-            viewController.injectRegisterScreenScenes();
-            viewController.injectMenuScreenScenes();
-            viewController.injectLeaderBoardScenes();
+            mainController.injectMainScreenScenes();
+            mainController.injectLoginScreenScenes();
+            mainController.injectRegisterScreenScenes();
+            mainController.injectMenuScreenScenes();
+            mainController.injectLeaderBoardScenes();
 
             Database.createDatabase();
 
