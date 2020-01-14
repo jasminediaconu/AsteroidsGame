@@ -1,8 +1,11 @@
+import controllers.AudioController;
 import controllers.MainController;
 import database.Database;
 import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+
+import javax.swing.*;
 
 
 public class Main extends Application {
@@ -34,6 +37,9 @@ public class Main extends Application {
             viewController.injectLeaderBoardScenes();
 
             Database.createDatabase();
+
+            AudioController audioController = new AudioController();
+            audioController.playMusic("src/main/resources/audio/gc.wav");
 
             // Sets default icon of the application
             stage.getIcons().add(new Image("views/images/asteroid.png"));
