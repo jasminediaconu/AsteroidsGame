@@ -1,15 +1,14 @@
 package controllers;
 
+import java.io.File;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import javax.swing.*;
-import java.io.File;
 
-public class AudioController extends Thread{
+public class AudioController {
 
-    private Clip clip;
-    private long pausePoint;
+    private transient Clip clip;
+    private transient long pausePoint;
 
     /**
      * Method plays music in a separate thread using a .wav file loaded from a path.
@@ -19,18 +18,16 @@ public class AudioController extends Thread{
         try {
             File music = new File(path);
 
-            if(music.exists()) {
+            if (music.exists()) {
                 AudioInputStream audioInput = AudioSystem.getAudioInputStream(music);
                 clip = AudioSystem.getClip();
                 clip.open(audioInput);
                 clip.start();
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
-            }
-            else {
+            } else {
                 System.out.println("Can't find bgm file");
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
@@ -54,21 +51,5 @@ public class AudioController extends Thread{
             clip.start();
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
-    }
-
-    /**
-     * Getter for Clip object.
-     * @return Clip the current audio clip
-     */
-    public Clip getClip() {
-        return clip;
-    }
-
-    /**
-     * Getter for pause point in milliseconds.
-     * @return long Latest point the clip was paused at
-     */
-    public long getPausePoint() {
-        return pausePoint;
     }
 }

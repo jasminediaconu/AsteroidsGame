@@ -8,7 +8,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -398,10 +397,7 @@ public class GameScreenController {
             addBullet(player.shoot(), player);
         }
         if (fkey) {
-            Random rand = new Random();
-            int x = rand.nextInt(screenSize);
-            int y = rand.nextInt(screenSize);
-            player.setLocation(new Point2D(x, y));
+            player.teleport();
         }
         if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
             addShield(player.activateShield());
