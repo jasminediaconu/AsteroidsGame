@@ -1,9 +1,5 @@
 package controllers;
-
-import com.sun.tools.javac.Main;
 import database.Database;
-
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -12,10 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,7 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.AnchorPane;;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.robot.Robot;
 import javafx.scene.text.Text;
@@ -103,7 +96,7 @@ public class GameScreenController {
     /**
      * GameScreenController constructor.
      */
-    public GameScreenController() throws IOException {
+    public GameScreenController() {
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
@@ -147,8 +140,6 @@ public class GameScreenController {
                 skey = false;
             }
         });
-
-        setLeaderBoardScreen(leaderBoardScene);
     }
 
     /**
