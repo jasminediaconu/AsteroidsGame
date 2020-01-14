@@ -6,7 +6,7 @@ import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.io.File;
 
-public class AudioController {
+public class AudioController extends Thread{
 
     private Clip clip;
     private long pausePoint;
@@ -48,11 +48,27 @@ public class AudioController {
     /**
      * Method plays music at the point it was paused.
      */
-    public void resume() {
+    public void resumePlayback() {
         if (!clip.isActive()) {
             clip.setMicrosecondPosition(pausePoint);
             clip.start();
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
+    }
+
+    /**
+     * Getter for Clip object.
+     * @return Clip the current audio clip
+     */
+    public Clip getClip() {
+        return clip;
+    }
+
+    /**
+     * Getter for pause point in milliseconds.
+     * @return long Latest point the clip was paused at
+     */
+    public long getPausePoint() {
+        return pausePoint;
     }
 }

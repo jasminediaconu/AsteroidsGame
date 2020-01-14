@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+import java.util.concurrent.Semaphore;
 
 
 public class Main extends Application {
