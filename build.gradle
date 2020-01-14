@@ -33,7 +33,7 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.media' ]
 }
 
-mainClassName = 'MainScreen'
+mainClassName = 'Main'
 group 'nl.tudelft.cse.sem.template'
 version '1.0-SNAPSHOT'
 
@@ -44,8 +44,26 @@ test {
 
     jacoco {
         enabled = true
-        includes = ['nl.tudelft.cse.sem.*']
-        excludes = []
+        includes = []
+        excludes = ['**.controllers.*', '**.Main']
+    }
+
+    repositories { jcenter() }
+    dependencies { testCompile "org.mockito:mockito-core:1.+" }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        csv.enabled true
+        csv.destination file("${buildDir}/jacoco/jacoco.csv")
+        html.destination file("${buildDir}/jacoco/jacoco")
+    }
+
+    afterEvaluate {
+        classDirectories = files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: ['**/controllers/*', '**/Main'])
+        })
     }
 }
 
@@ -62,14 +80,19 @@ jacocoTestCoverageVerification {
         rule {
             enabled = true
             element = 'CLASS'
-            includes = ['nl.tudelft.cse.sem.*']
-
+            includes = ['**']
+            excludes = ['**controllers*', '**Main']
             limit {
-                maximum = 0.5
+                minimum = 0.5
             }
         }
     }
 }
+
+// to run coverage verification during the build (and fail when appropriate)
+check.dependsOn jacocoTestCoverageVerification
+check.dependsOn test
+check.dependsOn jacocoTestReport
 
 checkstyle {
     toolVersion "8.25"
