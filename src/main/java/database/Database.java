@@ -101,7 +101,6 @@ public class Database {
      * @param score     score of player
      */
     public void insertGame(int id, String username, String alias, Date timestamp, int score)  {
-
         try (PreparedStatement stm = connection
                 .prepareStatement("insert into game values(?, ?, ?, ?, ?)")) {
 
@@ -128,7 +127,6 @@ public class Database {
      * @param user the User that will be added to the database
      */
     public void insertUser(User user) {
-
         try (PreparedStatement statement = connection
                 .prepareStatement("insert into user values(?,?,?)")) {
 
@@ -298,10 +296,51 @@ public class Database {
         return highScores;
     }
 
+    /**
+     * Inserts the given timestamp in the login attempt table.
+     * @param timestamp timestampt to insert
+     */
+    public void insertLoginAttempt(long timestamp) {
+        try (PreparedStatement stm = connection
+                .prepareStatement("insert into login_attempt values(?)")) {
+
+            stm.setLong(1, timestamp);
+
+            stm.execute();
+        } catch (SQLException e) {
+            System.out.println("insert login attempt: " + e.getMessage());
+            System.out.print("error: connection couldn't be established\n");
+        }
+    }
 
     /**
-     * Main method that connects to the database and creates the user and
-     * games table if they are not created yet.
+     * Gets the last entry from the login attempt table.
+     * @return last time stored in the login attempt table.
+     */
+    public long getLastLoginLocked() {
+        long timestamp = Long.MAX_VALUE;
+
+        try (PreparedStatement statement = connection.prepareStatement("select "
+                + "* from login_attempt order by timestamp desc limit 1")) {
+
+            ResultSet resultSet = statement.executeQuery();
+
+            resultSet.next();
+            timestamp = resultSet.getLong("timestamp");
+
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println("get last login locked error: " + e.getMessage());
+            System.out.print("error: connection couldn't be established\n");
+        }
+
+        return timestamp;
+    }
+
+
+    /**
+     * Main method that connects to the database and creates the user,
+     * games and login attempt table if they are not created yet.
      */
     public static void createDatabase() {
         Database db = new Database();
@@ -315,8 +354,12 @@ public class Database {
                 "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
                         + "password BLOB NOT NULL, salt BLOB NOT NULL)";
 
+        String createTableLoginAttempts =
+                "CREATE TABLE IF NOT EXISTS login_attempt(timestamp INTEGER NOT NULL)";
+
         db.createNewTable(createTableUser);
         db.createNewTable(createTableGame);
+        db.createNewTable(createTableLoginAttempts);
 
         db.populateDatabase(db);
     }
@@ -399,7 +442,7 @@ public class Database {
             return userList;
         }
 
-        AuthenticationService as = new AuthenticationService();
+        AuthenticationService as = new AuthenticationService(this);
 
         int numberOfUsers = sc.nextInt();
         sc.nextLine();
