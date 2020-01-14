@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import models.game.Hostile;
-import models.game.hostiles.LargeUfo;
-import models.game.hostiles.SmallUfo;
+import models.game.hostiles.Juggernaut;
+import models.game.hostiles.Sniper;
 import org.junit.jupiter.api.Test;
 
 
@@ -18,10 +18,10 @@ public class HostileTest {
 
         for (int i = 0; i < 4000; i++) {
             Hostile hostile = Hostile.spawnHostile();
-            if (hostile instanceof SmallUfo) {
+            if (hostile instanceof Sniper) {
                 small++;
             }
-            if (hostile instanceof LargeUfo) {
+            if (hostile instanceof Juggernaut) {
                 large++;
             }
         }
@@ -34,10 +34,10 @@ public class HostileTest {
 
     @Test
     void ufoLinkTest() {
-        LargeUfo lg = new LargeUfo();
-        assertEquals("/game/sprites/enemyBlue1.png",lg.getUrl());
-        SmallUfo sm = new SmallUfo();
-        assertEquals("/game/sprites/enemyBlue1.png",sm.getUrl());
+        Juggernaut jg = new Juggernaut();
+        assertEquals("/views/sprites/enemyBlue1.png",jg.getUrl());
+        Sniper sp = new Sniper();
+        assertEquals("/views/sprites/enemyBlue1.png",sp.getUrl());
     }
 
 }

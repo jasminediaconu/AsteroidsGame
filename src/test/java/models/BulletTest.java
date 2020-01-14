@@ -9,8 +9,7 @@ import models.game.Bullet;
 import models.game.Hostile;
 import models.game.Player;
 import models.game.SpaceEntity;
-import models.game.asteroids.Small;
-import models.game.hostiles.SmallUfo;
+import models.game.hostiles.Sniper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +26,7 @@ class BulletTest {
         player = new Player();
         playerBullet = new Bullet(player);
 
-        ufo = new SmallUfo();
+        ufo = new Sniper();
         hostileBullet = new Bullet(ufo);
     }
 
