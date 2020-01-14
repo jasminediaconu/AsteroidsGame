@@ -36,6 +36,7 @@ public class Main extends Application {
 
             Database.createDatabase();
 
+            // Start background music
             AudioController audioController = new AudioController();
             audioController.playMusic("src/main/resources/audio/gc.wav");
 

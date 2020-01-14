@@ -1,5 +1,6 @@
 package models.game;
 
+import controllers.AudioController;
 import controllers.GameScreenController;
 import java.util.Random;
 import javafx.geometry.Point2D;
@@ -69,6 +70,7 @@ public class Player extends SpaceEntity {
      * 5 degrees to the right.
      */
     public void rotateRight() {
+
         setRotation(getRotation() + 4);
     }
 
@@ -172,6 +174,11 @@ public class Player extends SpaceEntity {
      * Function to be called when the player shoots.
      */
     public Bullet shoot() {
+
+        // Start laser sound effect
+        AudioController audioController = new AudioController();
+        audioController.playSound("src/main/resources/audio/laser_lo.wav");
+
         this.currentFireCooldown = this.fireCooldown;
         return new Bullet(this);
     }

@@ -33,6 +33,27 @@ public class AudioController {
     }
 
     /**
+     * Method plays music in a separate thread using a .wav file loaded from a path.
+     * @param path path to the wav file to play
+     */
+    public void playSound(String path) {
+        try {
+            File sound = new File(path);
+
+            if (sound.exists()) {
+                AudioInputStream audioInput = AudioSystem.getAudioInputStream(sound);
+                clip = AudioSystem.getClip();
+                clip.open(audioInput);
+                clip.start();
+            } else {
+                System.out.println("Can't find bgm file");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    /**
      * Method pauses music at current point if it is playing.
      */
     public void pause() {
@@ -51,5 +72,19 @@ public class AudioController {
             clip.start();
             clip.loop(Clip.LOOP_CONTINUOUSLY);
         }
+    }
+
+    /**
+     * Stops current audio playback, resetting the pause timer to 0.
+     */
+    public void stop() {
+        if (clip.isActive()) {
+            clip.stop();
+            pausePoint = 0;
+        }
+    }
+
+    public Clip getClip() {
+        return clip;
     }
 }
