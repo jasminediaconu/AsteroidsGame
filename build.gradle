@@ -1,5 +1,16 @@
 import com.github.spotbugs.SpotBugsTask
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    configurations.maybeCreate('pitest')
+    dependencies {
+        classpath 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.6'
+        pitest 'org.pitest:pitest-junit5-plugin:0.10'
+    }
+}
+
 plugins {
     id 'java'
 //    id 'eclipse' // optional (to generate Eclipse project files)
@@ -22,18 +33,30 @@ plugins {
 
     // JavaFX
     id 'org.openjfx.javafxplugin' version '0.0.8'
+
+    // PIT
+    id 'info.solidsoft.pitest' version '1.4.6'
 }
 
-repositories {
-    mavenCentral()
-}
+apply plugin: "info.solidsoft.pitest"
 
 javafx {
     version = "13"
     modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.swing', 'javafx.media' ]
 }
 
-mainClassName = 'MainScreen'
+pitest {
+    targetTests  = []
+    targetClasses  = ['models.*', 'database.*']
+    testPlugin = 'junit5'
+    failWhenNoMutations = false
+    pitestVersion = '1.4.9' //not needed when a default PIT version should be used
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    timestampedReports = false
+}
+
+mainClassName = 'Main'
 group 'nl.tudelft.cse.sem.template'
 version '1.0-SNAPSHOT'
 
@@ -45,11 +68,11 @@ test {
     jacoco {
         enabled = true
         includes = []
-        excludes = ['**.menu.*', '**.game.GameScreenController*', '**.MainScreen']
+        excludes = ['**.controllers.*', '**.Main']
     }
 
     repositories { jcenter() }
-    dependencies { testCompile "org.mockito:mockito-core:1.+" }
+    dependencies { testCompile "org.mockito:mockito-core:1.+"}
 }
 
 jacocoTestReport {
@@ -62,7 +85,7 @@ jacocoTestReport {
 
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['**/menu/*', '**/game/GameScreenController*', '**/MainScreen'])
+            fileTree(dir: it, exclude: ['**/controllers/*', '**/Main'])
         })
     }
 }
@@ -81,7 +104,7 @@ jacocoTestCoverageVerification {
             enabled = true
             element = 'CLASS'
             includes = ['**']
-            excludes = ['**menu*', '**game.GameScreenController*', '**MainScreen']
+            excludes = ['**controllers*', '**Main']
             limit {
                 minimum = 0.5
             }

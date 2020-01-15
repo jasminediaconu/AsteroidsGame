@@ -1,6 +1,5 @@
 package database;
 
-import game.Game;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.sql.Connection;
@@ -13,18 +12,13 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Scanner;
-import user.AuthenticationService;
-import user.User;
+import models.authentication.AuthenticationService;
+import models.authentication.User;
+import models.game.Game;
 
 @SuppressWarnings("PMD")
 public class Database {
-
-    /**
-     * Url containing the path to where the database is stored.
-     */
-    private String url;
 
     private static final String defaultURL =
             "jdbc:sqlite:src/main/resources/database/semdatabase.db";
@@ -35,7 +29,6 @@ public class Database {
      * Constructor used when no specific database url is supplied.
      */
     public Database() {
-        this.url = defaultURL;
         this.connect();
     }
 
@@ -45,25 +38,6 @@ public class Database {
      */
     public Database(Connection connection) {
         this.connection = connection;
-        this.url = defaultURL;
-    }
-
-    /**
-     * Getter for the url.
-     *
-     * @return String url
-     */
-    public String getUrl() {
-        return this.url;
-    }
-
-    /**
-     * Setter for the url.
-     *
-     * @param url String url
-     */
-    public void setUrl(String url) {
-        this.url = url;
     }
 
     /**
@@ -72,7 +46,7 @@ public class Database {
     public void connect() {
         try {
             // create a connection to the database
-            connection = DriverManager.getConnection(this.url);
+            connection = DriverManager.getConnection(defaultURL);
 
             System.out.println("Connection to SQLite has been established.");
 
@@ -86,7 +60,7 @@ public class Database {
      *
      * @param sql statement for creating a new table
      */
-    public void createNewTable(String sql) {
+    private void createNewTable(String sql) {
         try {
             Statement stmt = connection.createStatement();
             // create a new table
@@ -127,7 +101,6 @@ public class Database {
      * @param score     score of player
      */
     public void insertGame(int id, String username, String alias, Date timestamp, int score)  {
-
         try (PreparedStatement stm = connection
                 .prepareStatement("insert into game values(?, ?, ?, ?, ?)")) {
 
@@ -154,7 +127,6 @@ public class Database {
      * @param user the User that will be added to the database
      */
     public void insertUser(User user) {
-
         try (PreparedStatement statement = connection
                 .prepareStatement("insert into user values(?,?,?)")) {
 
@@ -172,30 +144,10 @@ public class Database {
     }
 
     /**
-     * Retrieves a user.User from the user table based on the username.
+     * Retrieves a models.authentication.User from the user table based on the username.
      *
-     * @param username username of user.User
-     * @return User object created from
-     *                 if (bullet.isDead())
-     *                     anchorPane.getChildren().removeAll(bullet.getView());
-     *                 if (asteroid.isDead())
-     *                     anchorPane.getChildren().removeAll(asteroid.getView());
-     *             }
-     *         }
-     *
-     *
-     *         //check if player collided with an asteroid.
-     *         for (SpaceEntity asteroid: asteroids) {
-     *             if (player.isColliding(asteroid)) {
-     *                 player.removeLife();
-     *                 playerLives.setText("Lives: " + player.getLives());
-     *             }
-     *         }
-     *
-     *         //check if player collided with an enemy bullet.
-     *         for (Bullet bullet: bullets) {
-     *             if (bullet.getOrigin() != player && player.isColliding(bullet)) {
-     *                 player.removeLife();values retrieved from database
+     * @param username username of models.authentication.User
+     * @return User object created from database values
      */
     public User getUserByUsername(String username) {
         User user = new User(username);
@@ -263,8 +215,11 @@ public class Database {
     public Game getGameById(int id) {
         Game game = new Game();
 
-        try (PreparedStatement statement = connection
-                .prepareStatement("select * from game where id = ?")) {
+        try {
+            PreparedStatement statement = connection
+                    .prepareStatement("select * from game where id = ?");
+            statement.setString(1, String.valueOf(id));
+
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -283,6 +238,7 @@ public class Database {
             resultSet.close();
         } catch (SQLException e) {
             System.out.print("error: connection couldn't be established\n");
+            System.out.println(e.getMessage());
         }
 
         return game;
@@ -295,7 +251,7 @@ public class Database {
     public ArrayList<Game> getTop5Scores() {
         ArrayList<Game> highScores = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement("select "
-                + "* from game order by score desc limit 5")) {
+                + "* from game order by score desc limit 12")) {
 
             ResultSet resultSet = statement.executeQuery();
 
@@ -320,16 +276,57 @@ public class Database {
         return highScores;
     }
 
+    /**
+     * Inserts the given timestamp in the login attempt table.
+     * @param timestamp timestampt to insert
+     */
+    public void insertLoginAttempt(long timestamp) {
+        try (PreparedStatement stm = connection
+                .prepareStatement("insert into login_attempt values(?)")) {
+
+            stm.setLong(1, timestamp);
+
+            stm.execute();
+        } catch (SQLException e) {
+            System.out.println("insert login attempt: " + e.getMessage());
+            System.out.print("error: connection couldn't be established\n");
+        }
+    }
 
     /**
-     * Main method that connects to the database and creates the user and
-     * games table if they are not created yet.
+     * Gets the last entry from the login attempt table.
+     * @return last time stored in the login attempt table.
+     */
+    public long getLastLoginLocked() {
+        long timestamp = Long.MAX_VALUE;
+
+        try (PreparedStatement statement = connection.prepareStatement("select "
+                + "* from login_attempt order by timestamp desc limit 1")) {
+
+            ResultSet resultSet = statement.executeQuery();
+
+            resultSet.next();
+            timestamp = resultSet.getLong("timestamp");
+
+            resultSet.close();
+        } catch (SQLException e) {
+            System.out.println("get last login locked error: " + e.getMessage());
+            System.out.print("error: connection couldn't be established\n");
+        }
+
+        return timestamp;
+    }
+
+
+    /**
+     * Main method that connects to the database and creates the user,
+     * games and login attempt table if they are not created yet.
      */
     public static void createDatabase() {
         Database db = new Database();
         db.connect();
         String createTableGame =
-                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
+                "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY KEY,"
                   + "username TEXT NOT NULL, alias TEXT NOT NULL,"
                     + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
 
@@ -337,8 +334,12 @@ public class Database {
                 "CREATE TABLE IF NOT EXISTS user(username TEXT PRIMARY KEY,"
                         + "password BLOB NOT NULL, salt BLOB NOT NULL)";
 
+        String createTableLoginAttempts =
+                "CREATE TABLE IF NOT EXISTS login_attempt(timestamp INTEGER NOT NULL)";
+
         db.createNewTable(createTableUser);
         db.createNewTable(createTableGame);
+        db.createNewTable(createTableLoginAttempts);
 
         db.populateDatabase(db);
     }
@@ -358,7 +359,9 @@ public class Database {
                 "src/main/resources/database/standard_data/games.txt");
 
         for (Game game : gamesList) {
-            database.insertGame(game);
+            if (database.getGameById(game.getId()).getAlias() == null) {
+                database.insertGame(game);
+            }
         }
     }
 
@@ -419,7 +422,7 @@ public class Database {
             return userList;
         }
 
-        AuthenticationService as = new AuthenticationService();
+        AuthenticationService as = new AuthenticationService(this);
 
         int numberOfUsers = sc.nextInt();
         sc.nextLine();

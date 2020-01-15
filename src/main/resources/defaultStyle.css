@@ -5,7 +5,7 @@
  }
 
 AnchorPane {
-    -fx-background-image: url("/menu/images/stars.png");
+    -fx-background-image: url("/views/images/stars.png");
 }
 
 Button {

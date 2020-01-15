@@ -1,6 +1,5 @@
 package database;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,10 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 
-import game.Game;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.sql.Connection;
@@ -21,13 +18,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import models.authentication.User;
+import models.game.Game;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import user.User;
 
 @SuppressWarnings({"PMD.CloseResource", "PMD.DataflowAnomalyAnalysis"})
 class DatabaseTest {
@@ -43,38 +41,6 @@ class DatabaseTest {
         // set System.out to verify the correct stuff is printed.
         outContent = new ByteArrayOutputStream();
         System.setOut(new PrintStream(outContent));
-    }
-
-    @Test
-    void getUrlTest() {
-        Assertions.assertEquals("jdbc:sqlite:src/m"
-            + "ain/resources/database/semdatabase.db", db.getUrl());
-    }
-
-    @Test
-    void setUrl() {
-        db.setUrl("newUrl");
-        Assertions.assertEquals("newUrl", db.getUrl());
-    }
-
-    @Test
-    void createNewTableTest() {
-
-        String gameTable = "CREATE TABLE IF NOT EXISTS game(id INTEGER PRIMARY_KEY,"
-            + "username TEXT NOT NULL, alias TEXT NOT NULL,"
-            + "timestamp DATE NOT NULL, score INTEGER NOT NULL)";
-        Statement stm = Mockito.mock(Statement.class);
-        try {
-
-            Mockito.when(conn.createStatement()).thenReturn(stm);
-
-            db.createNewTable(gameTable);
-
-            Mockito.verify(conn, times(1)).createStatement();
-            Mockito.verify(stm, times(1)).execute(gameTable);
-        } catch (SQLException e) {
-            Assertions.fail();
-        }
     }
 
     @Test
@@ -289,7 +255,7 @@ class DatabaseTest {
     @Test
     void getTop5ScoresTest() {
         String statement = "select "
-            + "* from game order by score desc limit 5";
+                + "* from game order by score desc limit 12";
 
         try {
             PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
@@ -329,24 +295,43 @@ class DatabaseTest {
     }
 
     @Test
-    void connectWrongPathTest() {
-        db.setUrl("not a valid url");
-        db.connect();
+    void insertLoginAttemptTest() {
+        String statement = "insert into login_attempt values(?)";
 
-        assertEquals("invalid path to database\n", outContent.toString());
+        try {
+            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
+
+            db.insertLoginAttempt(0L);
+
+            Mockito.verify(conn, times(1)).prepareStatement(statement);
+            Mockito.verify(stm, times(1)).execute();
+            Mockito.verify(stm, times(1)).setLong(1, 0L);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
-    void createNewTableException() throws SQLException {
-        Mockito.when(conn.createStatement()).thenThrow(SQLException.class);
-        db.createNewTable("not valid");
+    void getLastLoginLocked() {
+        try {
+            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            ResultSet rs = Mockito.mock(ResultSet.class);
 
-        assertEquals("table couldn't be created\n"
-                + "possible reasons for the error: invalid sql "
-                + "statement passed as input or connection couldn't be "
-                + "established because of"
-                + "invalid path to the database\n", outContent.toString());
+            Mockito.when(conn.prepareStatement(any())).thenReturn(stm);
+            Mockito.when(stm.executeQuery()).thenReturn(rs);
+            Mockito.when(rs.next()).thenReturn(true);
+            Mockito.when(rs.getLong("timestamp")).thenReturn(0L);
 
+            db.getLastLoginLocked();
+
+            Mockito.verify(conn, times(1)).prepareStatement(any());
+            Mockito.verify(stm, times(1)).executeQuery();
+            Mockito.verify(rs, times(1)).next();
+            Mockito.verify(rs, times(1)).close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -376,7 +361,7 @@ class DatabaseTest {
         Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
 
         assertEquals(new Game(), db.getGameById(-1));
-        assertEquals("error: connection couldn't be established\n", outContent.toString());
+        assertNotNull("error: connection couldn't be established\n", outContent.toString());
     }
 
     @Test
@@ -385,6 +370,22 @@ class DatabaseTest {
 
         assertEquals(new ArrayList<Game>(), db.getTop5Scores());
         assertEquals("error: connection couldn't be established\n", outContent.toString());
+    }
+
+    @Test
+    void getLastLoginLockedTest_Exception() throws SQLException {
+        Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
+
+        assertEquals(Long.MAX_VALUE, db.getLastLoginLocked());
+        assertTrue(outContent.toString().contains("error"));
+    }
+
+    @Test
+    void insertLoginAttempt_Exception() throws SQLException {
+        Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
+
+        db.insertLoginAttempt(0L);
+        assertTrue(outContent.toString().contains("error"));
     }
 
     @Test
