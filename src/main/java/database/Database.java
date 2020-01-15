@@ -147,27 +147,7 @@ public class Database {
      * Retrieves a models.authentication.User from the user table based on the username.
      *
      * @param username username of models.authentication.User
-     * @return User object created from
-     *                 if (bullet.isDead())
-     *                     anchorPane.getChildren().removeAll(bullet.getView());
-     *                 if (asteroid.isDead())
-     *                     anchorPane.getChildren().removeAll(asteroid.getView());
-     *             }
-     *         }
-     *
-     *
-     *         //check if player collided with an asteroid.
-     *         for (SpaceEntity asteroid: asteroids) {
-     *             if (player.isColliding(asteroid)) {
-     *                 player.removeLife();
-     *                 playerLives.setText("Lives: " + player.getLives());
-     *             }
-     *         }
-     *
-     *         //check if player collided with an enemy bullet.
-     *         for (Bullet bullet: bullets) {
-     *             if (bullet.getOrigin() != player && player.isColliding(bullet)) {
-     *                 player.removeLife();values retrieved from database
+     * @return User object created from database values
      */
     public User getUserByUsername(String username) {
         User user = new User(username);
