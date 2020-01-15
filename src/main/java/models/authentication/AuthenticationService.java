@@ -16,6 +16,12 @@ import javax.crypto.spec.PBEKeySpec;
  */
 public class AuthenticationService {
 
+    private transient Database db;
+
+    public AuthenticationService(Database db) {
+        this.db = db;
+    }
+
     /**
      * Checks if the user created on login is a registered user.
      * This is done by comparing the encrypted password stored in the database
@@ -24,7 +30,6 @@ public class AuthenticationService {
      * @return true iff the user provided a correct username and password combination
      */
     public boolean authenticate(User user) {
-        Database db = new Database();
         User userFromDB = db.getUserByUsername(user.getUsername());
 
         if (userFromDB == null) {
@@ -116,5 +121,42 @@ public class AuthenticationService {
         }
 
         return user;
+    }
+
+    /**
+     * Stores the current System time in the database to keep track
+     * of when the user should be allowed to login again.
+     */
+    public void setLoginLocked(long timestamp) {
+        db.insertLoginAttempt(timestamp);
+        System.out.println("inserted into db login locked: " + timestamp);
+    }
+
+    /**
+     * Checks the database to see if the stored time is more than 5 minutes ago.
+     * @return true iff user is allowed to attempt login again.
+     */
+    public long loginLockedForSeconds() {
+        long timeLocked = db.getLastLoginLocked();
+        long now = System.currentTimeMillis();
+
+        if (timeLocked >= now) {
+            return 0L;
+        }
+
+        long millis = now - timeLocked;
+        return 300000L - millis;
+    }
+
+    /**
+     * Checks the database to see if the stored time is more than 5 minutes ago.
+     * @return true iff user is allowed to attempt login again.
+     */
+    public boolean isLoginLocked() {
+        long lockedfor = loginLockedForSeconds();
+        System.out.println("locked for: " + lockedfor);
+        boolean res = lockedfor > 0L;
+        System.out.println("bool: " + res);
+        return lockedfor > 0L;
     }
 }

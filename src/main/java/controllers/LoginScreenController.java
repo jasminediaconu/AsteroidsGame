@@ -1,5 +1,6 @@
 package controllers;
 
+import database.Database;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -26,9 +27,10 @@ import models.authentication.User;
 public class LoginScreenController {
     private static final int minPasswordLength = 5;
     private static final int minUsernameLength = 4;
+    private static int numberOfAttempts = 0;
+    private static final int numberOfAttemptsAllowed = 3;
 
     private Scene mainScreen;
-
     private Scene menuScreen;
 
     @FXML
@@ -56,22 +58,45 @@ public class LoginScreenController {
      * Authenticates User.
      */
     public void login(ActionEvent actionEvent) {
-        String password = passwordField.getText();
-        String username = usernameField.getText();
+        if (validateInput()) {
 
-        User attemptedUser = new User(username, password.getBytes());
-        AuthenticationService authService = new AuthenticationService();
+            AuthenticationService authService = new AuthenticationService(new Database());
 
-        validateInput();
-        if (authService.authenticate(attemptedUser)) {
-            System.out.println("Login successful");
-            errorMessage.setStyle("-fx-opacity: 0;");
-            successMessage.setStyle("-fx-opacity: 100;");
-            openMenuScreen(actionEvent);
-        } else {
-            successMessage.setStyle("-fx-opacity: 0;");
-            errorMessage.setStyle("-fx-opacity: 100;");
-            System.out.println("Login failed");
+            if (!authService.isLoginLocked()) {
+                String password = passwordField.getText();
+                String username = usernameField.getText();
+
+                User attemptedUser = new User(username, password.getBytes());
+
+                if (authService.authenticate(attemptedUser)) {
+                    System.out.println("Login successful");
+                    errorMessage.setStyle("-fx-opacity: 0;");
+                    successMessage.setStyle("-fx-opacity: 100;");
+
+                    openMenuScreen(actionEvent);
+                } else {
+                    successMessage.setStyle("-fx-opacity: 0;");
+                    errorMessage.setStyle("-fx-opacity: 100;");
+                    errorMessage.setText("Login failed. \n" + (2 - numberOfAttempts)
+                            + " More failed attempts and login will be locked for 5 minutes");
+                    System.out.println("Login failed");
+
+                    if (numberOfAttempts < numberOfAttemptsAllowed) {
+                        numberOfAttempts++;
+                    } else {
+                        errorMessage.setText("3rd login attempt failed. Try again in 5 minutes");
+                        System.out.println("3rd login attempt failed");
+                        // lock login for 5 mins
+                        authService.setLoginLocked(System.currentTimeMillis());
+                    }
+                }
+            } else {
+                long lockedFor = authService.loginLockedForSeconds();
+                successMessage.setStyle("-fx-opacity: 0;");
+                errorMessage.setStyle("-fx-opacity: 100;");
+                errorMessage.setText("3rd login attempt failed.\nTry again in "
+                        + lockedFor / 1000 + " seconds.");
+            }
         }
     }
 

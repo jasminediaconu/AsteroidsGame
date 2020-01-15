@@ -18,7 +18,7 @@ public class RegisterScreenController {
 
     private static Database db = new Database();
 
-    private static AuthenticationService authService = new AuthenticationService();
+    private static AuthenticationService authService = new AuthenticationService(db);
 
     private Scene mainScreen;
 
