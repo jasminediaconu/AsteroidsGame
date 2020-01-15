@@ -3,6 +3,7 @@ package models;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import javafx.geometry.Point2D;
 import models.game.Hostile;
 import models.game.hostiles.Juggernaut;
 import models.game.hostiles.Sniper;
@@ -34,10 +35,10 @@ public class HostileTest {
 
     @Test
     void ufoLinkTest() {
-        Juggernaut jg = new Juggernaut();
-        assertEquals("/views/sprites/enemyBlue1.png",jg.getUrl());
-        Sniper sp = new Sniper();
-        assertEquals("/views/sprites/enemyBlue1.png",sp.getUrl());
+        Juggernaut jg = new Juggernaut(new Point2D(0, 0));
+        assertEquals("/views/sprites/Juggernaut.png",jg.getUrl());
+        Sniper sp = new Sniper(new Point2D(0, 0));
+        assertEquals("/views/sprites/Sniper.png",sp.getUrl());
     }
 
 }

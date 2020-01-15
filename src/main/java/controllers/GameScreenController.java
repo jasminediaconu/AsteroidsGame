@@ -57,9 +57,9 @@ public class GameScreenController {
     private transient ActionEvent event;
 
     //TODO: make spawn chances increase with a higher score.
-    private static final double asteroidSpawnChance = 0.03;
+    private static final double asteroidSpawnChance = 0.02;
     private static final double hostileSpawnChance = 0.005;
-    private static final int hostileCount = 0;
+    private static final int hostileCount = 3;
 
     private transient AnchorPane anchorPane;
     @FXML private transient Pane pauseScreen;
@@ -69,7 +69,6 @@ public class GameScreenController {
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<Hostile> hostiles = new ArrayList<>();
-    private transient List<SpaceEntity> ufos = new ArrayList<>();
 
     private transient Robot robot = new Robot();
 
@@ -77,7 +76,7 @@ public class GameScreenController {
 
     //TODO: change text to icon
     private transient Text playerLives;
-    private transient Player player;
+    private static transient Player player;
 
     private transient boolean up = false;
     private transient boolean right = false;
@@ -110,7 +109,6 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.F) {
                 fkey = true;
             } else if (e.getCode() == KeyCode.DOWN) {
-                System.out.println("Invulnerability time: " + player.getInvulnerabilityTime());
                 down = true;
             } else if ((e.getCode() == KeyCode.P)) {
                 pkey = pkey ? false : true;
@@ -335,7 +333,7 @@ public class GameScreenController {
         }
 
         //check if player collided with an enemy ship.
-        for (SpaceEntity ufo: ufos) {
+        for (SpaceEntity ufo: hostiles) {
             if (player.isColliding(ufo) && !isShieldActive) {
                 updateLives(false);
             }
@@ -346,7 +344,7 @@ public class GameScreenController {
 
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
-        hostiles.forEach(Hostile::thrust);
+        hostiles.forEach(Hostile::action);
         hostiles.forEach(Hostile::move);
         player.move();
         player.cooldown();
@@ -360,7 +358,6 @@ public class GameScreenController {
 
         if (isShieldActive) {
             player.getShield().move();
-            System.out.println("The shield is moving with the player.");
         }
 
         // checks if the shield time has expired
@@ -377,7 +374,7 @@ public class GameScreenController {
             addAsteroid(Asteroid.spawnAsteroid());
         }
 
-        if (Math.random() < hostileSpawnChance && hostileCount < 2) {
+        if (Math.random() < hostileSpawnChance && hostiles.size() < hostileCount) {
             addHostile(Hostile.spawnHostile());
         }
     }
@@ -526,6 +523,10 @@ public class GameScreenController {
             // TODO go to Leaderboard screen
             Platform.exit();
         }
+    }
+
+    public static Point2D getPlayerLocation() {
+        return player.getLocation();
     }
 }
 

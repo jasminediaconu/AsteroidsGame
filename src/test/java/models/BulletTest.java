@@ -26,7 +26,7 @@ class BulletTest {
         player = new Player();
         playerBullet = new Bullet(player);
 
-        ufo = new Sniper();
+        ufo = new Sniper(new Point2D(0, 0));
         hostileBullet = new Bullet(ufo);
     }
 
