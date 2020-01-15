@@ -7,16 +7,18 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import database.Database;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
-
 import models.authentication.AuthenticationService;
 import models.authentication.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.mockito.Mockito;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AuthenticationServiceTest {
@@ -31,6 +33,9 @@ class AuthenticationServiceTest {
     private static final String username = "username";
     private static final String password = "password";
 
+    private transient ByteArrayOutputStream outContent;
+
+
     @BeforeEach
     void setUp() throws InvalidKeySpecException,
             NoSuchAlgorithmException,
@@ -44,6 +49,9 @@ class AuthenticationServiceTest {
         expectedPwEncrypted = authService.encryptPassword(saltBytes, pw);
         userFromDB.setPassword(expectedPwEncrypted);
         userFromDB.setSalt(saltBytes);
+
+        outContent = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outContent));
     }
 
     @Test
@@ -51,6 +59,9 @@ class AuthenticationServiceTest {
             InvalidKeySpecException,
             UnsupportedEncodingException {
         byte[] salt = authService.generateSalt();
+
+        assertFalse(Arrays.equals(new byte[8], salt));
+
         userFromDB.setSalt(salt);
 
         expectedPwEncrypted = authService.encryptPassword(salt, pw);
@@ -128,5 +139,17 @@ class AuthenticationServiceTest {
         assertArrayEquals(encrypted.getPassword(),
                 authService.encryptPassword(saltBytes, nonEncrypted.getPassword()));
         assertTrue(authService.authenticate(nonEncrypted, encrypted));
+    }
+
+    @Test
+    void authenticateException() {
+        User mockUser = Mockito.mock(User.class);
+        Mockito.when(mockUser.getPassword()).thenThrow(NoSuchAlgorithmException.class);
+        Mockito.when(mockUser.getSalt()).thenReturn("salt".getBytes());
+
+        boolean res = authService.authenticate(userFromDB, mockUser);
+
+        assertFalse(res);
+        assertFalse(outContent.toString().isEmpty());
     }
 }
