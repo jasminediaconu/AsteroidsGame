@@ -1,8 +1,11 @@
 package models;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import controllers.GameScreenController;
+import javafx.geometry.Point2D;
 import models.game.Asteroid;
 import models.game.asteroids.Large;
 import models.game.asteroids.Medium;
@@ -69,5 +72,26 @@ class AsteroidTest {
         assertNotEquals(0,smCount);
         assertNotEquals(0,mdCount);
         assertNotEquals(0,lgCount);
+    }
+
+    @Test
+    public void testIsOffScreen() {
+        Asteroid asteroid = new Large();
+        asteroid.setLocation(new Point2D(-1, 5));
+        assertEquals(true, asteroid.isOffscreen());
+    }
+
+    @Test
+    public void testIsOffScreen1() {
+        Asteroid asteroid = new Large();
+        asteroid.setLocation(new Point2D(56, GameScreenController.screenSize + 1));
+        assertEquals(true, asteroid.isOffscreen());
+    }
+
+    @Test
+    public void testIsOffScreen2() {
+        Asteroid asteroid = new Large();
+        asteroid.setLocation(new Point2D(45, 5));
+        assertEquals(false, asteroid.isOffscreen());
     }
 }
