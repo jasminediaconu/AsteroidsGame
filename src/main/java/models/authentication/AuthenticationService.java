@@ -154,7 +154,6 @@ public class AuthenticationService {
      */
     public boolean isLoginLocked() {
         long lockedfor = loginLockedForSeconds();
-        boolean res = lockedfor > 0L;
         return lockedfor > 0L;
     }
 }
