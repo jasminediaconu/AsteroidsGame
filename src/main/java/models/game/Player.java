@@ -11,9 +11,9 @@ public class Player extends SpaceEntity {
     private static final int center = GameScreenController.screenSize / 2;
 
     //amount of time (in seconds roughly) the player has to wait until it can fire again
-    private transient double fireCooldown = 0.2;
+    private transient final double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
-    private transient double teleportCooldown = 5;
+    private transient final double teleportCooldown = 5;
     private transient double currentTeleportCooldown = teleportCooldown;
 
     //acceleration modifier, very sensitive.
