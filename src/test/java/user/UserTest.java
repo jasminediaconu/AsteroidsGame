@@ -112,4 +112,14 @@ class UserTest {
 
         assertEquals(newAlias, user.getAlias());
     }
+
+    @Test
+    void getMutatedUsername() {
+        assertEquals(username, user.getUsername());
+    }
+
+    @Test
+    void getMutatedPassword() {
+        assertEquals(password, user.getPassword());
+    }
 }

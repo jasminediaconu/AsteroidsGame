@@ -1,6 +1,7 @@
 package models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -219,5 +220,26 @@ class AsteroidTest {
         Asteroid asteroid = large;
         asteroid.setLocation(new Point2D(45, 5));
         assertEquals(false, asteroid.isOffscreen());
+    }
+
+    @Test
+    public void mutantOffsetTrueTest() {
+        Asteroid md = medium;
+        md.setLocation(new Point2D(-1,-1));
+        assertTrue(md.isOffscreen());
+    }
+
+    @Test
+    public void mutantOffsetFalseTest() {
+        Asteroid lg = large;
+        lg.setLocation(new Point2D(0,0));
+        assertFalse(lg.isOffscreen());
+    }
+
+    @Test
+    public void mutantOffsetFalseTest2() {
+        Asteroid md = medium;
+        md.setLocation(new Point2D(800,800));
+        assertFalse(md.isOffscreen());
     }
 }
