@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 import java.util.Random;
 
 import javafx.geometry.Point2D;
+import controllers.GameScreenController;
+import javafx.geometry.Point2D;
 import models.game.Asteroid;
 import models.game.SpaceEntity;
 import models.game.asteroids.Large;
@@ -198,5 +200,26 @@ class AsteroidTest {
 
         assertEquals(end, small.getLocation());
         assertEquals(1.0, small.getRotation());
+    }
+
+    @Test
+    public void testIsOffScreen() {
+        Asteroid asteroid = new Large();
+        asteroid.setLocation(new Point2D(-1, 5));
+        assertEquals(true, asteroid.isOffscreen());
+    }
+
+    @Test
+    public void testIsOffScreen1() {
+        Asteroid asteroid = new Large();
+        asteroid.setLocation(new Point2D(56, GameScreenController.screenSize + 1));
+        assertEquals(true, asteroid.isOffscreen());
+    }
+
+    @Test
+    public void testIsOffScreen2() {
+        Asteroid asteroid = new Large();
+        asteroid.setLocation(new Point2D(45, 5));
+        assertEquals(false, asteroid.isOffscreen());
     }
 }
