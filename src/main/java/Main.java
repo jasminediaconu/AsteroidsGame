@@ -38,7 +38,7 @@ public class Main extends Application {
 
             // Start background music
             AudioController audioController = new AudioController();
-            audioController.playMusic("src/main/resources/audio/gc.wav");
+            audioController.playMusic("src/main/resources/audio/bgm.wav");
 
             // Sets default icon of the application
             stage.getIcons().add(new Image("views/images/asteroid.png"));
