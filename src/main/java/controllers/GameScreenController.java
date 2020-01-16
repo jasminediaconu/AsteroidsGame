@@ -415,6 +415,9 @@ public class GameScreenController {
         }
         //checks if player died.
         if (!player.hasLives()) {
+            for (Asteroid asteroid:asteroids) {
+                anchorPane.getChildren().remove(asteroid.getView());
+            }
             gameEnd();
         }
 
