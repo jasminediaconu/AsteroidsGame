@@ -1,16 +1,23 @@
 package models.game.hostiles;
 
 import controllers.GameScreenController;
-import models.game.Hostile;
 import javafx.geometry.Point2D;
+
+import models.game.Bullet;
+import models.game.Hostile;
 
 public class Sniper extends Hostile {
 
-    private transient double course;
-    private static final transient double speed = 2;
+    private static final transient double speed = 3;
     private static final transient double rotationSpeed = 3;
-    private static final transient double rotateChance = 0.01;
+    private static final transient double rotateChance = 0.02;
     private static final transient double magicNumber = 1;
+    private static final transient int minDistance = 256;
+    private static final transient double fullTurn = 180;
+    private static final double fireCooldown = 0.6;
+    private transient double currentFireCooldown = 2;
+    private transient double course;
+
 
     public Sniper(Point2D spawnPoint) {
         setLocation(spawnPoint);
@@ -19,24 +26,45 @@ public class Sniper extends Hostile {
     @Override
     public void action() {
 
-        if(Math.random() < rotateChance) {
+        if (Math.random() < rotateChance) {
+
             course = findPlayer();
-            System.out.println(course);
+
+            if (GameScreenController.getPlayerLocation().subtract(getLocation()).magnitude()
+                    < minDistance) {
+                if (course > fullTurn) {
+                    course -= fullTurn;
+                } else {
+                    course += fullTurn;
+                }
+            } else {
+                course = findPlayer();
+            }
         }
 
         if (course > magicNumber) {
             setRotation(getRotation() - rotationSpeed);
             course = course - rotationSpeed;
-        }
-        if (course < -magicNumber) {
+
+        } else if (course < -magicNumber) {
             setRotation(getRotation() + rotationSpeed);
             course = course + rotationSpeed;
+
+        } else if (currentFireCooldown < 0) {
+            shoot();
+            currentFireCooldown = fireCooldown;
         }
+
+        currentFireCooldown -= 1.0 / 60.0;
 
         setVelocity(new Point2D(
                 Math.cos(Math.toRadians(getRotation())),
                 Math.sin(Math.toRadians(getRotation()))
         ).normalize().multiply(speed));
+    }
+
+    public void shoot() {
+        GameScreenController.addHostileBullet(new Bullet(this), this);
     }
 
     /**
@@ -53,8 +81,8 @@ public class Sniper extends Hostile {
         double x2 = getVelocity().getX();
         double y2 = getVelocity().getY();
 
-        double dot = x1*x2 + y1*y2;
-        double det = x1*y2 - y1*x2;
+        double dot = x1 * x2 + y1 * y2;
+        double det = x1 * y2 - y1 * x2;
 
         return Math.toDegrees(Math.atan2(det, dot));
     }

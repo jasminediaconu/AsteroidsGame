@@ -8,11 +8,8 @@ public class Player extends SpaceEntity {
     private static final int center = GameScreenController.screenSize / 2;
 
     //amount of time (in seconds roughly) the player has to wait until it can fire again
-    private transient double fireCooldown = 0.2;
+    private static final double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
-
-    //acceleration modifier, very sensitive.
-    private transient double acceleration = 0.069;
 
     private Shield shield;
 
@@ -55,6 +52,8 @@ public class Player extends SpaceEntity {
      * Thrust spaceship.
      */
     public void thrust() {
+        //acceleration modifier, very sensitive.
+        double acceleration = 0.069;
         setVelocity(getVelocity().add(
                 acceleration * Math.cos(Math.toRadians(getRotation())),
                 acceleration * Math.sin(Math.toRadians(getRotation()))
@@ -100,11 +99,7 @@ public class Player extends SpaceEntity {
      * @return false is the player has 0 lives, true if they have more.
      */
     public boolean hasLives() {
-        if (this.lives <= 0) {
-            return false;
-        }
-
-        return true;
+        return this.lives > 0;
     }
 
     /**

@@ -8,9 +8,10 @@ public abstract class Hostile extends SpaceEntity {
 
     private static final transient Point2D spawnPoint1 = new Point2D(0, 0);
     private static final transient Point2D spawnPoint2 = new Point2D(800, 800);
+    private static final transient int score = 500;
 
     /**
-     * moves Hostiles
+     * moves Hostiles.
      */
     public abstract void action();
 
@@ -22,19 +23,16 @@ public abstract class Hostile extends SpaceEntity {
 
         Hostile hostile;
 
-        if(Math.round(Math.random()) == 0) {
-            if(Math.round(Math.random()) == 0) {
+        if (Math.round(Math.random()) == 0) {
+            if (Math.round(Math.random()) == 0) {
                 hostile = new Juggernaut(spawnPoint1);
-            }
-            else {
+            } else {
                 hostile = new Juggernaut(spawnPoint2);
             }
-        }
-        else {
-            if(Math.round(Math.random()) == 0) {
+        } else {
+            if (Math.round(Math.random()) == 0) {
                 hostile = new Sniper(spawnPoint1);
-            }
-            else {
+            } else {
                 hostile = new Sniper(spawnPoint2);
             }
         }
@@ -42,4 +40,7 @@ public abstract class Hostile extends SpaceEntity {
         return hostile;
     }
 
+    public static int getScore() {
+        return score;
+    }
 }

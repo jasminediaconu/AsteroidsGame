@@ -9,6 +9,7 @@ import models.game.Bullet;
 import models.game.Hostile;
 import models.game.Player;
 import models.game.SpaceEntity;
+import models.game.hostiles.Juggernaut;
 import models.game.hostiles.Sniper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,22 +19,30 @@ class BulletTest {
 
     private transient Player player;
     private transient Bullet playerBullet;
-    private transient Hostile ufo;
-    private transient Bullet hostileBullet;
+    private transient Hostile sniper;
+    private transient Hostile juggernaut;
+    private transient Bullet sniperBullet;
+    private transient Bullet juggernautBullet;
+
 
     @BeforeEach
     void setUp() {
         player = new Player();
         playerBullet = new Bullet(player);
 
-        ufo = new Sniper(new Point2D(0, 0));
-        hostileBullet = new Bullet(ufo);
+        sniper = new Sniper(new Point2D(0, 0));
+        sniperBullet = new Bullet(sniper);
+
+        juggernaut = new Juggernaut(new Point2D(0, 0));
+        juggernautBullet = new Bullet(juggernaut);
     }
 
     @Test
     void originTest() {
         assertEquals(player, playerBullet.getOrigin());
-        assertEquals(ufo, hostileBullet.getOrigin());
+        assertEquals(sniper, sniperBullet.getOrigin());
+        assertEquals(juggernaut, juggernautBullet.getOrigin());
+
     }
 
     @Test
@@ -51,13 +60,17 @@ class BulletTest {
     @Test
     void getUrlTest() {
         assertEquals("/views/sprites/laserBlue16.png", playerBullet.getUrl());
-        assertEquals("/views/sprites/laserGreen16.png", hostileBullet.getUrl());
+        assertEquals("/views/sprites/laserGreen16.png", sniperBullet.getUrl());
+        assertEquals("/views/sprites/laserGreen16.png", juggernautBullet.getUrl());
+
     }
 
     @Test
     void testSpeed() {
         assertEquals(Bullet.getDefaultSpeed(), playerBullet.getSpeed());
-        assertEquals(Bullet.getHostileSpeed(), hostileBullet.getSpeed());
+        assertEquals(Bullet.getSniperSpeed(), sniperBullet.getSpeed());
+        assertEquals(Bullet.getJuggernautSpeed(), juggernautBullet.getSpeed());
+
     }
 
     @Test

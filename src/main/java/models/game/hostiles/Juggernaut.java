@@ -1,17 +1,26 @@
 package models.game.hostiles;
 
 import controllers.GameScreenController;
-import models.game.Hostile;
 import javafx.geometry.Point2D;
+
+import models.game.Bullet;
+import models.game.Hostile;
 
 public class Juggernaut extends Hostile {
 
     private transient double course;
     private static final transient double speed = 1;
     private static final transient double fullTurn = 180;
-    private static final transient double rotationSpeed = 1;
+    private static final transient double rotationSpeed = 0.5;
     private static final transient double rotateChance = 0.01;
+    private static final double fireCooldown = 0.3;
+    private transient double currentFireCooldown = 2;
 
+    /**
+     * Spawns a new Juggernaut at the given coordinates,
+     * and gives it a new random course.
+     * @param spawnPoint the spawn point.
+     */
     public Juggernaut(Point2D spawnPoint) {
         course = randomCourse();
         setVelocity(new Point2D(0, 1));
@@ -21,10 +30,22 @@ public class Juggernaut extends Hostile {
     @Override
     public void action() {
 
-        if (getRotation() > course - rotationSpeed
-                && getRotation() < course + rotationSpeed) {
+        if (getRotation() > course + rotationSpeed) {
 
-            if(Math.random() < rotateChance) {
+            setRotation(getRotation() - rotationSpeed);
+
+        } else if (getRotation() < course - rotationSpeed) {
+
+            setRotation(getRotation() + rotationSpeed);
+
+        } else if (currentFireCooldown < 0) {
+
+            shoot();
+            currentFireCooldown = fireCooldown;
+
+        } else {
+
+            if (Math.random() < rotateChance) {
                 course = randomCourse();
             }
 
@@ -32,15 +53,14 @@ public class Juggernaut extends Hostile {
                     Math.cos(Math.toRadians(getRotation())),
                     Math.sin(Math.toRadians(getRotation()))
             ).normalize().multiply(speed));
-
-        } else {
-            if (getRotation() > course) {
-                setRotation(getRotation() - rotationSpeed);
-            }
-            if (getRotation() < course) {
-                setRotation(getRotation() + rotationSpeed);
-            }
         }
+
+        currentFireCooldown -= 1.0 / 60.0;
+    }
+
+    public void shoot() {
+        this.currentFireCooldown = this.fireCooldown;
+        GameScreenController.addHostileBullet(new Bullet(this), this);
     }
 
     private double randomCourse() {

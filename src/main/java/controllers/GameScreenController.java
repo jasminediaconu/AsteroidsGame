@@ -57,16 +57,16 @@ public class GameScreenController {
     private transient ActionEvent event;
 
     //TODO: make spawn chances increase with a higher score.
-    private static final double asteroidSpawnChance = 0.02;
-    private static final double hostileSpawnChance = 0.005;
+    private static final double asteroidSpawnChance = 0.01;
+    private static final double hostileSpawnChance = 0.01;
     private static final int hostileCount = 3;
 
-    private transient AnchorPane anchorPane;
+    private static transient AnchorPane anchorPane;
     @FXML private transient Pane pauseScreen;
 
     private transient URL pauseScreenFile;
     private transient Scene gameScene;
-    private transient List<Bullet> bullets = new ArrayList<>();
+    private static transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<Hostile> hostiles = new ArrayList<>();
 
@@ -93,7 +93,8 @@ public class GameScreenController {
      * GameScreenController constructor.
      */
     public GameScreenController() {
-        anchorPane = new AnchorPane();
+        // Ignored PMD violation for crude implementation of Hostile bullets.
+        anchorPane = new AnchorPane(); //NOPMD
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
 
@@ -197,13 +198,14 @@ public class GameScreenController {
      * @param bullet Bullet type
      * @param firedFrom SpaceEntity that fired the bullet
      */
-    private void addBullet(Bullet bullet, SpaceEntity firedFrom) {
-        bullets.add(bullet);
-        addSpaceEntity(bullet);
+    private static void addBullet(Bullet bullet, SpaceEntity firedFrom) {
+
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
-
         bullet.setLocation(new Point2D(x, y));
+
+        bullets.add(bullet);
+        addSpaceEntity(bullet);
     }
 
     /**
@@ -241,7 +243,7 @@ public class GameScreenController {
      * This method adds a generic SpaceEntity on the screen.
      * @param object SpaceEntity type
      */
-    private void addSpaceEntity(SpaceEntity object) {
+    private static void addSpaceEntity(SpaceEntity object) {
         object.setView(new ImageView(new Image(object.getUrl())));
         object.getView().setTranslateX(object.getLocation().getX());
         object.getView().setTranslateY(object.getLocation().getY());
@@ -302,6 +304,21 @@ public class GameScreenController {
 
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
+
+                if (!bullet.checkDistance()) {
+                    anchorPane.getChildren().remove(bullet.getView());
+                }
+            }
+            //check if a player bullet collided with an hostile
+            for (Hostile hostile : hostiles) {
+                if (bullet.isColliding(hostile) && bullet.getOrigin() == player) {
+                    bullet.setAlive(false);
+                    hostile.setAlive(false);
+                    player.incrementScore(hostile.getScore());
+                    score.setText("Score: " + player.getCurrentScore());
+                    anchorPane.getChildren().removeAll(bullet.getView(), hostile.getView());
+                }
+
                 if (!bullet.checkDistance()) {
                     anchorPane.getChildren().remove(bullet.getView());
                 }
@@ -341,11 +358,14 @@ public class GameScreenController {
 
         bullets.removeIf(SpaceEntity::isDead);
         asteroids.removeIf(SpaceEntity::isDead);
+        hostiles.removeIf(SpaceEntity::isDead);
 
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
-        hostiles.forEach(Hostile::action);
         hostiles.forEach(Hostile::move);
+
+        hostiles.forEach(Hostile::action);
+
         player.move();
         player.cooldown();
         player.updateInvulnerabilityTime();
@@ -527,6 +547,11 @@ public class GameScreenController {
 
     public static Point2D getPlayerLocation() {
         return player.getLocation();
+    }
+
+    public static void addHostileBullet(Bullet bullet, Hostile source) {
+        bullets.add(bullet);
+        addBullet(bullet, source);
     }
 }
 
