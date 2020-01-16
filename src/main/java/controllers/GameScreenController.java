@@ -287,6 +287,7 @@ public class GameScreenController {
         anchorPane.getChildren().add(object.getView());
     }
 
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void updateLives(boolean addLife) {
         if (addLife) {
             player.addLife();
@@ -294,6 +295,11 @@ public class GameScreenController {
             player.removeLife();
             isShieldActive = true;
             addShield(player.activateShield());
+
+            for (Asteroid asteroid: asteroids) {
+                asteroid.setAlive(false);
+                anchorPane.getChildren().remove(asteroid.getView());
+            }
         }
         playerLives.setText("Lives: " + player.getLives());
     }
@@ -351,9 +357,6 @@ public class GameScreenController {
                 }
                 if (!bullet.checkDistance()) {
                     anchorPane.getChildren().remove(bullet.getView());
-                }
-                if (asteroid.isOffscreen()) {
-                    anchorPane.getChildren().remove(asteroid.getView());
                 }
             }
         }
@@ -416,6 +419,7 @@ public class GameScreenController {
         //checks if player died.
         if (!player.hasLives()) {
             for (Asteroid asteroid:asteroids) {
+                asteroids.remove(asteroid);
                 anchorPane.getChildren().remove(asteroid.getView());
             }
             gameEnd();
