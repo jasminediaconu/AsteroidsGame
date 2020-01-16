@@ -310,10 +310,8 @@ public class GameScreenController {
     private void onUpdate() {
 
         if (!pauseScreenInitiated) {
-            System.out.println("pause screen initiating" + pauseScreenInitiated);
             createPauseScreen();
             pauseScreenInitiated = true;
-            System.out.println("pause screen initiated" + pauseScreenInitiated);
         }
 
         if (isStopped) {
@@ -444,10 +442,8 @@ public class GameScreenController {
             // Start thrust sound
             if (thrustSound.getClip() == null) {
                 thrustSound.playSound("src/main/resources/audio/thrust.wav");
-                System.out.println("starting thrust");
             } else if (thrustSound.getClip() != null && !thrustSound.getClip().isActive()) {
                 thrustSound.playSound("src/main/resources/audio/thrust.wav");
-                System.out.println("playing thrust");
             }
         } else if (thrustSound.getClip() != null && thrustSound.getClip().isActive()) {
             thrustSound.stop();
@@ -464,16 +460,13 @@ public class GameScreenController {
             // Start rotate sound effect
             if (rotateSound.getClip() == null) {
                 rotateSound.playSound("src/main/resources/audio/rotate.wav");
-                System.out.println("starting rrotate");
             } else if (rotateSound.getClip() != null && !rotateSound.getClip().isActive()) {
                 rotateSound.playSound("src/main/resources/audio/rotate.wav");
-                System.out.println("playing rrotate");
             }
 
         } else if (rotateSound.getClip() != null && rotateSound.getClip().isActive()) {
             // Stop rotate sound effect
             rotateSound.stop();
-            System.out.println("stopping rotate");
         }
 
         if (space && player.canFire()) {
