@@ -2,6 +2,8 @@ package models.game.asteroids;
 
 import models.game.Asteroid;
 
+import java.util.Random;
+
 public class Small extends Asteroid {
 
     private static final String sprite0 =
@@ -12,8 +14,8 @@ public class Small extends Asteroid {
     private static final int maxRotation = 8;
     private static final int maxVelocity = 8;
 
-    public Small() {
-        super(maxVelocity, maxRotation);
+    public Small(Random random) {
+        super(maxVelocity, maxRotation, random);
         this.score = 200;
     }
 

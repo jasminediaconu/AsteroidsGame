@@ -287,15 +287,15 @@ public class GameScreenController {
                     }
 
                     if (asteroid instanceof Large) {
-                        Medium md1 = new Medium();
-                        Medium md2 = new Medium();
+                        Medium md1 = new Medium(new Random());
+                        Medium md2 = new Medium(new Random());
                         md1.setLocation(asteroid.getLocation());
                         md2.setLocation(asteroid.getLocation());
                         newMeds.add(md1);
                         newMeds.add(md2);
                     } else if (asteroid instanceof Medium) {
-                        Small sm1 = new Small();
-                        Small sm2 = new Small();
+                        Small sm1 = new Small(new Random());
+                        Small sm2 = new Small(new Random());
                         sm1.setLocation(asteroid.getLocation());
                         sm2.setLocation(asteroid.getLocation());
                         newSmalls.add(sm1);
@@ -372,7 +372,7 @@ public class GameScreenController {
         }
 
         if (Math.random() < asteroidSpawnChance) {
-            addAsteroid(Asteroid.spawnAsteroid());
+            addAsteroid(Asteroid.spawnAsteroid(Math.random()));
         }
 
         if (Math.random() < hostileSpawnChance && hostileCount < 2) {
