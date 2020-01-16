@@ -352,6 +352,9 @@ public class GameScreenController {
                 if (!bullet.checkDistance()) {
                     anchorPane.getChildren().remove(bullet.getView());
                 }
+                if (asteroid.isOffscreen()) {
+                    anchorPane.getChildren().remove(asteroid.getView());
+                }
             }
         }
 
