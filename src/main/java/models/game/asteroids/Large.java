@@ -1,8 +1,7 @@
 package models.game.asteroids;
 
-import models.game.Asteroid;
-
 import java.util.Random;
+import models.game.Asteroid;
 
 public class Large extends Asteroid {
 

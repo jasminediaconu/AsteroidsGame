@@ -6,10 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Random;
-
-import javafx.geometry.Point2D;
 import controllers.GameScreenController;
+import java.util.Random;
 import javafx.geometry.Point2D;
 import models.game.Asteroid;
 import models.game.SpaceEntity;
@@ -204,21 +202,21 @@ class AsteroidTest {
 
     @Test
     public void testIsOffScreen() {
-        Asteroid asteroid = new Large();
+        Asteroid asteroid = large;
         asteroid.setLocation(new Point2D(-1, 5));
         assertEquals(true, asteroid.isOffscreen());
     }
 
     @Test
     public void testIsOffScreen1() {
-        Asteroid asteroid = new Large();
+        Asteroid asteroid = large;
         asteroid.setLocation(new Point2D(56, GameScreenController.screenSize + 1));
         assertEquals(true, asteroid.isOffscreen());
     }
 
     @Test
     public void testIsOffScreen2() {
-        Asteroid asteroid = new Large();
+        Asteroid asteroid = large;
         asteroid.setLocation(new Point2D(45, 5));
         assertEquals(false, asteroid.isOffscreen());
     }
