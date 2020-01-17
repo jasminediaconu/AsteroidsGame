@@ -395,7 +395,7 @@ class DatabaseTest {
 
         boolean negativeId = false;
 
-        for(Game game:games) {
+        for (Game game:games) {
             if (game.getId() <= 0) {
                 negativeId = true;
             }
