@@ -3,6 +3,7 @@ package models.game;
 import static controllers.GameScreenController.screenSize;
 
 import java.util.Random;
+
 import javafx.geometry.Point2D;
 import models.game.asteroids.Large;
 import models.game.asteroids.Medium;
@@ -37,10 +38,10 @@ public abstract class Asteroid extends SpaceEntity {
      * @param maxVelocity the maximum possible velocity of this asteroid.
      * @param maxRotation the maximum possible rotation of this asteroid.
      */
-    public Asteroid(int maxVelocity, int maxRotation) {
+    public Asteroid(int maxVelocity, int maxRotation, Random rand) {
 
         Point2D course;
-        Random rand = new Random();
+
         int gaussianCourse = (int) (rand.nextGaussian()
                 * ((screenSize / 2) - courseMargin) + (screenSize / 2));
         int gaussianSpawn = (int) (rand.nextGaussian()
@@ -113,23 +114,36 @@ public abstract class Asteroid extends SpaceEntity {
      * Method that spawns in a new random asteroid.
      * @return A new Asteroid.
      */
-    public static Asteroid spawnAsteroid() {
-
-        double number = Math.random();
-
+    public static Asteroid spawnAsteroid(double number) {
+        Random random = new Random();
         if (number < smallSpawnThreshold) {
-            return new Small();
+            return new Small(random);
         } else if (number < medSpawnThreshold) {
-            return new Medium();
+            return new Medium(random);
         } else {
-            return new Large();
+            return new Large(random);
         }
     }
 
 
+    /**
+     * Checks if asteroid is off screen.
+     * @return true iff asteroid is off screen, false otherwise
+     */
+    public boolean isOffscreen() {
+        double x = this.getLocation().getX();
+        double y = this.getLocation().getY();
+
+        if (x < 0 || y < 0 || x > screenSize || y > screenSize) {
+            return true;
+        }
+
+        return false;
+    }
+
     @Override
     public void checkMove() {
-        //TODO: kill the asteroid if it flies of the screen. (further away than the margin)
+
     }
 
     public int caseTest() {
