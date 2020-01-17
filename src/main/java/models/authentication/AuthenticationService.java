@@ -152,9 +152,6 @@ public class AuthenticationService {
      */
     public boolean isLoginLocked() {
         long lockedfor = loginLockedForSeconds();
-        System.out.println("locked for: " + lockedfor);
-        boolean res = lockedfor > 0L;
-        System.out.println("bool: " + res);
         return lockedfor > 0L;
     }
 }

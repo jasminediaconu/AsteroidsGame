@@ -11,9 +11,10 @@ public class Player extends SpaceEntity {
     private static final int center = GameScreenController.screenSize / 2;
 
     //amount of time (in seconds roughly) the player has to wait until it can fire again
-    private transient double fireCooldown = 0.2;
+    private transient final double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
-    private  transient double teleportCooldown = 0.5;
+    private transient final double teleportCooldown = 5;
+    private transient double currentTeleportCooldown = teleportCooldown;
 
     //acceleration modifier, very sensitive.
     private transient double acceleration = 0.069;
@@ -194,8 +195,8 @@ public class Player extends SpaceEntity {
         if (currentFireCooldown > Double.MIN_VALUE) {
             currentFireCooldown -= 1.0 / 60.0;
         }
-        if (teleportCooldown > Double.MIN_VALUE) {
-            teleportCooldown -= 1.0 / 60.0;
+        if (currentTeleportCooldown > Double.MIN_VALUE) {
+            currentTeleportCooldown -= 1.0 / 60.0;
         }
     }
 
@@ -272,15 +273,15 @@ public class Player extends SpaceEntity {
 
     /**
      * Teleports the player to a random location on the screen.
-     * Resets the teleport cooldown to 0.5s.
+     * Resets the teleport cooldown to teleportCooldownt.
      */
     public void teleport() {
-        if (teleportCooldown == Double.MIN_VALUE) {
+        if (currentTeleportCooldown <= Double.MIN_VALUE * 2) {
             Random rand = new Random();
             int x = rand.nextInt(GameScreenController.screenSize);
             int y = rand.nextInt(GameScreenController.screenSize);
             setLocation(new Point2D(x, y));
-            teleportCooldown = 0.5;
+            currentTeleportCooldown = teleportCooldown;
         }
     }
 }
