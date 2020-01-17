@@ -292,6 +292,7 @@ public class GameScreenController {
         anchorPane.getChildren().add(object.getView());
     }
 
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void updateLives(boolean addLife) {
         if (addLife) {
             player.addLife();
@@ -299,6 +300,11 @@ public class GameScreenController {
             player.removeLife();
             isShieldActive = true;
             addShield(player.activateShield());
+
+            for (Asteroid asteroid: asteroids) {
+                asteroid.setAlive(false);
+                anchorPane.getChildren().remove(asteroid.getView());
+            }
         }
         playerLives.setText("Lives: " + player.getLives());
     }
@@ -342,15 +348,15 @@ public class GameScreenController {
                     }
 
                     if (asteroid instanceof Large) {
-                        Medium md1 = new Medium();
-                        Medium md2 = new Medium();
+                        Medium md1 = new Medium(new Random());
+                        Medium md2 = new Medium(new Random());
                         md1.setLocation(asteroid.getLocation());
                         md2.setLocation(asteroid.getLocation());
                         newMeds.add(md1);
                         newMeds.add(md2);
                     } else if (asteroid instanceof Medium) {
-                        Small sm1 = new Small();
-                        Small sm2 = new Small();
+                        Small sm1 = new Small(new Random());
+                        Small sm2 = new Small(new Random());
                         sm1.setLocation(asteroid.getLocation());
                         sm2.setLocation(asteroid.getLocation());
                         newSmalls.add(sm1);
@@ -422,11 +428,15 @@ public class GameScreenController {
         }
         //checks if player died.
         if (!player.hasLives()) {
+            for (Asteroid asteroid:asteroids) {
+                asteroids.remove(asteroid);
+                anchorPane.getChildren().remove(asteroid.getView());
+            }
             gameEnd();
         }
 
         if (Math.random() < asteroidSpawnChance) {
-            addAsteroid(Asteroid.spawnAsteroid());
+            addAsteroid(Asteroid.spawnAsteroid(Math.random()));
         }
 
         if (Math.random() < hostileSpawnChance && hostileCount < 2) {

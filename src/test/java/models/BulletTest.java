@@ -63,12 +63,16 @@ class BulletTest {
 
     @Test
     void checkDistanceTest() {
-        playerBullet.checkDistance();
+        assertTrue(playerBullet.checkDistance());
         assertTrue(player.isAlive());
 
-        playerBullet.setDistanceTravelled(playerBullet.getMaxDistance() + 1);
+        playerBullet.setDistanceTravelled(playerBullet.getMaxDistance());
 
-        playerBullet.checkDistance();
+        assertTrue(playerBullet.checkDistance());
+
+        playerBullet.setDistanceTravelled(playerBullet.getMaxDistance() + 0.0001);
+
+        assertFalse(playerBullet.checkDistance());
         assertFalse(playerBullet.isAlive());
     }
 
@@ -84,5 +88,29 @@ class BulletTest {
     void get_set_MaxDistanceTest() {
         playerBullet.setMaxDistance(10.2);
         assertEquals(10.2, playerBullet.getMaxDistance());
+    }
+
+    @Test
+    void updateLocationTest() {
+        Point2D start = new Point2D(0, 0);
+        Point2D end = new Point2D(1, 1);
+        playerBullet.setLocation(start);
+        playerBullet.setVelocity(end);
+        playerBullet.setRotation(0.0);
+        playerBullet.setRotationSpeed(1.0);
+        playerBullet.setDistanceTravelled(0.0);
+
+        playerBullet.updateLocation();
+
+        assertEquals(new Point2D(1,1), playerBullet.getLocation());
+        assertEquals(1.0, playerBullet.getRotation());
+        assertEquals(start.distance(end), playerBullet.getDistanceTravelled());
+    }
+
+    @Test
+    void get_set_firedByPlayerTest() {
+        playerBullet.setFiredByPlayer(true);
+
+        assertTrue(playerBullet.getFiredByPlayer());
     }
 }
