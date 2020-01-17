@@ -198,7 +198,7 @@ public class GameScreenController {
      * @param bullet Bullet type
      * @param firedFrom SpaceEntity that fired the bullet
      */
-    private static void addBullet(Bullet bullet, SpaceEntity firedFrom) {
+    public static void addBullet(Bullet bullet, SpaceEntity firedFrom) {
 
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
@@ -549,9 +549,5 @@ public class GameScreenController {
         return player.getLocation();
     }
 
-    public static void addHostileBullet(Bullet bullet, Hostile source) {
-        bullets.add(bullet);
-        addBullet(bullet, source);
-    }
 }
 

@@ -11,8 +11,8 @@ public class Juggernaut extends Hostile {
     private transient double course;
     private static final transient double speed = 1;
     private static final transient double fullTurn = 180;
-    private static final transient double rotationSpeed = 0.5;
-    private static final transient double rotateChance = 0.01;
+    private static final transient double rotationSpeed = 1;
+    private static final transient double rotateChance = 0.005;
     private static final double fireCooldown = 0.3;
     private transient double currentFireCooldown = 2;
 
@@ -22,29 +22,25 @@ public class Juggernaut extends Hostile {
      * @param spawnPoint the spawn point.
      */
     public Juggernaut(Point2D spawnPoint) {
+        setRotation(-90);
         course = randomCourse();
-        setVelocity(new Point2D(0, 1));
+        setVelocity(new Point2D(0, -1));
         setLocation(spawnPoint);
     }
 
     @Override
     public void action() {
-
         if (getRotation() > course + rotationSpeed) {
-
             setRotation(getRotation() - rotationSpeed);
 
         } else if (getRotation() < course - rotationSpeed) {
-
             setRotation(getRotation() + rotationSpeed);
 
         } else if (currentFireCooldown < 0) {
-
             shoot();
             currentFireCooldown = fireCooldown;
 
         } else {
-
             if (Math.random() < rotateChance) {
                 course = randomCourse();
             }
@@ -53,14 +49,15 @@ public class Juggernaut extends Hostile {
                     Math.cos(Math.toRadians(getRotation())),
                     Math.sin(Math.toRadians(getRotation()))
             ).normalize().multiply(speed));
+
         }
 
         currentFireCooldown -= 1.0 / 60.0;
     }
 
     public void shoot() {
-        this.currentFireCooldown = this.fireCooldown;
-        GameScreenController.addHostileBullet(new Bullet(this), this);
+        this.currentFireCooldown = fireCooldown;
+        GameScreenController.addBullet(new Bullet(this), this);
     }
 
     private double randomCourse() {

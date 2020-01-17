@@ -6,8 +6,7 @@ import models.game.hostiles.Sniper;
 
 public abstract class Hostile extends SpaceEntity {
 
-    private static final transient Point2D spawnPoint1 = new Point2D(0, 0);
-    private static final transient Point2D spawnPoint2 = new Point2D(800, 800);
+    private static final transient Point2D spawnPoint = new Point2D(400, 800);
     private static final transient int score = 500;
 
     /**
@@ -24,17 +23,10 @@ public abstract class Hostile extends SpaceEntity {
         Hostile hostile;
 
         if (Math.round(Math.random()) == 0) {
-            if (Math.round(Math.random()) == 0) {
-                hostile = new Juggernaut(spawnPoint1);
-            } else {
-                hostile = new Juggernaut(spawnPoint2);
-            }
+            hostile = new Juggernaut(spawnPoint);
+
         } else {
-            if (Math.round(Math.random()) == 0) {
-                hostile = new Sniper(spawnPoint1);
-            } else {
-                hostile = new Sniper(spawnPoint2);
-            }
+            hostile = new Sniper(spawnPoint);
         }
 
         return hostile;

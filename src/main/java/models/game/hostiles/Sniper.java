@@ -8,15 +8,17 @@ import models.game.Hostile;
 
 public class Sniper extends Hostile {
 
-    private static final transient double speed = 3;
-    private static final transient double rotationSpeed = 3;
+    private static final transient double speed = 3.5;
+    private static final transient double rotationSpeed = 4;
     private static final transient double rotateChance = 0.02;
-    private static final transient double magicNumber = 1;
-    private static final transient int minDistance = 256;
+    // The distance between the Sniper and the player in which
+    // the Sniper has the chance to rotate away.
+    private static final transient int minDistance = 128;
     private static final transient double fullTurn = 180;
     private static final double fireCooldown = 0.6;
     private transient double currentFireCooldown = 2;
     private transient double course;
+    private transient boolean fleeing;
 
 
     public Sniper(Point2D spawnPoint) {
@@ -26,33 +28,37 @@ public class Sniper extends Hostile {
     @Override
     public void action() {
 
-        if (Math.random() < rotateChance) {
+        double distanceToPlayer = GameScreenController.getPlayerLocation()
+                .subtract(getLocation()).magnitude();
 
-            course = findPlayer();
-
-            if (GameScreenController.getPlayerLocation().subtract(getLocation()).magnitude()
-                    < minDistance) {
-                if (course > fullTurn) {
-                    course -= fullTurn;
-                } else {
-                    course += fullTurn;
-                }
-            } else {
-                course = findPlayer();
-            }
+        if (distanceToPlayer > minDistance + minDistance && fleeing) {
+            fleeing = false;
         }
 
-        if (course > magicNumber) {
+        if (Math.random() < rotateChance && !fleeing) {
+            course = findPlayer();
+        }
+
+        if (course > (rotationSpeed / 2)) {
             setRotation(getRotation() - rotationSpeed);
             course = course - rotationSpeed;
 
-        } else if (course < -magicNumber) {
+        } else if (course < -(rotationSpeed / 2)) {
             setRotation(getRotation() + rotationSpeed);
             course = course + rotationSpeed;
 
         } else if (currentFireCooldown < 0) {
             shoot();
             currentFireCooldown = fireCooldown;
+        }
+
+        if (distanceToPlayer < minDistance && !fleeing) {
+            fleeing = true;
+            if (course > fullTurn) {
+                course -= fullTurn;
+            } else {
+                course += fullTurn;
+            }
         }
 
         currentFireCooldown -= 1.0 / 60.0;
@@ -64,7 +70,7 @@ public class Sniper extends Hostile {
     }
 
     public void shoot() {
-        GameScreenController.addHostileBullet(new Bullet(this), this);
+        GameScreenController.addBullet(new Bullet(this), this);
     }
 
     /**

@@ -83,7 +83,7 @@ jacocoTestCoverageVerification {
             includes = ['**']
             excludes = ['**controllers*', '**Main']
             limit {
-                minimum = 0.0
+                minimum = 0.5
             }
         }
     }
