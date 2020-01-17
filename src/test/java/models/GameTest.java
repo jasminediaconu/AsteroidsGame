@@ -1,16 +1,13 @@
 package models;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.sql.Date;
 
 import models.game.Game;
-import models.game.LeaderBoardGame;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -106,24 +103,5 @@ class GameTest {
 
         game.setScore(120);
         assertNotEquals(hash2, game.hashCode());
-    }
-
-    @Test
-    void toStringTest() {
-        String gameString = "Game{id=" + id
-                + ", username=" + "'username'" + ", alias=" + "'alias'"
-                + ", timestamp=" + date + ", score=" + score + "}";
-        assertEquals(gameString, game.toString());
-    }
-
-    @Test
-    void equalsMutationTest() {
-        LeaderBoardGame leaderBoardGame = new LeaderBoardGame(username, score, date);
-        assertFalse(game.equals(leaderBoardGame));
-    }
-
-    @Test
-    void equalsMutationTest2() {
-        assertTrue(game.equals(game));
     }
 }

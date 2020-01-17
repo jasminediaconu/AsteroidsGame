@@ -1,10 +1,7 @@
 package models.game;
 
-import controllers.AudioController;
 import controllers.GameScreenController;
-import java.util.Random;
 import javafx.geometry.Point2D;
-
 
 public class Player extends SpaceEntity {
 
@@ -13,7 +10,6 @@ public class Player extends SpaceEntity {
     //amount of time (in seconds roughly) the player has to wait until it can fire again
     private transient double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
-    private  transient double teleportCooldown = 0.5;
 
     //acceleration modifier, very sensitive.
     private transient double acceleration = 0.069;
@@ -70,7 +66,6 @@ public class Player extends SpaceEntity {
      * 5 degrees to the right.
      */
     public void rotateRight() {
-
         setRotation(getRotation() + 4);
     }
 
@@ -170,11 +165,6 @@ public class Player extends SpaceEntity {
      * Function to be called when the player shoots.
      */
     public Bullet shoot() {
-
-        // Start laser sound effect
-        AudioController audioController = new AudioController();
-        audioController.playSound("src/main/resources/audio/laser_lo.wav");
-
         this.currentFireCooldown = this.fireCooldown;
         return new Bullet(this);
     }
@@ -188,14 +178,11 @@ public class Player extends SpaceEntity {
     }
 
     /**
-     * To be called every frame, decreases the cooldown timers, fireCooldown and teleportCooldovn..
+     * To be called every frame, decreases the cooldown timer.
      */
     public void cooldown() {
         if (currentFireCooldown > Double.MIN_VALUE) {
             currentFireCooldown -= 1.0 / 60.0;
-        }
-        if (teleportCooldown > Double.MIN_VALUE) {
-            teleportCooldown -= 1.0 / 60.0;
         }
     }
 
@@ -268,19 +255,5 @@ public class Player extends SpaceEntity {
      */
     public void updateInvulnerabilityTime() {
         this.invulnerabilityTime -= 1d / 60d;
-    }
-
-    /**
-     * Teleports the player to a random location on the screen.
-     * Resets the teleport cooldown to 0.5s.
-     */
-    public void teleport() {
-        if (teleportCooldown == Double.MIN_VALUE) {
-            Random rand = new Random();
-            int x = rand.nextInt(GameScreenController.screenSize);
-            int y = rand.nextInt(GameScreenController.screenSize);
-            setLocation(new Point2D(x, y));
-            teleportCooldown = 0.5;
-        }
     }
 }

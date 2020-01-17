@@ -3,9 +3,6 @@ package models;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import controllers.GameScreenController;
 import javafx.geometry.Point2D;
@@ -14,7 +11,6 @@ import models.game.Player;
 import models.game.Shield;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 public class PlayerTest {
     private transient Player player;
@@ -55,20 +51,6 @@ public class PlayerTest {
     }
 
     @Test
-    void thrust2() {
-        Point2D velocity = new Point2D(10,0);
-        player.setVelocity(velocity);
-        player.setRotation(1);
-        //Player acceleration is 0.069
-        player.thrust();
-        Point2D newVelocity = velocity.add((0.069 * Math.cos(Math.toRadians(player.getRotation()))),
-                (0.069 * Math.sin(Math.toRadians(player.getRotation()))));
-        assertEquals(newVelocity,player.getVelocity());
-        assertEquals(new Point2D(10 + 0.06898949096579,
-                0.0012042160441725624),player.getVelocity());
-    }
-
-    @Test
     void rotationTest() {
         assertEquals(0,player.getRotation());
 
@@ -103,7 +85,6 @@ public class PlayerTest {
 
     @Test
     void lifeTest() {
-
         assertEquals(3, player.getLives());
         assertTrue(player.hasLives());
 
@@ -202,11 +183,6 @@ public class PlayerTest {
         assertEquals(expected, player.getInvulnerabilityTime());
     }
 
-    @Test
-    void mockedPlayerMutant() {
-        Player mockedPlayer = mock(Player.class);
-        mockedPlayer.removeLife();
-        mockedPlayer.respawn();
-        verify(mockedPlayer, times(1)).respawn();
-    }
+
+
 }

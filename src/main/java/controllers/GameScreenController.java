@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -98,14 +97,10 @@ public class GameScreenController {
 
     private transient boolean isShieldActive = false;
 
-    private transient AudioController rotateSound = new AudioController();
-    private transient AudioController thrustSound = new AudioController();
-
     /**
      * GameScreenController constructor.
      */
     public GameScreenController() {
-
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
@@ -292,7 +287,6 @@ public class GameScreenController {
         anchorPane.getChildren().add(object.getView());
     }
 
-    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void updateLives(boolean addLife) {
         if (addLife) {
             player.addLife();
@@ -300,11 +294,6 @@ public class GameScreenController {
             player.removeLife();
             isShieldActive = true;
             addShield(player.activateShield());
-
-            for (Asteroid asteroid: asteroids) {
-                asteroid.setAlive(false);
-                anchorPane.getChildren().remove(asteroid.getView());
-            }
         }
         playerLives.setText("Lives: " + player.getLives());
     }
@@ -337,26 +326,21 @@ public class GameScreenController {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
 
-                    AudioController explosion = new AudioController();
-                    Random random = new Random();
-                    int track = random.nextInt(4) + 1;
-                    explosion.playSound("src/main/resources/audio/exp_" + track + ".wav");
-
                     if (bullet.getOrigin() == player) {
                         player.incrementScore(asteroid.getScore());
                         score.setText("Score: " + player.getCurrentScore());
                     }
 
                     if (asteroid instanceof Large) {
-                        Medium md1 = new Medium(new Random());
-                        Medium md2 = new Medium(new Random());
+                        Medium md1 = new Medium();
+                        Medium md2 = new Medium();
                         md1.setLocation(asteroid.getLocation());
                         md2.setLocation(asteroid.getLocation());
                         newMeds.add(md1);
                         newMeds.add(md2);
                     } else if (asteroid instanceof Medium) {
-                        Small sm1 = new Small(new Random());
-                        Small sm2 = new Small(new Random());
+                        Small sm1 = new Small();
+                        Small sm2 = new Small();
                         sm1.setLocation(asteroid.getLocation());
                         sm2.setLocation(asteroid.getLocation());
                         newSmalls.add(sm1);
@@ -428,15 +412,11 @@ public class GameScreenController {
         }
         //checks if player died.
         if (!player.hasLives()) {
-            for (Asteroid asteroid:asteroids) {
-                asteroids.remove(asteroid);
-                anchorPane.getChildren().remove(asteroid.getView());
-            }
             gameEnd();
         }
 
         if (Math.random() < asteroidSpawnChance) {
-            addAsteroid(Asteroid.spawnAsteroid(Math.random()));
+            addAsteroid(Asteroid.spawnAsteroid());
         }
 
         if (Math.random() < hostileSpawnChance && hostileCount < 2) {
@@ -451,46 +431,21 @@ public class GameScreenController {
     private void checkButtons() throws IOException {
         if (up) {
             player.thrust();
-            // Start thrust sound
-            if (thrustSound.getClip() == null) {
-                thrustSound.playSound("src/main/resources/audio/thrust.wav");
-                System.out.println("starting thrust");
-            } else if (thrustSound.getClip() != null && !thrustSound.getClip().isActive()) {
-                thrustSound.playSound("src/main/resources/audio/thrust.wav");
-                System.out.println("playing thrust");
-            }
-        } else if (thrustSound.getClip() != null && thrustSound.getClip().isActive()) {
-            thrustSound.stop();
         }
-
         if (right) {
             player.rotateRight();
         }
         if (left) {
             player.rotateLeft();
         }
-
-        if (left || right) {
-            // Start rotate sound effect
-            if (rotateSound.getClip() == null) {
-                rotateSound.playSound("src/main/resources/audio/rotate.wav");
-                System.out.println("starting rrotate");
-            } else if (rotateSound.getClip() != null && !rotateSound.getClip().isActive()) {
-                rotateSound.playSound("src/main/resources/audio/rotate.wav");
-                System.out.println("playing rrotate");
-            }
-
-        } else if (rotateSound.getClip() != null && rotateSound.getClip().isActive()) {
-            // Stop rotate sound effect
-            rotateSound.stop();
-            System.out.println("stopping rotate");
-        }
-
         if (space && player.canFire()) {
             addBullet(player.shoot(), player);
         }
         if (fkey) {
-            player.teleport();
+            Random rand = new Random();
+            int x = rand.nextInt(screenSize);
+            int y = rand.nextInt(screenSize);
+            player.setLocation(new Point2D(x, y));
         }
         if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
             addShield(player.activateShield());

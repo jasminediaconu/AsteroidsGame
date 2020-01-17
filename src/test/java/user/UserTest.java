@@ -1,9 +1,5 @@
 package user;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
 import java.io.UnsupportedEncodingException;
 
 import models.authentication.User;
@@ -34,20 +30,14 @@ class UserTest {
     void testAltConstructor() throws UnsupportedEncodingException {
         User testUser = new User("user", "pw".getBytes());
 
-        assertNotNull(testUser);
-        assertEquals("user", testUser.getUsername());
-        assertEquals("pw", testUser.getPasswordAsString());
+        Assertions.assertNotNull(testUser);
+        Assertions.assertEquals("user", testUser.getUsername());
+        Assertions.assertEquals("pw", testUser.getPasswordAsString());
     }
 
     @Test
     void getSalt() {
-        assertEquals(bytes, user.getSalt());
-    }
-
-    @Test
-    void setSaltNull() {
-        user.setSalt(null);
-        assertNull(user.getSalt());
+        Assertions.assertEquals(bytes, user.getSalt());
     }
 
     @Test
@@ -55,18 +45,17 @@ class UserTest {
         byte[] newBytes = "newBytes".getBytes();
         user.setSalt(newBytes);
 
-        assertEquals(newBytes, user.getSalt());
+        Assertions.assertEquals(newBytes, user.getSalt());
     }
 
     @Test
     void getSaltAsString() throws UnsupportedEncodingException {
-        assertEquals(username, user.getSaltAsString());
+        Assertions.assertEquals(username, user.getSaltAsString());
     }
 
     @Test
     void getUsername() {
-        assertNotNull(user.getUsername());
-        assertEquals(username, user.getUsername());
+        Assertions.assertEquals(username, user.getUsername());
     }
 
     @Test
@@ -74,21 +63,17 @@ class UserTest {
         String newUsername = "newUsername";
         user.setUsername(newUsername);
 
-        assertEquals(newUsername, user.getUsername());
+        Assertions.assertEquals(newUsername, user.getUsername());
     }
 
     @Test
     void getPassword() {
-        assertNotNull(user.getPassword());
-        assertEquals(password, user.getPassword());
+        Assertions.assertEquals(password, user.getPassword());
     }
 
     @Test
     void getPasswordAsString() throws UnsupportedEncodingException {
-        assertNotNull(user.getPasswordAsString());
-        assertNotNull(user.getPasswordAsString().getBytes());
-
-        assertEquals(new String(password, "UTF-8"), user.getPasswordAsString());
+        Assertions.assertEquals(new String(password, "UTF-8"), user.getPasswordAsString());
     }
 
     @Test
@@ -96,13 +81,12 @@ class UserTest {
         byte[] newPassword = "newPassword".getBytes();
         user.setPassword(newPassword);
 
-        assertEquals(newPassword, user.getPassword());
+        Assertions.assertEquals(newPassword, user.getPassword());
     }
 
     @Test
     void getAlias() {
-        assertNotNull(user.getAlias().getBytes());
-        assertEquals(alias, user.getAlias());
+        Assertions.assertEquals(alias, user.getAlias());
     }
 
     @Test
@@ -110,16 +94,6 @@ class UserTest {
         String newAlias = "newAlias";
         user.setAlias(newAlias);
 
-        assertEquals(newAlias, user.getAlias());
-    }
-
-    @Test
-    void getMutatedUsername() {
-        assertEquals(username, user.getUsername());
-    }
-
-    @Test
-    void getMutatedPassword() {
-        assertEquals(password, user.getPassword());
+        Assertions.assertEquals(newAlias, user.getAlias());
     }
 }

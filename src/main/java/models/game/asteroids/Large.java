@@ -1,6 +1,5 @@
 package models.game.asteroids;
 
-import java.util.Random;
 import models.game.Asteroid;
 
 public class Large extends Asteroid {
@@ -17,8 +16,8 @@ public class Large extends Asteroid {
     private static final int maxRotation = 2;
     private static final int maxVelocity = 2;
 
-    public Large(Random random) {
-        super(maxVelocity, maxRotation, random);
+    public Large() {
+        super(maxVelocity, maxRotation);
         this.score = 100;
     }
 

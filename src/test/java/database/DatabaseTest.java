@@ -393,16 +393,6 @@ class DatabaseTest {
         ArrayList<Game> games = db.makeGamesFromFile(
                 "src/main/resources/database/standard_data/games.txt");
 
-        boolean negativeId = false;
-
-        for (Game game:games) {
-            if (game.getId() <= 0) {
-                negativeId = true;
-            }
-        }
-
-        assertEquals(false, negativeId);
-        assertEquals(15, games.size());
         assertNotNull(games);
         assertEquals(0, db.makeGamesFromFile("not a valid path").size());
     }
