@@ -1,5 +1,6 @@
 package models;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -69,5 +70,48 @@ class AsteroidTest {
         assertNotEquals(0,smCount);
         assertNotEquals(0,mdCount);
         assertNotEquals(0,lgCount);
+    }
+
+    @Test
+    void getScoreTest() {
+        Large large = new Large();
+        assertEquals(100, large.getScore());
+
+        Medium medium = new Medium();
+        assertEquals(150, medium.getScore());
+
+        Small small = new Small();
+        assertEquals(200, small.getScore());
+    }
+
+    @Test
+    void largeSpriteTest() {
+        Large large = new Large();
+        assertEquals("/views/sprites/asteroids/asteroidBrown_big0.png",
+                large.getSprite(0));
+        assertEquals("/views/sprites/asteroids/asteroidBrown_big1.png",
+                large.getSprite(1));
+        assertEquals("/views/sprites/asteroids/asteroidBrown_big2.png",
+                large.getSprite(2));
+        assertEquals("/views/sprites/asteroids/asteroidBrown_big3.png",
+                large.getSprite(3));
+    }
+
+    @Test
+    void mediumSpriteTest() {
+        Medium medium = new Medium();
+        assertEquals("/views/sprites/asteroids/asteroidBrown_med0.png",
+                medium.getSprite(0));
+        assertEquals("/views/sprites/asteroids/asteroidBrown_med1.png",
+                medium.getSprite(1));
+    }
+
+    @Test
+    void smallSpriteTest() {
+        Small small = new Small();
+        assertEquals("/views/sprites/asteroids/asteroidBrown_small0.png",
+                small.getSprite(0));
+        assertEquals("/views/sprites/asteroids/asteroidBrown_small1.png",
+                small.getSprite(1));
     }
 }
