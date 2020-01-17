@@ -65,6 +65,7 @@ public class MenuScreenController {
      */
     public void openGameScreen(ActionEvent actionEvent) throws IOException {
         GameScreenController gameScreenController = new GameScreenController();
+        gameScreenController.setLeaderBoardScreen(leaderBoardScreen);
         Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(gameScreenController.getGameScene());
     }

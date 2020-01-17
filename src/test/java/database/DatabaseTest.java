@@ -295,6 +295,46 @@ class DatabaseTest {
     }
 
     @Test
+    void insertLoginAttemptTest() {
+        String statement = "insert into login_attempt values(?)";
+
+        try {
+            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
+
+            db.insertLoginAttempt(0L);
+
+            Mockito.verify(conn, times(1)).prepareStatement(statement);
+            Mockito.verify(stm, times(1)).execute();
+            Mockito.verify(stm, times(1)).setLong(1, 0L);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void getLastLoginLocked() {
+        try {
+            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            ResultSet rs = Mockito.mock(ResultSet.class);
+
+            Mockito.when(conn.prepareStatement(any())).thenReturn(stm);
+            Mockito.when(stm.executeQuery()).thenReturn(rs);
+            Mockito.when(rs.next()).thenReturn(true);
+            Mockito.when(rs.getLong("timestamp")).thenReturn(0L);
+
+            db.getLastLoginLocked();
+
+            Mockito.verify(conn, times(1)).prepareStatement(any());
+            Mockito.verify(stm, times(1)).executeQuery();
+            Mockito.verify(rs, times(1)).next();
+            Mockito.verify(rs, times(1)).close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     void insertGameException() throws SQLException {
         Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
         db.insertGame(0, "", "", null, 0);
@@ -330,6 +370,22 @@ class DatabaseTest {
 
         assertEquals(new ArrayList<Game>(), db.getTop5Scores());
         assertEquals("error: connection couldn't be established\n", outContent.toString());
+    }
+
+    @Test
+    void getLastLoginLockedTest_Exception() throws SQLException {
+        Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
+
+        assertEquals(Long.MAX_VALUE, db.getLastLoginLocked());
+        assertTrue(outContent.toString().contains("error"));
+    }
+
+    @Test
+    void insertLoginAttempt_Exception() throws SQLException {
+        Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
+
+        db.insertLoginAttempt(0L);
+        assertTrue(outContent.toString().contains("error"));
     }
 
     @Test
