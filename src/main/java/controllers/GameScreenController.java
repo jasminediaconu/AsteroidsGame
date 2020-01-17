@@ -549,5 +549,12 @@ public class GameScreenController {
         return player.getLocation();
     }
 
+    public static Player getPlayer() {
+        return player;
+    }
+
+    public static void setPlayer(Player player) {
+        GameScreenController.player = player;
+    }
 }
 

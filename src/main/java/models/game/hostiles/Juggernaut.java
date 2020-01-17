@@ -15,6 +15,7 @@ public class Juggernaut extends Hostile {
     private static final transient double rotateChance = 0.005;
     private static final double fireCooldown = 0.3;
     private transient double currentFireCooldown = 2;
+    private static final transient int score = 200;
 
     /**
      * Spawns a new Juggernaut at the given coordinates,
@@ -89,6 +90,15 @@ public class Juggernaut extends Hostile {
     @Override
     public String getUrl() {
         return "/views/sprites/Juggernaut.png";
+    }
+
+
+    public static int getScore() {
+        return score;
+    }
+
+    public double getCourse() {
+        return course;
     }
 }
 

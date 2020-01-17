@@ -19,6 +19,8 @@ public class Sniper extends Hostile {
     private transient double currentFireCooldown = 2;
     private transient double course;
     private transient boolean fleeing;
+    private static final transient int score = 400;
+
 
 
     public Sniper(Point2D spawnPoint) {
@@ -95,24 +97,19 @@ public class Sniper extends Hostile {
 
     @Override
     public void checkMove() {
-        if (getLocation().getX() > GameScreenController.screenSize) {
-            setVelocity(getVelocity().multiply(0.1));
-            course = findPlayer();
-        }
-        if (getLocation().getY() > GameScreenController.screenSize) {
-            setVelocity(getVelocity().multiply(0.1));
-        }
-        if (getLocation().getX() < 0) {
-            setVelocity(getVelocity().multiply(0.1));
-        }
-        if (getLocation().getY() < 0) {
-            setVelocity(getVelocity().multiply(0.1));
-        }
     }
 
     @Override
     public String getUrl() {
         return "/views/sprites/Sniper.png";
+    }
+
+    public static int getScore() {
+        return score;
+    }
+
+    public boolean isFleeing() {
+        return fleeing;
     }
 }
 

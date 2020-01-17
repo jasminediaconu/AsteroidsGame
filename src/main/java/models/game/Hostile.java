@@ -7,7 +7,6 @@ import models.game.hostiles.Sniper;
 public abstract class Hostile extends SpaceEntity {
 
     private static final transient Point2D spawnPoint = new Point2D(400, 800);
-    private static final transient int score = 500;
 
     /**
      * moves Hostiles.
@@ -33,6 +32,6 @@ public abstract class Hostile extends SpaceEntity {
     }
 
     public static int getScore() {
-        return score;
+        return 0;
     }
 }
