@@ -83,15 +83,26 @@ public class LeaderBoardGameTest {
     }
 
     @Test
-    void equalsTestFalse() {
+    void equalsFalseTest() {
         LeaderBoardGame leaderBoardGame2 = new LeaderBoardGame();
         assertFalse(leaderBoardGame2.equals(leaderBoardGame));
     }
 
     @Test
-    void equalsTestTrue() {
+    void equalsTrueTest() {
         LeaderBoardGame leaderBoardGame2 = new LeaderBoardGame(username, score, date);
         assertTrue(leaderBoardGame2.equals(leaderBoardGame));
+    }
+
+    @Test
+    void equalsMutaionTest1() {
+        LeaderBoardGame leaderBoardGame2 = new LeaderBoardGame(username, score, date);
+        assertFalse(leaderBoardGame2.equals(game));
+    }
+
+    @Test
+    void equalsMutationTest2() {
+        assertTrue(leaderBoardGame.equals(leaderBoardGame));
     }
 
     @Test
