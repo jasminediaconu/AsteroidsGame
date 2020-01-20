@@ -26,6 +26,11 @@
             <Font name="Century Gothic" size="96.0" />
          </font>
       </Text>
+       <Button layoutX="86.0" layoutY="631.0" mnemonicParsing="false" onAction="#refresh" prefHeight="50.0" prefWidth="143.0" text="Refresh">
+           <font>
+               <Font name="Century Gothic" size="25.0" />
+           </font>
+       </Button>
       <Button layoutX="597.0" layoutY="700.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="50.0" prefWidth="143.0" text="Exit">
          <font>
             <Font name="Century Gothic" size="25.0" />
