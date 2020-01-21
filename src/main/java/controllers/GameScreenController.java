@@ -3,14 +3,12 @@ package controllers;
 import database.Database;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
-
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -62,9 +60,9 @@ public class GameScreenController {
     private static boolean pauseScreenInitiated = false;
 
     //TODO: make spawn chances increase with a higher score.
-    private static final double asteroidSpawnChance = 0.03;
-    private static final double hostileSpawnChance = 0.0005;
-    private static final int hostileCount = 0;
+    private final double asteroidSpawnChance = 0.01;
+    private final double hostileSpawnChance = 0.01;
+    private final int hostileCount = 3;
 
     private transient AnchorPane anchorPane;
     @FXML private transient Pane pauseScreen;
@@ -76,7 +74,6 @@ public class GameScreenController {
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<Hostile> hostiles = new ArrayList<>();
-    private transient List<SpaceEntity> ufos = new ArrayList<>();
 
     private transient Robot robot = new Robot();
 
@@ -105,7 +102,6 @@ public class GameScreenController {
      * GameScreenController constructor.
      */
     public GameScreenController() {
-
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
@@ -122,6 +118,7 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.F) {
                 fkey = true;
             } else if (e.getCode() == KeyCode.DOWN) {
+                System.out.println("Invulnerability time: " + player.getInvulnerabilityTime());
                 down = true;
             } else if ((e.getCode() == KeyCode.P)) {
                 pkey = pkey ? false : true;
@@ -185,7 +182,7 @@ public class GameScreenController {
 
         player.getView().setScaleX(0.69);
         player.getView().setScaleY(0.69);
-
+        
         // Attach the default style sheet to the Game Screen
         anchorPane.getStylesheets().add(new File("src/main/resources/defaultStyle.css")
                 .toURI().toString());
@@ -211,14 +208,13 @@ public class GameScreenController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
                 if (!isPaused) {
                     onUpdate();
                 }
             }
         };
-
         timer.start();
+
         return anchorPane;
     }
 
@@ -241,13 +237,14 @@ public class GameScreenController {
      * @param bullet Bullet type
      * @param firedFrom SpaceEntity that fired the bullet
      */
-    private void addBullet(Bullet bullet, SpaceEntity firedFrom) {
-        bullets.add(bullet);
-        addSpaceEntity(bullet);
+    public void addBullet(Bullet bullet, SpaceEntity firedFrom) {
+        if (bullet == null) return;
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
-
         bullet.setLocation(new Point2D(x, y));
+
+        bullets.add(bullet);
+        addSpaceEntity(bullet);
     }
 
     /**
@@ -286,6 +283,7 @@ public class GameScreenController {
      * @param object SpaceEntity type
      */
     private void addSpaceEntity(SpaceEntity object) {
+        System.out.println("adding space entity");
         object.setView(new ImageView(new Image(object.getUrl())));
         object.getView().setTranslateX(object.getLocation().getX());
         object.getView().setTranslateY(object.getLocation().getY());
@@ -363,6 +361,21 @@ public class GameScreenController {
 
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
+
+                if (!bullet.checkDistance()) {
+                    anchorPane.getChildren().remove(bullet.getView());
+                }
+            }
+            //check if a player bullet collided with an hostile
+            for (Hostile hostile : hostiles) {
+                if (bullet.isColliding(hostile) && bullet.getOrigin() == player) {
+                    bullet.setAlive(false);
+                    hostile.setAlive(false);
+                    player.incrementScore(hostile.getScore());
+                    score.setText("Score: " + player.getCurrentScore());
+                    anchorPane.getChildren().removeAll(bullet.getView(), hostile.getView());
+                }
+
                 if (!bullet.checkDistance()) {
                     anchorPane.getChildren().remove(bullet.getView());
                 }
@@ -394,7 +407,7 @@ public class GameScreenController {
         }
 
         //check if player collided with an enemy ship.
-        for (SpaceEntity ufo: ufos) {
+        for (SpaceEntity ufo: hostiles) {
             if (player.isColliding(ufo) && !isShieldActive) {
                 updateLives(false);
             }
@@ -402,9 +415,16 @@ public class GameScreenController {
 
         bullets.removeIf(SpaceEntity::isDead);
         asteroids.removeIf(SpaceEntity::isDead);
+        hostiles.removeIf(SpaceEntity::isDead);
 
         bullets.forEach(SpaceEntity::move);
         asteroids.forEach(SpaceEntity::move);
+        hostiles.forEach(Hostile::move);
+
+        for (Hostile hostile : hostiles) {
+            addBullet(hostile.action(), hostile);
+        }
+
         player.move();
         player.cooldown();
         player.updateInvulnerabilityTime();
@@ -417,6 +437,7 @@ public class GameScreenController {
 
         if (isShieldActive) {
             player.getShield().move();
+            System.out.println("The shield is moving with the player.");
         }
 
         // checks if the shield time has expired
@@ -437,8 +458,8 @@ public class GameScreenController {
             addAsteroid(Asteroid.spawnAsteroid(Math.random()));
         }
 
-        if (Math.random() < hostileSpawnChance && hostileCount < 2) {
-            addHostile(Hostile.spawnHostile());
+        if (Math.random() < hostileSpawnChance && hostiles.size() < hostileCount) {
+            addHostile(Hostile.spawnHostile(player));
         }
     }
 
@@ -483,6 +504,11 @@ public class GameScreenController {
             addBullet(player.shoot(), player);
         }
         if (fkey) {
+            Random rand = new Random();
+            int x = rand.nextInt(screenSize);
+            int y = rand.nextInt(screenSize);
+            player.setLocation(new Point2D(x, y));
+            Hostile.spawnHostile(player);
             player.teleport();
         }
         if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
@@ -578,6 +604,7 @@ public class GameScreenController {
         saveScreen.toFront();
     }
 
+
     /**
      * Adds a new game to the database with the score and provided alias.
      * @param alias String alias
@@ -596,6 +623,18 @@ public class GameScreenController {
             Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
             primaryStage.setScene(getLeaderBoardScreen());
         }
+    }
+
+    public Point2D getPlayerLocation() {
+        return player.getLocation();
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }
 

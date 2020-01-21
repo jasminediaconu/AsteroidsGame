@@ -80,9 +80,9 @@ public abstract class SpaceEntity {
      * helper function of move, which updates te view of the spaceEntity.
      */
     public final void updateView() {
+        getView().setRotate(getRotation());
         getView().setTranslateX(getLocation().getX());
         getView().setTranslateY(getLocation().getY());
-        getView().setRotate(getRotation());
     }
 
     /**

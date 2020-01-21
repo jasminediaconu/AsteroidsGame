@@ -5,19 +5,15 @@ import controllers.GameScreenController;
 import java.util.Random;
 import javafx.geometry.Point2D;
 
-
 public class Player extends SpaceEntity {
 
     private static final int center = GameScreenController.screenSize / 2;
 
     //amount of time (in seconds roughly) the player has to wait until it can fire again
-    private transient final double fireCooldown = 0.2;
+    private static final double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
     private transient final double teleportCooldown = 5;
     private transient double currentTeleportCooldown = teleportCooldown;
-
-    //acceleration modifier, very sensitive.
-    private transient double acceleration = 0.069;
 
     private Shield shield;
 
@@ -60,6 +56,8 @@ public class Player extends SpaceEntity {
      * Thrust spaceship.
      */
     public void thrust() {
+        //acceleration modifier, very sensitive.
+        double acceleration = 0.069;
         setVelocity(getVelocity().add(
                 acceleration * Math.cos(Math.toRadians(getRotation())),
                 acceleration * Math.sin(Math.toRadians(getRotation()))
@@ -71,7 +69,6 @@ public class Player extends SpaceEntity {
      * 5 degrees to the right.
      */
     public void rotateRight() {
-
         setRotation(getRotation() + 4);
     }
 
