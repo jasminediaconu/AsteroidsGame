@@ -9,11 +9,11 @@ import models.game.Hostile;
 public class Juggernaut extends Hostile {
 
     private transient double course;
-    private static final transient double speed = 1;
+    private static final transient double speed = 1.8;
     private static final transient double fullTurn = 180;
     private static final transient double rotationSpeed = 1;
     private static final transient double rotateChance = 0.005;
-    private static final double fireCooldown = 0.3;
+    private static final double fireCooldown = 0.4;
     private transient double currentFireCooldown = 2;
     private static final transient int score = 200;
 

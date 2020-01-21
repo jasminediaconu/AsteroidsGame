@@ -9,15 +9,15 @@ import models.game.Player;
 
 public class Sniper extends Hostile {
 
-    private static final transient double speed = 3.5;
+    private static final transient double speed = 3.3;
     private static final transient double rotationSpeed = 4;
     private static final transient double rotateChance = 0.02;
     // The distance between the Sniper and the player in which
     // the Sniper has the chance to rotate away.
     private static final transient int minDistance = 128;
     private static final transient double fullTurn = 180;
-    private static final double fireCooldown = 0.6;
-    private transient double currentFireCooldown = 2;
+    private static final double fireCooldown = 0.8;
+    private transient double currentFireCooldown = 3;
     private transient double course;
     private transient boolean fleeing;
     private static final transient int score = 400;
