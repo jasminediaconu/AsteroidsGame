@@ -102,7 +102,6 @@ public class User {
      */
     public String getPasswordAsString() {
         return new String(password, StandardCharsets.UTF_8);
-        return "";
     }
 
     /**
