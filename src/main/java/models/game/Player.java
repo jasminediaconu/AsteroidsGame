@@ -1,6 +1,7 @@
 package models.game;
 
 import controllers.GameScreenController;
+import java.util.Random;
 import javafx.geometry.Point2D;
 
 public class Player extends SpaceEntity {
@@ -10,6 +11,8 @@ public class Player extends SpaceEntity {
     //amount of time (in seconds roughly) the player has to wait until it can fire again
     private static final double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
+    private transient final double teleportCooldown = 5;
+    private transient double currentTeleportCooldown = teleportCooldown;
 
     private Shield shield;
 
@@ -99,7 +102,7 @@ public class Player extends SpaceEntity {
      * @return false is the player has 0 lives, true if they have more.
      */
     public boolean hasLives() {
-        return this.lives > 0;
+        return this.getLives() > 0;
     }
 
     /**
@@ -177,11 +180,14 @@ public class Player extends SpaceEntity {
     }
 
     /**
-     * To be called every frame, decreases the cooldown timer.
+     * To be called every frame, decreases the cooldown timers, fireCooldown and teleportCooldovn..
      */
     public void cooldown() {
         if (currentFireCooldown > Double.MIN_VALUE) {
             currentFireCooldown -= 1.0 / 60.0;
+        }
+        if (currentTeleportCooldown > Double.MIN_VALUE) {
+            currentTeleportCooldown -= 1.0 / 60.0;
         }
     }
 
@@ -254,5 +260,19 @@ public class Player extends SpaceEntity {
      */
     public void updateInvulnerabilityTime() {
         this.invulnerabilityTime -= 1d / 60d;
+    }
+
+    /**
+     * Teleports the player to a random location on the screen.
+     * Resets the teleport cooldown to teleportCooldownt.
+     */
+    public void teleport() {
+        if (currentTeleportCooldown <= Double.MIN_VALUE * 2) {
+            Random rand = new Random();
+            int x = rand.nextInt(GameScreenController.screenSize);
+            int y = rand.nextInt(GameScreenController.screenSize);
+            setLocation(new Point2D(x, y));
+            currentTeleportCooldown = teleportCooldown;
+        }
     }
 }

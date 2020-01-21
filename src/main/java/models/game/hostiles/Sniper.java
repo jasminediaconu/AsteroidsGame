@@ -5,6 +5,7 @@ import javafx.geometry.Point2D;
 
 import models.game.Bullet;
 import models.game.Hostile;
+import models.game.Player;
 
 public class Sniper extends Hostile {
 
@@ -20,17 +21,19 @@ public class Sniper extends Hostile {
     private transient double course;
     private transient boolean fleeing;
     private static final transient int score = 400;
+    private final Player player;
 
 
 
-    public Sniper(Point2D spawnPoint) {
+    public Sniper(Point2D spawnPoint, Player p) {
+        this.player = p;
         setLocation(spawnPoint);
     }
 
     @Override
-    public void action() {
-
-        double distanceToPlayer = GameScreenController.getPlayerLocation()
+    public Bullet action() {
+        Bullet b = null;
+        double distanceToPlayer = player.getLocation()
                 .subtract(getLocation()).magnitude();
 
         if (distanceToPlayer > minDistance + minDistance && fleeing) {
@@ -50,7 +53,7 @@ public class Sniper extends Hostile {
             course = course + rotationSpeed;
 
         } else if (currentFireCooldown < 0) {
-            shoot();
+            b = shoot();
             currentFireCooldown = fireCooldown;
         }
 
@@ -69,10 +72,13 @@ public class Sniper extends Hostile {
                 Math.cos(Math.toRadians(getRotation())),
                 Math.sin(Math.toRadians(getRotation()))
         ).normalize().multiply(speed));
+        return b;
     }
 
-    public void shoot() {
-        GameScreenController.addBullet(new Bullet(this), this);
+    @Override
+    public Bullet shoot() {
+        this.currentFireCooldown = fireCooldown;
+        return new Bullet(this);
     }
 
     /**
@@ -82,7 +88,7 @@ public class Sniper extends Hostile {
      */
     private double findPlayer() {
 
-        Point2D target = GameScreenController.getPlayerLocation();
+        Point2D target = player.getLocation();
 
         double x1 = target.subtract(getLocation()).getX();
         double y1 = target.subtract(getLocation()).getY();

@@ -11,13 +11,18 @@ public abstract class Hostile extends SpaceEntity {
     /**
      * moves Hostiles.
      */
-    public abstract void action();
+    public abstract Bullet action();
+
+    /**
+     * returns new bullet created from hostile.
+     */
+    public abstract Bullet shoot();
 
     /**
      * Method that spawns in a new random UFO.
      * @return A new UFO.
      */
-    public static Hostile spawnHostile() {
+    public static Hostile spawnHostile(Player player) {
 
         Hostile hostile;
 
@@ -25,7 +30,7 @@ public abstract class Hostile extends SpaceEntity {
             hostile = new Juggernaut(spawnPoint);
 
         } else {
-            hostile = new Sniper(spawnPoint);
+            hostile = new Sniper(spawnPoint, player);
         }
 
         return hostile;

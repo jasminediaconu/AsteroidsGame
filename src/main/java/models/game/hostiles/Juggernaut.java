@@ -30,7 +30,8 @@ public class Juggernaut extends Hostile {
     }
 
     @Override
-    public void action() {
+    public Bullet action() {
+        Bullet b = null;
         if (getRotation() > course + rotationSpeed) {
             setRotation(getRotation() - rotationSpeed);
 
@@ -38,9 +39,8 @@ public class Juggernaut extends Hostile {
             setRotation(getRotation() + rotationSpeed);
 
         } else if (currentFireCooldown < 0) {
-            shoot();
+            b = shoot();
             currentFireCooldown = fireCooldown;
-
         } else {
             if (Math.random() < rotateChance) {
                 course = randomCourse();
@@ -54,11 +54,13 @@ public class Juggernaut extends Hostile {
         }
 
         currentFireCooldown -= 1.0 / 60.0;
+        return b;
     }
 
-    public void shoot() {
+    @Override
+    public Bullet shoot() {
         this.currentFireCooldown = fireCooldown;
-        GameScreenController.addBullet(new Bullet(this), this);
+        return new Bullet(this);
     }
 
     private double randomCourse() {
