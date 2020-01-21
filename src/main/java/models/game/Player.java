@@ -11,7 +11,7 @@ public class Player extends SpaceEntity {
     //amount of time (in seconds roughly) the player has to wait until it can fire again
     private static final double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
-    private transient final double teleportCooldown = 5;
+    private static final double teleportCooldown = 5;
     private transient double currentTeleportCooldown = teleportCooldown;
 
     private Shield shield;

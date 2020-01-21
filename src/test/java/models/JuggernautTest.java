@@ -1,10 +1,13 @@
 package models;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import javafx.geometry.Point2D;
 import models.game.hostiles.Juggernaut;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 public class JuggernautTest {
 
@@ -28,7 +31,7 @@ public class JuggernautTest {
     void outOfBoundsTest() {
         Point2D spawnPoint = new Point2D(400, 820);
         Juggernaut juggernaut = new Juggernaut(spawnPoint);
-        double c = juggernaut.getCourse();
+        final double c = juggernaut.getCourse();
         juggernaut.action();
         juggernaut.updateLocation();
         juggernaut.checkMove();
@@ -37,7 +40,9 @@ public class JuggernautTest {
 
     @Test
     void scoreTest() {
-        assertEquals(200, Juggernaut.getScore());
+        Point2D spawnPoint = new Point2D(400, 820);
+        Juggernaut juggernaut = new Juggernaut(spawnPoint);
+        assertEquals(200, juggernaut.getScore());
     }
 
 }

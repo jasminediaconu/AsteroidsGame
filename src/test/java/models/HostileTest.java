@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import javafx.geometry.Point2D;
 import models.game.Hostile;
+import models.game.Player;
 import models.game.hostiles.Juggernaut;
 import models.game.hostiles.Sniper;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,7 @@ public class HostileTest {
     void spawnTest() {
 
         for (int i = 0; i < 4000; i++) {
-            Hostile hostile = Hostile.spawnHostile();
+            Hostile hostile = Hostile.spawnHostile(new Player());
             if (hostile instanceof Sniper) {
                 small++;
             }
@@ -37,7 +38,7 @@ public class HostileTest {
     void ufoLinkTest() {
         Juggernaut jg = new Juggernaut(new Point2D(0, 0));
         assertEquals("/views/sprites/Juggernaut.png",jg.getUrl());
-        Sniper sp = new Sniper(new Point2D(0, 0));
+        Sniper sp = new Sniper(new Point2D(0, 0), new Player());
         assertEquals("/views/sprites/Sniper.png",sp.getUrl());
     }
 

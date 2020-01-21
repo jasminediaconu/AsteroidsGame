@@ -31,7 +31,7 @@ public class Juggernaut extends Hostile {
 
     @Override
     public Bullet action() {
-        Bullet b = null;
+        Bullet b = null; // NOPMD
         if (getRotation() > course + rotationSpeed) {
             setRotation(getRotation() - rotationSpeed);
 
@@ -50,7 +50,6 @@ public class Juggernaut extends Hostile {
                     Math.cos(Math.toRadians(getRotation())),
                     Math.sin(Math.toRadians(getRotation()))
             ).normalize().multiply(speed));
-
         }
 
         currentFireCooldown -= 1.0 / 60.0;
@@ -95,7 +94,7 @@ public class Juggernaut extends Hostile {
     }
 
 
-    public static int getScore() {
+    public int getScore() {
         return score;
     }
 

@@ -53,16 +53,14 @@ public class GameScreenController {
 
     public static int scoreUp = 10000;
 
-    private transient ActionEvent event;
-
     private transient AnimationTimer timer;
 
     private static boolean pauseScreenInitiated = false;
 
     //TODO: make spawn chances increase with a higher score.
-    private final double asteroidSpawnChance = 0.01;
-    private final double hostileSpawnChance = 0.01;
-    private final int hostileCount = 3;
+    private static final double asteroidSpawnChance = 0.01;
+    private static final double hostileSpawnChance = 0.003;
+    private static final int hostileCount = 3;
 
     private transient AnchorPane anchorPane;
     @FXML private transient Pane pauseScreen;
@@ -70,7 +68,6 @@ public class GameScreenController {
 
     private transient URL pauseScreenFile;
     private transient Scene gameScene;
-    private transient Scene leaderBoardScene;
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<Hostile> hostiles = new ArrayList<>();
@@ -235,7 +232,9 @@ public class GameScreenController {
      * @param firedFrom SpaceEntity that fired the bullet
      */
     public void addBullet(Bullet bullet, SpaceEntity firedFrom) {
-        if (bullet == null) return;
+        if (bullet == null) {
+            return;
+        }
         double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
         double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
         bullet.setLocation(new Point2D(x, y));
@@ -594,10 +593,6 @@ public class GameScreenController {
             Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
             primaryStage.setScene(getLeaderBoardScreen());
         }
-    }
-
-    public Point2D getPlayerLocation() {
-        return player.getLocation();
     }
 
     public Player getPlayer() {

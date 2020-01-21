@@ -21,7 +21,7 @@ public class Sniper extends Hostile {
     private transient double course;
     private transient boolean fleeing;
     private static final transient int score = 400;
-    private final Player player;
+    private transient Player player;
 
 
 
@@ -32,7 +32,7 @@ public class Sniper extends Hostile {
 
     @Override
     public Bullet action() {
-        Bullet b = null;
+        Bullet b = null; // NOPMD
         double distanceToPlayer = player.getLocation()
                 .subtract(getLocation()).magnitude();
 
@@ -110,7 +110,7 @@ public class Sniper extends Hostile {
         return "/views/sprites/Sniper.png";
     }
 
-    public static int getScore() {
+    public int getScore() {
         return score;
     }
 
