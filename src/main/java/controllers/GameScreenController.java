@@ -3,12 +3,14 @@ package controllers;
 import database.Database;
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -68,6 +70,7 @@ public class GameScreenController {
 
     private transient URL pauseScreenFile;
     private transient Scene gameScene;
+    private transient Scene leaderBoardScene;
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<Hostile> hostiles = new ArrayList<>();
@@ -92,10 +95,14 @@ public class GameScreenController {
 
     private transient boolean isShieldActive = false;
 
+    private transient AudioController rotateSound = new AudioController();
+    private transient AudioController thrustSound = new AudioController();
+
     /**
      * GameScreenController constructor.
      */
     public GameScreenController() {
+
         anchorPane = new AnchorPane();
         anchorPane.setPrefSize(screenSize, screenSize);
         gameScene = new Scene(createContent());
@@ -112,7 +119,6 @@ public class GameScreenController {
             } else if (e.getCode() == KeyCode.F) {
                 fkey = true;
             } else if (e.getCode() == KeyCode.DOWN) {
-                System.out.println("Invulnerability time: " + player.getInvulnerabilityTime());
                 down = true;
             } else if ((e.getCode() == KeyCode.P)) {
                 pkey = pkey ? false : true;
@@ -176,7 +182,7 @@ public class GameScreenController {
 
         player.getView().setScaleX(0.69);
         player.getView().setScaleY(0.69);
-        
+
         // Attach the default style sheet to the Game Screen
         anchorPane.getStylesheets().add(new File("src/main/resources/defaultStyle.css")
                 .toURI().toString());
@@ -202,13 +208,14 @@ public class GameScreenController {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
                 if (!isPaused) {
                     onUpdate();
                 }
             }
         };
-        timer.start();
 
+        timer.start();
         return anchorPane;
     }
 
@@ -329,21 +336,26 @@ public class GameScreenController {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
 
+                    AudioController explosion = new AudioController();
+                    Random random = new Random();
+                    int track = random.nextInt(4) + 1;
+                    explosion.playSound("src/main/resources/audio/exp_" + track + ".wav");
+
                     if (bullet.getOrigin() == player) {
                         player.incrementScore(asteroid.getScore());
                         score.setText("Score: " + player.getCurrentScore());
                     }
 
                     if (asteroid instanceof Large) {
-                        Medium md1 = new Medium();
-                        Medium md2 = new Medium();
+                        Medium md1 = new Medium(new Random());
+                        Medium md2 = new Medium(new Random());
                         md1.setLocation(asteroid.getLocation());
                         md2.setLocation(asteroid.getLocation());
                         newMeds.add(md1);
                         newMeds.add(md2);
                     } else if (asteroid instanceof Medium) {
-                        Small sm1 = new Small();
-                        Small sm2 = new Small();
+                        Small sm1 = new Small(new Random());
+                        Small sm2 = new Small(new Random());
                         sm1.setLocation(asteroid.getLocation());
                         sm2.setLocation(asteroid.getLocation());
                         newSmalls.add(sm1);
@@ -428,7 +440,6 @@ public class GameScreenController {
 
         if (isShieldActive) {
             player.getShield().move();
-            System.out.println("The shield is moving with the player.");
         }
 
         // checks if the shield time has expired
@@ -446,7 +457,7 @@ public class GameScreenController {
         }
 
         if (Math.random() < asteroidSpawnChance) {
-            addAsteroid(Asteroid.spawnAsteroid());
+            addAsteroid(Asteroid.spawnAsteroid(Math.random()));
         }
 
         if (Math.random() < hostileSpawnChance && hostiles.size() < hostileCount) {
@@ -461,6 +472,14 @@ public class GameScreenController {
     private void checkButtons() throws IOException {
         if (up) {
             player.thrust();
+            // Start thrust sound
+            if (thrustSound.getClip() == null) {
+                thrustSound.playSound("src/main/resources/audio/thrust.wav");
+            } else if (thrustSound.getClip() != null && !thrustSound.getClip().isActive()) {
+                thrustSound.playSound("src/main/resources/audio/thrust.wav");
+            }
+        } else if (thrustSound.getClip() != null && thrustSound.getClip().isActive()) {
+            thrustSound.stop();
         }
 
         if (right) {
@@ -470,15 +489,23 @@ public class GameScreenController {
             player.rotateLeft();
         }
 
+        if (left || right) {
+            // Start rotate sound effect
+            if (rotateSound.getClip() == null) {
+                rotateSound.playSound("src/main/resources/audio/rotate.wav");
+            } else if (rotateSound.getClip() != null && !rotateSound.getClip().isActive()) {
+                rotateSound.playSound("src/main/resources/audio/rotate.wav");
+            }
+
+        } else if (rotateSound.getClip() != null && rotateSound.getClip().isActive()) {
+            // Stop rotate sound effect
+            rotateSound.stop();
+        }
+
         if (space && player.canFire()) {
             addBullet(player.shoot(), player);
         }
         if (fkey) {
-            Random rand = new Random();
-            int x = rand.nextInt(screenSize);
-            int y = rand.nextInt(screenSize);
-            player.setLocation(new Point2D(x, y));
-            Hostile.spawnHostile(player);
             player.teleport();
         }
         if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
@@ -573,7 +600,6 @@ public class GameScreenController {
         anchorPane.getChildren().add(saveScreen);
         saveScreen.toFront();
     }
-
 
     /**
      * Adds a new game to the database with the score and provided alias.

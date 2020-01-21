@@ -1,3 +1,4 @@
+import controllers.AudioController;
 import controllers.MainController;
 import database.Database;
 import javafx.application.Application;
@@ -17,23 +18,27 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         try {
-            MainController viewController = new MainController();
-            stage = viewController.getMainStage();
+            MainController mainController = new MainController();
+            stage = mainController.getMainStage();
 
             //Loading scenes
-            viewController.setRegisterScene();
-            viewController.setLeaderBoardScene();
-            viewController.setLoginScene();
-            viewController.setMenuScene();
+            mainController.setRegisterScene();
+            mainController.setLeaderBoardScene();
+            mainController.setLoginScene();
+            mainController.setMenuScene();
 
             // Switching scenes
-            viewController.injectMainScreenScenes();
-            viewController.injectLoginScreenScenes();
-            viewController.injectRegisterScreenScenes();
-            viewController.injectMenuScreenScenes();
-            viewController.injectLeaderBoardScenes();
+            mainController.injectMainScreenScenes();
+            mainController.injectLoginScreenScenes();
+            mainController.injectRegisterScreenScenes();
+            mainController.injectMenuScreenScenes();
+            mainController.injectLeaderBoardScenes();
 
             Database.createDatabase();
+
+            // Start background music
+            AudioController audioController = new AudioController();
+            audioController.playMusic("src/main/resources/audio/bgm.wav");
 
             // Sets default icon of the application
             stage.getIcons().add(new Image("views/images/asteroid.png"));

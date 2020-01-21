@@ -53,13 +53,11 @@ public class AuthenticationService {
             byte[] passwordAttempted = encryptPassword(salt, attemptedUser.getPassword());
             byte[] passwordActual = userFromDB.getPassword();
 
-            String pwAttempted;
-
             return Arrays.equals(passwordActual, passwordAttempted);
         } catch (NoSuchAlgorithmException
                 | InvalidKeySpecException
                 | UnsupportedEncodingException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return false;
     }
@@ -154,9 +152,6 @@ public class AuthenticationService {
      */
     public boolean isLoginLocked() {
         long lockedfor = loginLockedForSeconds();
-        System.out.println("locked for: " + lockedfor);
-        boolean res = lockedfor > 0L;
-        System.out.println("bool: " + res);
         return lockedfor > 0L;
     }
 }
