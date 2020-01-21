@@ -8,7 +8,6 @@ import javafx.geometry.Point2D;
 import models.game.hostiles.Juggernaut;
 import org.junit.jupiter.api.Test;
 
-
 public class JuggernautTest {
 
     @Test

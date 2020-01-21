@@ -134,11 +134,7 @@ public abstract class Asteroid extends SpaceEntity {
         double x = this.getLocation().getX();
         double y = this.getLocation().getY();
 
-        if (x < 0 || y < 0 || x > screenSize || y > screenSize) {
-            return true;
-        }
-
-        return false;
+        return x < 0 || y < 0 || x > screenSize || y > screenSize;
     }
 
     @Override

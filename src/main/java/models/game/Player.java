@@ -5,7 +5,6 @@ import controllers.GameScreenController;
 import java.util.Random;
 import javafx.geometry.Point2D;
 
-
 public class Player extends SpaceEntity {
 
     private static final int center = GameScreenController.screenSize / 2;
@@ -70,7 +69,6 @@ public class Player extends SpaceEntity {
      * 5 degrees to the right.
      */
     public void rotateRight() {
-
         setRotation(getRotation() + 4);
     }
 
@@ -175,7 +173,7 @@ public class Player extends SpaceEntity {
         AudioController audioController = new AudioController();
         audioController.playSound("src/main/resources/audio/laser_lo.wav");
 
-        this.currentFireCooldown = this.fireCooldown;
+        this.currentFireCooldown = fireCooldown;
         return new Bullet(this);
     }
 

@@ -34,6 +34,7 @@ public abstract class Hostile extends SpaceEntity {
         }
 
         return hostile;
+
     }
 
     public abstract int getScore();

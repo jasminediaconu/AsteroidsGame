@@ -47,6 +47,8 @@ public class Bullet extends SpaceEntity {
                 Math.cos(Math.toRadians(firedFrom.getRotation())),
                 Math.sin(Math.toRadians(firedFrom.getRotation()))
         ).normalize().multiply(currentSpeed).add(firedFrom.getVelocity()));
+
+        setRotation(firedFrom.getRotation() + 90);
     }
 
 
