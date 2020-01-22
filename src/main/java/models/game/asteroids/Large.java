@@ -1,6 +1,7 @@
 package models.game.asteroids;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import models.game.Asteroid;
 
@@ -54,5 +55,18 @@ public class Large extends Asteroid {
         sprites.add(sprite3);
 
         return sprites.get(sprite);
+    }
+
+    @Override
+    public List<Asteroid> split() {
+        Medium md1 = new Medium(new Random());
+        Medium md2 = new Medium(new Random());
+        md1.setLocation(this.getLocation());
+        md2.setLocation(this.getLocation());
+
+        List<Asteroid> res = new ArrayList<>();
+        res.add(md1);
+        res.add(md2);
+        return res;
     }
 }

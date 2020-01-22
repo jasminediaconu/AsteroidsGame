@@ -1,5 +1,7 @@
 package models.game.asteroids;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import models.game.Asteroid;
 
@@ -24,6 +26,15 @@ public class Small extends Asteroid {
     @Override
     public int getScore() {
         return score;
+    }
+
+    /**
+     * Small asteroids don't split into anything.
+     * @return empty list
+     */
+    @Override
+    public List<Asteroid> split() {
+        return new ArrayList<>();
     }
 
     /**

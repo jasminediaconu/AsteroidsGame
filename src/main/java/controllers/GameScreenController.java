@@ -371,11 +371,10 @@ public class GameScreenController {
 
     private void generateElements(List<Bullet> bullets, List<Asteroid> asteroids,
                                   List<Hostile> hostiles, Player player) {
-        ArrayList<Medium> newMeds = new ArrayList<>();
-        ArrayList<Small> newSmalls = new ArrayList<>();
+        ArrayList<Asteroid> newAsteroids = new ArrayList<>();
         for (Bullet bullet : bullets) {
             for (Asteroid asteroid : asteroids) {
-                checkBullet(bullet, asteroid, newMeds, newSmalls);
+                checkBullet(bullet, asteroid, newAsteroids);
             }
 
             //check if a player bullet collided with an hostile
@@ -384,11 +383,8 @@ public class GameScreenController {
             }
         }
 
-        for (Small sm : newSmalls) {
-            addAsteroid(sm);
-        }
-        for (Medium md : newMeds) {
-            addAsteroid(md);
+        for (Asteroid asteroid : newAsteroids) {
+            addAsteroid(asteroid);
         }
 
         for (Hostile hostile : hostiles) {
@@ -396,8 +392,8 @@ public class GameScreenController {
         }
     }
 
-    private void checkBullet(Bullet bullet, Asteroid asteroid, ArrayList<Medium> newMeds,
-                             ArrayList<Small> newSmalls) {
+    private void checkBullet(Bullet bullet, Asteroid asteroid,
+                             ArrayList<Asteroid> newAsteroids) {
         if (bullet.isColliding(asteroid)) {
             bullet.setAlive(false);
             asteroid.setAlive(false);
@@ -412,21 +408,7 @@ public class GameScreenController {
                 score.setText("Score: " + player.getCurrentScore());
             }
 
-            if (asteroid instanceof Large) {
-                Medium md1 = new Medium(new Random());
-                Medium md2 = new Medium(new Random());
-                md1.setLocation(asteroid.getLocation());
-                md2.setLocation(asteroid.getLocation());
-                newMeds.add(md1);
-                newMeds.add(md2);
-            } else if (asteroid instanceof Medium) {
-                Small sm1 = new Small(new Random());
-                Small sm2 = new Small(new Random());
-                sm1.setLocation(asteroid.getLocation());
-                sm2.setLocation(asteroid.getLocation());
-                newSmalls.add(sm1);
-                newSmalls.add(sm2);
-            }
+            newAsteroids.addAll(asteroid.split());
 
             anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
         }
