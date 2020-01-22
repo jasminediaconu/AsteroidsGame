@@ -5,7 +5,6 @@ import controllers.GameScreenController;
 import java.util.Random;
 import javafx.geometry.Point2D;
 
-
 public class Player extends SpaceEntity {
 
     private static final int center = GameScreenController.screenSize / 2;
@@ -15,9 +14,6 @@ public class Player extends SpaceEntity {
     private transient double currentFireCooldown = 1;
     private final transient double teleportCooldown = 5;
     private transient double currentTeleportCooldown = teleportCooldown;
-
-    //acceleration modifier, very sensitive.
-    private transient double acceleration = 0.069;
 
     private Shield shield;
 
@@ -59,6 +55,8 @@ public class Player extends SpaceEntity {
      * Thrust spaceship.
      */
     public void thrust() {
+        //acceleration modifier, very sensitive.
+        double acceleration = 0.069;
         setVelocity(getVelocity().add(
                 acceleration * Math.cos(Math.toRadians(getRotation())),
                 acceleration * Math.sin(Math.toRadians(getRotation()))
@@ -70,7 +68,6 @@ public class Player extends SpaceEntity {
      * 5 degrees to the right.
      */
     public void rotateRight() {
-
         setRotation(getRotation() + 4);
     }
 
@@ -159,7 +156,7 @@ public class Player extends SpaceEntity {
         AudioController audioController = new AudioController();
         audioController.playSound("src/main/resources/audio/laser_lo.wav");
 
-        this.currentFireCooldown = this.fireCooldown;
+        this.currentFireCooldown = fireCooldown;
         return new Bullet(this);
     }
 

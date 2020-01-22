@@ -2,6 +2,7 @@ package models.authentication;
 
 import database.Database;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
@@ -73,7 +74,7 @@ public class AuthenticationService {
      */
     public byte[] encryptPassword(byte[] salt, byte[] password)
             throws NoSuchAlgorithmException, InvalidKeySpecException, UnsupportedEncodingException {
-        String pw = new String(password, "UTF-8");
+        String pw = new String(password, StandardCharsets.UTF_8);
         KeySpec keySpec = new PBEKeySpec(pw.toCharArray(), salt, 10_000, 160);
 
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");

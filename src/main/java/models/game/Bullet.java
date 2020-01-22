@@ -1,6 +1,8 @@
 package models.game;
 
 import javafx.geometry.Point2D;
+import models.game.hostiles.Juggernaut;
+import models.game.hostiles.Sniper;
 
 public class Bullet extends SpaceEntity {
 
@@ -13,7 +15,8 @@ public class Bullet extends SpaceEntity {
      * Speed of bullets is relative to its origin.
      */
     private static final transient double defaultSpeed = 12.0;
-    private static final transient double hostileSpeed = 8.0;
+    private static final transient double SniperSpeed = 4.0;
+    private static final transient double JuggernautSpeed = 3.0;
 
     private transient double maxDistance = 1000;
     private transient SpaceEntity origin;
@@ -28,12 +31,17 @@ public class Bullet extends SpaceEntity {
         origin = firedFrom;
         currentSpeed = defaultSpeed;
 
-        if (firedFrom instanceof Hostile) {
-            currentSpeed = hostileSpeed;
+        if (firedFrom instanceof Sniper) {
+            currentSpeed = SniperSpeed;
+            this.firedByPlayer = false;
+        } else if (firedFrom instanceof Juggernaut) {
+            currentSpeed = JuggernautSpeed;
             this.firedByPlayer = false;
         } else {
             this.firedByPlayer = true;
         }
+
+        setRotation(firedFrom.getRotation() + 90);
 
         setVelocity(new Point2D(
                 Math.cos(Math.toRadians(firedFrom.getRotation())),
@@ -63,7 +71,9 @@ public class Bullet extends SpaceEntity {
      */
     @Override
     public void checkMove() {
-        checkWrapAround();
+        if (firedByPlayer) {
+            checkWrapAround();
+        }
     }
 
     /**
@@ -138,11 +148,19 @@ public class Bullet extends SpaceEntity {
     }
 
     /**
-     * Getter for the bullet speed if bullet is fired from a Hostile.
-     * @return double hostileSpeed
+     * Getter for the default sniper bullet speed.
+     * @return double SniperSpeed
      */
-    public static double getHostileSpeed() {
-        return hostileSpeed;
+    public static double getSniperSpeed() {
+        return SniperSpeed;
+    }
+
+    /**
+     * Getter for the default juggernaut bullet speed.
+     * @return double JuggernautSpeed
+     */
+    public static double getJuggernautSpeed() {
+        return JuggernautSpeed;
     }
 
     /**

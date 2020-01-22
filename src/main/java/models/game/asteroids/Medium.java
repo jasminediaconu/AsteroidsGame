@@ -1,5 +1,7 @@
 package models.game.asteroids;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import models.game.Asteroid;
 
@@ -24,6 +26,19 @@ public class Medium extends Asteroid {
     @Override
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public List<Asteroid> split() {
+        Small sm1 = new Small(new Random());
+        Small sm2 = new Small(new Random());
+        sm1.setLocation(this.getLocation());
+        sm2.setLocation(this.getLocation());
+
+        List<Asteroid> res = new ArrayList<>();
+        res.add(sm1);
+        res.add(sm2);
+        return res;
     }
 
     /**
