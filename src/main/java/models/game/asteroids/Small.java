@@ -3,8 +3,6 @@ package models.game.asteroids;
 import java.util.Random;
 import models.game.Asteroid;
 
-import java.util.Random;
-
 public class Small extends Asteroid {
 
     private static final String sprite0 =
