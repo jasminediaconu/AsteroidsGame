@@ -174,7 +174,7 @@ public class Player extends SpaceEntity {
 
         // Start laser sound effect
         AudioController audioController = new AudioController();
-        audioController.playSound("src/main/resources/audio/laser_lo.wav");
+        audioController.playLaser();
 
         this.currentFireCooldown = this.fireCooldown;
         return new Bullet(this);

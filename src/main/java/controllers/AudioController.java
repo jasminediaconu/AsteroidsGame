@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.File;
+import java.util.Random;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -86,5 +87,19 @@ public class AudioController {
 
     public Clip getClip() {
         return clip;
+    }
+
+    public void playLaser() {
+        playSound("src/main/resources/audio/laser_lo.wav");
+    }
+
+    public void playExplosion() {
+        Random random = new Random();
+        int track = random.nextInt(4) + 1;
+        playSound("src/main/resources/audio/exp_" + track + ".wav");
+    }
+
+    public void playThrusters() {
+
     }
 }

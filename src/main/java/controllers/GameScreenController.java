@@ -336,9 +336,7 @@ public class GameScreenController {
                     asteroid.setAlive(false);
 
                     AudioController explosion = new AudioController();
-                    Random random = new Random();
-                    int track = random.nextInt(4) + 1;
-                    explosion.playSound("src/main/resources/audio/exp_" + track + ".wav");
+                    explosion.playExplosion();
 
                     if (bullet.getOrigin() == player) {
                         player.incrementScore(asteroid.getScore());
