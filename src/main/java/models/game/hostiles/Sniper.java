@@ -9,15 +9,15 @@ import models.game.Player;
 
 public class Sniper extends Hostile {
 
-    private static final transient double speed = 3.3;
+    private static final transient double speed = 3.0;
     private static final transient double rotationSpeed = 4;
     private static final transient double rotateChance = 0.02;
     // The distance between the Sniper and the player in which
     // the Sniper has the chance to rotate away.
     private static final transient int minDistance = 128;
     private static final transient double fullTurn = 180;
-    private static final double fireCooldown = 0.8;
-    private transient double currentFireCooldown = 3;
+    private static final double fireCooldown = 1.5;
+    private transient double currentFireCooldown = 4;
     private transient double course;
     private transient boolean fleeing;
     private static final transient int score = 400;
@@ -25,7 +25,7 @@ public class Sniper extends Hostile {
 
 
 
-    public Sniper(Point2D spawnPoint, Player p) {
+    public Sniper(Player p) {
         this.player = p;
         setLocation(spawnPoint);
     }
@@ -52,7 +52,7 @@ public class Sniper extends Hostile {
             setRotation(getRotation() + rotationSpeed);
             course = course + rotationSpeed;
 
-        } else if (currentFireCooldown < 0) {
+        } else if (currentFireCooldown <= 0) {
             b = shoot();
             currentFireCooldown = fireCooldown;
         }
@@ -115,6 +115,10 @@ public class Sniper extends Hostile {
 
     public boolean isFleeing() {
         return fleeing;
+    }
+
+    public void setCurrentFireCooldown(double currentFireCooldown) {
+        this.currentFireCooldown = currentFireCooldown;
     }
 }
 

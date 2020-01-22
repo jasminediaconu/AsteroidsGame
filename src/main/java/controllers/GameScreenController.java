@@ -39,6 +39,8 @@ import models.game.SpaceEntity;
 import models.game.asteroids.Large;
 import models.game.asteroids.Medium;
 import models.game.asteroids.Small;
+import models.game.hostiles.Juggernaut;
+import models.game.hostiles.Sniper;
 
 /**
  * The type GameScreen ViewController.
@@ -48,9 +50,10 @@ public class GameScreenController {
     // default values
     public static int scoreUp = 10000;
     public static final int screenSize = 800;
-    private final transient double asteroidSpawnChance = 0.01;
-    private final transient double hostileSpawnChance = 0.01;
-    private final transient int hostileCount = 3;
+    private static final  double asteroidSpawnChance = 0.01;
+    private static final double hostileSpawnChance = 0.003;
+    private static final int maxHostileCount = 2;
+    private static final int magicNumber = 1;
 
     //FXML stuff
     @FXML
@@ -360,13 +363,12 @@ public class GameScreenController {
 
         checkPlayer(player, asteroids);
 
+        checkSpawnHostile();
+
         if (Math.random() < asteroidSpawnChance) {
             addAsteroid(Asteroid.spawnAsteroid(Math.random()));
         }
 
-        if (Math.random() < hostileSpawnChance && hostiles.size() < hostileCount) {
-            addHostile(Hostile.spawnHostile(player));
-        }
     }
 
     private void generateElements(List<Bullet> bullets, List<Asteroid> asteroids,
@@ -496,6 +498,34 @@ public class GameScreenController {
         }
     }
 
+    private void checkSpawnHostile() {
+        if (Math.random() < hostileSpawnChance) {
+
+            if (hostiles.size() >= maxHostileCount) {
+                return;
+            }
+
+            if (hostiles.size() == magicNumber) {
+
+                for (SpaceEntity ufo : hostiles) {
+                    if (ufo instanceof Sniper) {
+                        addHostile(new Juggernaut());
+                    }
+                    if (ufo instanceof Juggernaut) {
+                        addHostile(new Sniper(getPlayer()));
+                    }
+                }
+
+            }
+
+            if (Math.round(Math.random()) == 0) {
+                addHostile(new Sniper(getPlayer()));
+            } else {
+                addHostile(new Juggernaut());
+            }
+        }
+    }
+
     /**
      * Method to call functions that execute behaviour of buttons.
      */
@@ -540,7 +570,6 @@ public class GameScreenController {
             int x = rand.nextInt(screenSize);
             int y = rand.nextInt(screenSize);
             player.setLocation(new Point2D(x, y));
-            Hostile.spawnHostile(player);
             player.teleport();
         }
         if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {

@@ -20,9 +20,8 @@ public class Juggernaut extends Hostile {
     /**
      * Spawns a new Juggernaut at the given coordinates,
      * and gives it a new random course.
-     * @param spawnPoint the spawn point.
      */
-    public Juggernaut(Point2D spawnPoint) {
+    public Juggernaut() {
         setRotation(-90);
         course = randomCourse();
         setVelocity(new Point2D(0, -1));
@@ -32,27 +31,31 @@ public class Juggernaut extends Hostile {
     @Override
     public Bullet action() {
         Bullet b = null; // NOPMD
+        currentFireCooldown -= 1.0 / 60.0;
+
         if (getRotation() > course + rotationSpeed) {
             setRotation(getRotation() - rotationSpeed);
+            return null;
 
         } else if (getRotation() < course - rotationSpeed) {
             setRotation(getRotation() + rotationSpeed);
-
-        } else if (currentFireCooldown < 0) {
-            b = shoot();
-            currentFireCooldown = fireCooldown;
-        } else {
-            if (Math.random() < rotateChance) {
-                course = randomCourse();
-            }
-
-            setVelocity(new Point2D(
-                    Math.cos(Math.toRadians(getRotation())),
-                    Math.sin(Math.toRadians(getRotation()))
-            ).normalize().multiply(speed));
+            return null;
         }
 
-        currentFireCooldown -= 1.0 / 60.0;
+        if (Math.random() < rotateChance) {
+            course = randomCourse();
+        }
+
+        setVelocity(new Point2D(
+                Math.cos(Math.toRadians(getRotation())),
+                Math.sin(Math.toRadians(getRotation()))
+        ).normalize().multiply(speed));
+
+        if (currentFireCooldown < 0) {
+            b = shoot();
+            currentFireCooldown = fireCooldown;
+        }
+
         return b;
     }
 
@@ -93,6 +96,13 @@ public class Juggernaut extends Hostile {
         return "/views/sprites/Juggernaut.png";
     }
 
+    public void setCurrentFireCooldown(double currentFireCooldown) {
+        this.currentFireCooldown = currentFireCooldown;
+    }
+
+    public void setCourse(double course) {
+        this.course = course;
+    }
 
     public int getScore() {
         return score;

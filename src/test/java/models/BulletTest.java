@@ -30,10 +30,10 @@ class BulletTest {
         player = new Player();
         playerBullet = new Bullet(player);
 
-        sniper = new Sniper(new Point2D(0, 0), player);
+        sniper = new Sniper(player);
         sniperBullet = new Bullet(sniper);
 
-        juggernaut = new Juggernaut(new Point2D(0, 0));
+        juggernaut = new Juggernaut();
         juggernautBullet = new Bullet(juggernaut);
     }
 
