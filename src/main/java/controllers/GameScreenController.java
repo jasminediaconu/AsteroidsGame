@@ -1,6 +1,7 @@
 package controllers;
 
 import database.Database;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -67,7 +68,8 @@ public class GameScreenController {
     private static final int hostileCount = 0;
 
     private transient AnchorPane anchorPane;
-    @FXML private transient Pane pauseScreen;
+    @FXML
+    private transient Pane pauseScreen;
     private transient Scene leaderBoardScreen;
 
     private transient URL pauseScreenFile;
@@ -115,7 +117,7 @@ public class GameScreenController {
                 left = true;
             } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
                 right = true;
-            } else if (e.getCode() == KeyCode.UP  || e.getCode() == KeyCode.W) {
+            } else if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.W) {
                 up = true;
             } else if (e.getCode() == KeyCode.SPACE) {
                 space = true;
@@ -137,7 +139,7 @@ public class GameScreenController {
                 left = false;
             } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
                 right = false;
-            } else if (e.getCode() == KeyCode.UP  || e.getCode() == KeyCode.W) {
+            } else if (e.getCode() == KeyCode.UP || e.getCode() == KeyCode.W) {
                 up = false;
             } else if (e.getCode() == KeyCode.SPACE) {
                 space = false;
@@ -153,6 +155,7 @@ public class GameScreenController {
 
     /**
      * Getter for the Game Scene.
+     *
      * @return gameScene Scene type
      */
     public Scene getGameScene() {
@@ -161,6 +164,7 @@ public class GameScreenController {
 
     /**
      * Getter for LeaderBoard Screen scene.
+     *
      * @return mainScreen
      */
     public Scene getLeaderBoardScreen() {
@@ -169,6 +173,7 @@ public class GameScreenController {
 
     /**
      * Setter for LeaderBoard Screen Scene.
+     *
      * @param scene type Scene
      */
     public void setLeaderBoardScreen(Scene scene) {
@@ -177,6 +182,7 @@ public class GameScreenController {
 
     /**
      * Sets up the initial scene of the game.
+     *
      * @return The generated parent
      */
     private Parent createContent() {
@@ -238,7 +244,8 @@ public class GameScreenController {
 
     /**
      * This method adds a Bullet object when the user press the SPACE key.
-     * @param bullet Bullet type
+     *
+     * @param bullet    Bullet type
      * @param firedFrom SpaceEntity that fired the bullet
      */
     private void addBullet(Bullet bullet, SpaceEntity firedFrom) {
@@ -252,6 +259,7 @@ public class GameScreenController {
 
     /**
      * This method adds a Shield object when the user press the DOWN key.
+     *
      * @param shield Shield type
      */
     private void addShield(Shield shield) {
@@ -265,6 +273,7 @@ public class GameScreenController {
 
     /**
      * This method adds an Asteroid object on the screen.
+     *
      * @param asteroid SpaceEntity type
      */
     private void addAsteroid(Asteroid asteroid) {
@@ -274,6 +283,7 @@ public class GameScreenController {
 
     /**
      * This method adds a hostile UFO object on the screen.
+     *
      * @param hostile Hostile type
      */
     private void addHostile(Hostile hostile) {
@@ -283,6 +293,7 @@ public class GameScreenController {
 
     /**
      * This method adds a generic SpaceEntity on the screen.
+     *
      * @param object SpaceEntity type
      */
     private void addSpaceEntity(SpaceEntity object) {
@@ -301,7 +312,7 @@ public class GameScreenController {
             isShieldActive = true;
             addShield(player.activateShield());
 
-            for (Asteroid asteroid: asteroids) {
+            for (Asteroid asteroid : asteroids) {
                 asteroid.setAlive(false);
                 anchorPane.getChildren().remove(asteroid.getView());
             }
@@ -353,19 +364,19 @@ public class GameScreenController {
         }
 
         //If an asteroid was destroyed spawn the split chunks
-        for(Asteroid chunk : chunks) {
+        for (Asteroid chunk : chunks) {
             addAsteroid(chunk);
         }
 
         //check if player collided with an asteroid.
-        for (SpaceEntity asteroid: asteroids) {
+        for (SpaceEntity asteroid : asteroids) {
             if (player.isColliding(asteroid) && !isShieldActive) {
                 updateLives(false);
             }
         }
 
         //check if player collided with an enemy bullet.
-        for (Bullet bullet: bullets) {
+        for (Bullet bullet : bullets) {
             if (bullet.getOrigin() != player && player.isColliding(bullet) && !isShieldActive) {
                 updateLives(false);
             }
@@ -375,7 +386,7 @@ public class GameScreenController {
         }
 
         //check if player collided with an enemy ship.
-        for (SpaceEntity ufo: ufos) {
+        for (SpaceEntity ufo : ufos) {
             if (player.isColliding(ufo) && !isShieldActive) {
                 updateLives(false);
             }
@@ -407,7 +418,7 @@ public class GameScreenController {
         }
         //checks if player died.
         if (!player.hasLives()) {
-            for (Asteroid asteroid:asteroids) {
+            for (Asteroid asteroid : asteroids) {
                 asteroids.remove(asteroid);
                 anchorPane.getChildren().remove(asteroid.getView());
             }
@@ -478,6 +489,7 @@ public class GameScreenController {
 
     /**
      * Method that checks if the Pause Menu is showing on the screen or not.
+     *
      * @throws IOException type
      */
     public void checkPause(boolean paused) throws IOException {
@@ -525,7 +537,7 @@ public class GameScreenController {
         anchorPane.getChildren().remove(pauseScreen);
 
         Pane saveScreen = new Pane();
-        saveScreen.setPrefSize(400,270);
+        saveScreen.setPrefSize(400, 270);
         saveScreen.setStyle("-fx-background-color: black");
         saveScreen.setTranslateX(200.0);
         saveScreen.setTranslateY(200.0);
@@ -553,6 +565,7 @@ public class GameScreenController {
 
     /**
      * Adds a new game to the database with the score and provided alias.
+     *
      * @param alias String alias
      */
     private void saveScore(ActionEvent actionEvent, String alias) {
@@ -566,7 +579,7 @@ public class GameScreenController {
             Database d = new Database();
             d.insertGame(game);
 
-            Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             primaryStage.setScene(getLeaderBoardScreen());
         }
     }

@@ -151,6 +151,10 @@ public abstract class Asteroid extends SpaceEntity {
         return caseNr;
     }
 
+    /**
+     * Creates Asteroids when called, dependent on this Asteroid's type.
+     * @return ArrayList of Asteroids to be spawned by GameScreenController
+     */
     public ArrayList<Asteroid> split() {
         ArrayList<Asteroid> chunks = new ArrayList<>();
 

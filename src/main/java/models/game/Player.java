@@ -2,7 +2,9 @@ package models.game;
 
 import controllers.AudioController;
 import controllers.GameScreenController;
+
 import java.util.Random;
+
 import javafx.geometry.Point2D;
 
 
@@ -63,7 +65,7 @@ public class Player extends SpaceEntity {
         setVelocity(getVelocity().add(
                 acceleration * Math.cos(Math.toRadians(getRotation())),
                 acceleration * Math.sin(Math.toRadians(getRotation()))
-                ));
+        ));
     }
 
     /**
@@ -103,6 +105,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Checks if the player has lives left.
+     *
      * @return false is the player has 0 lives, true if they have more.
      */
     public boolean hasLives() {
@@ -111,6 +114,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for the lives.
+     *
      * @return how many lives the player has.
      */
     public int getLives() {
@@ -119,6 +123,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for the life.
+     *
      * @param lives new value of life.
      */
     public void setLives(int lives) {
@@ -127,6 +132,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Increments the player's score by the value passed.
+     *
      * @param value value.
      */
     public void incrementScore(int value) {
@@ -136,6 +142,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for totalScore.
+     *
      * @return total score of player.
      */
     public int getTotalScore() {
@@ -144,6 +151,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for totalScore.
+     *
      * @param totalScore new value for totalScore.
      */
     public void setTotalScore(int totalScore) {
@@ -152,6 +160,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for currentScore.
+     *
      * @return current score of the player.
      */
     public int getCurrentScore() {
@@ -160,6 +169,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter of currentScore.
+     *
      * @param currentScore new value for currentScore.
      */
     public void setCurrentScore(int currentScore) {
@@ -182,6 +192,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Checks if the player can fire their weapon.
+     *
      * @return boolean the player can fire
      */
     public boolean canFire() {
@@ -225,6 +236,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Returns the shield of the player.
+     *
      * @return Shield
      */
     public Shield getShield() {
@@ -233,6 +245,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for the Shield.
+     *
      * @param shield new value of Shield
      */
     public void setShield(Shield shield) {
@@ -241,6 +254,7 @@ public class Player extends SpaceEntity {
 
     /**
      * This method creates a new Shield for the player.
+     *
      * @return shield.
      */
     public Shield activateShield() {
@@ -250,6 +264,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Returns seconds left of invulnerability.
+     *
      * @return current invulnerabilityTime
      */
     public double getInvulnerabilityTime() {
@@ -258,6 +273,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for invulnerabilityTime, needed for testing.
+     *
      * @param ivt new value
      */
     public void setInvulnerabilityTime(double ivt) {

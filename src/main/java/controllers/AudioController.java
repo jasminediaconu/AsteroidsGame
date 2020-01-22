@@ -85,20 +85,33 @@ public class AudioController {
         }
     }
 
+    /**
+     * Getter for the Clip.
+     * @return the Clip used by this controller
+     */
     public Clip getClip() {
         return clip;
     }
 
+    /**
+     * Method that plays the laser sound.
+     */
     public void playLaser() {
         playSound("src/main/resources/audio/laser_lo.wav");
     }
 
+    /**
+     * Plays a random explosion sound.
+     */
     public void playExplosion() {
         Random random = new Random();
         int track = random.nextInt(4) + 1;
         playSound("src/main/resources/audio/exp_" + track + ".wav");
     }
 
+    /**
+     * Plays thruster sound.
+     */
     public void playThrusterSound() {
         if (getClip() == null) {
             playSound("src/main/resources/audio/thrust.wav");
@@ -106,13 +119,19 @@ public class AudioController {
             playSound("src/main/resources/audio/thrust.wav");
         }
     }
-    
+
+    /**
+     * Stops thruster sound if playing.
+     */
     public void stopThrusterSound() {
-        if(getClip() != null && getClip().isActive()) {
+        if (getClip() != null && getClip().isActive()) {
             stop();
         }
     }
 
+    /**
+     * Plays rotation sound.
+     */
     public void playRotatingSound() {
         if (getClip() == null) {
             playSound("src/main/resources/audio/rotate.wav");
@@ -120,7 +139,10 @@ public class AudioController {
             playSound("src/main/resources/audio/rotate.wav");
         }
     }
-    
+
+    /**
+     * Stops rotation sound if playing.
+     */
     public void stopRotatingSound() {
         if (getClip() != null && getClip().isActive()) {
             stop();
