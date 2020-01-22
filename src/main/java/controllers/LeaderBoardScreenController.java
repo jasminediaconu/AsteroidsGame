@@ -17,6 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javax.swing.Action;
 import models.game.Game;
 import models.game.LeaderBoardGame;
 
@@ -87,8 +88,14 @@ public class LeaderBoardScreenController implements Initializable {
      * @param url URL
      * @param resourceBundle ResourceBundle
      */
-    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        refresh();
+    }
+
+    @FXML
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
+    private void refresh() {
+        leaderBoardGame.clear();
         top5 = db.getTop5Scores();
         for (Game game : top5) {
             if (game.getAlias() == null) {
