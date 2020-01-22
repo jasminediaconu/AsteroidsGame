@@ -45,48 +45,44 @@ import models.game.asteroids.Small;
  */
 @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class GameScreenController {
-
-    public static final int screenSize = 800;
-
-    public transient boolean isPaused = false;
-
-    public transient boolean isStopped = false;
-
-    public transient boolean soundEffect = false;
-
+    // default values
     public static int scoreUp = 10000;
-
-    private transient ActionEvent event;
-
-    private transient AnimationTimer timer;
-
-    private static boolean pauseScreenInitiated = false;
-
-    //TODO: make spawn chances increase with a higher score.
+    public static final int screenSize = 800;
     private final transient double asteroidSpawnChance = 0.01;
     private final transient double hostileSpawnChance = 0.01;
     private final transient int hostileCount = 3;
 
-    private transient AnchorPane anchorPane;
+    //FXML stuff
     @FXML
     private transient Pane pauseScreen;
     private transient Scene leaderBoardScreen;
-
     private transient URL pauseScreenFile;
     private transient Scene gameScene;
-    private transient Scene leaderBoardScene;
+    private transient AnimationTimer timer;
+    private transient AnchorPane anchorPane;
+
+    // audio
+    private transient AudioController rotateSound = new AudioController();
+    private transient AudioController thrustSound = new AudioController();
+
+    public transient boolean isPaused = false;
+    public transient boolean isStopped = false;
+    public transient boolean soundEffect = false;
+    private static boolean pauseScreenInitiated = false;
+    private transient boolean isShieldActive = false;
+
+
+    // SpaceEntity lists
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<Hostile> hostiles = new ArrayList<>();
 
-    private transient Robot robot = new Robot();
-
-    private transient Text score;
-
     //TODO: change text to icon
     private transient Text playerLives;
+    private transient Text score;
     private transient Player player;
 
+    // key booleans
     private transient boolean up = false;
     private transient boolean right = false;
     private transient boolean left = false;
@@ -96,10 +92,7 @@ public class GameScreenController {
     private transient boolean pkey = false;
     private transient boolean skey = false;
 
-    private transient boolean isShieldActive = false;
-
-    private transient AudioController rotateSound = new AudioController();
-    private transient AudioController thrustSound = new AudioController();
+    private transient Robot robot = new Robot();
 
     /**
      * GameScreenController constructor.

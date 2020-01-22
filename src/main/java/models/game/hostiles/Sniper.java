@@ -87,7 +87,6 @@ public class Sniper extends Hostile {
      * @return The amount of degrees.
      */
     private double findPlayer() {
-
         Point2D target = player.getLocation();
 
         double x1 = target.subtract(getLocation()).getX();
