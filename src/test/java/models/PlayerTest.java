@@ -123,9 +123,6 @@ public class PlayerTest {
         player.addLife();
         assertEquals(1, player.getLives());
         assertTrue(player.hasLives());
-
-        player.setLives(10);
-        assertEquals(10, player.getLives());
     }
 
     @Test
@@ -137,9 +134,6 @@ public class PlayerTest {
 
         player.incrementScore(10000);
         assertEquals(10015, player.getTotalScore());
-
-        player.setTotalScore(10);
-        assertEquals(10, player.getTotalScore());
 
         player.setCurrentScore(10);
         assertEquals(10, player.getCurrentScore());

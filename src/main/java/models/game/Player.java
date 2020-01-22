@@ -23,9 +23,8 @@ public class Player extends SpaceEntity {
 
     private transient double invulnerabilityTime;
 
-    private int lives;
-
-    private int totalScore;
+    private transient int lives;
+    private transient int totalScore;
     /**
      * Current score of player.
      * Needed to keep count of the 10000 points, so the extra life can be added.
@@ -118,14 +117,6 @@ public class Player extends SpaceEntity {
     }
 
     /**
-     * Setter for the life.
-     * @param lives new value of life.
-     */
-    public void setLives(int lives) {
-        this.lives = lives;
-    }
-
-    /**
      * Increments the player's score by the value passed.
      * @param value value.
      */
@@ -140,14 +131,6 @@ public class Player extends SpaceEntity {
      */
     public int getTotalScore() {
         return totalScore;
-    }
-
-    /**
-     * Setter for totalScore.
-     * @param totalScore new value for totalScore.
-     */
-    public void setTotalScore(int totalScore) {
-        this.totalScore = totalScore;
     }
 
     /**
