@@ -193,11 +193,7 @@ public class Database {
 
             stm.close();
 
-            if (rowsAffected == 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return rowsAffected != 0;
 
         } catch (SQLException e) {
             System.out.println("error: connection couldn't be established,"

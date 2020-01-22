@@ -2,6 +2,7 @@ package models.game;
 
 import static controllers.GameScreenController.screenSize;
 
+import java.util.List;
 import java.util.Random;
 
 import javafx.geometry.Point2D;
@@ -39,7 +40,6 @@ public abstract class Asteroid extends SpaceEntity {
      * @param maxRotation the maximum possible rotation of this asteroid.
      */
     public Asteroid(int maxVelocity, int maxRotation, Random rand) {
-
         Point2D course;
 
         int gaussianCourse = (int) (rand.nextGaussian()
@@ -107,8 +107,13 @@ public abstract class Asteroid extends SpaceEntity {
                 rand.nextDouble() * maxVelocity + minVelocity
         ));
         setRotationSpeed(rand.nextInt(maxRotation * 2) - maxRotation);
-
     }
+
+    /**
+     * Method called when asteroid is hit by a bullet.
+     * @return a list of 2 asteroids of the next type.
+     */
+    public abstract List<Asteroid> split();
 
     /**
      * Method that spawns in a new random asteroid.
@@ -125,7 +130,6 @@ public abstract class Asteroid extends SpaceEntity {
         }
     }
 
-
     /**
      * Checks if asteroid is off screen.
      * @return true iff asteroid is off screen, false otherwise
@@ -134,20 +138,21 @@ public abstract class Asteroid extends SpaceEntity {
         double x = this.getLocation().getX();
         double y = this.getLocation().getY();
 
-        if (x < 0 || y < 0 || x > screenSize || y > screenSize) {
-            return true;
-        }
-
-        return false;
+        return x < 0 || y < 0 || x > screenSize || y > screenSize;
     }
 
     @Override
     public void checkMove() {
-
+        // do nothing
     }
 
+    /**
+     * Used in tests.
+     * @return type of asteroid that is created.
+     */
     public int caseTest() {
         return caseNr;
     }
+
 
 }
