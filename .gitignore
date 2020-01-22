@@ -13,3 +13,5 @@ out/**
 
 # database
 src/main/resources/database/semdatabase.db
+
+codemr/*
