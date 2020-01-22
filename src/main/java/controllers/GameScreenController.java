@@ -325,9 +325,8 @@ public class GameScreenController {
         }
 
         //checkButtons();
+        ArrayList<Asteroid> chunks = new ArrayList<>();
 
-        ArrayList<Medium> newMeds = new ArrayList<>();
-        ArrayList<Small> newSmalls = new ArrayList<>();
 
         for (Bullet bullet : bullets) {
             for (Asteroid asteroid : asteroids) {
@@ -335,29 +334,15 @@ public class GameScreenController {
                     bullet.setAlive(false);
                     asteroid.setAlive(false);
 
-                    AudioController explosion = new AudioController();
-                    explosion.playExplosion();
-
                     if (bullet.getOrigin() == player) {
                         player.incrementScore(asteroid.getScore());
                         score.setText("Score: " + player.getCurrentScore());
                     }
 
-                    if (asteroid instanceof Large) {
-                        Medium md1 = new Medium(new Random());
-                        Medium md2 = new Medium(new Random());
-                        md1.setLocation(asteroid.getLocation());
-                        md2.setLocation(asteroid.getLocation());
-                        newMeds.add(md1);
-                        newMeds.add(md2);
-                    } else if (asteroid instanceof Medium) {
-                        Small sm1 = new Small(new Random());
-                        Small sm2 = new Small(new Random());
-                        sm1.setLocation(asteroid.getLocation());
-                        sm2.setLocation(asteroid.getLocation());
-                        newSmalls.add(sm1);
-                        newSmalls.add(sm2);
-                    }
+                    AudioController explosion = new AudioController();
+                    explosion.playExplosion();
+
+                    chunks = asteroid.split();
 
                     anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
                 }
@@ -367,11 +352,9 @@ public class GameScreenController {
             }
         }
 
-        for (Small sm : newSmalls) {
-            addAsteroid(sm);
-        }
-        for (Medium md : newMeds) {
-            addAsteroid(md);
+        //If an asteroid was destroyed spawn the split chunks
+        for(Asteroid chunk : chunks) {
+            addAsteroid(chunk);
         }
 
         //check if player collided with an asteroid.

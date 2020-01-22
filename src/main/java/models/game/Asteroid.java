@@ -2,6 +2,7 @@ package models.game;
 
 import static controllers.GameScreenController.screenSize;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.geometry.Point2D;
@@ -148,6 +149,28 @@ public abstract class Asteroid extends SpaceEntity {
 
     public int caseTest() {
         return caseNr;
+    }
+
+    public ArrayList<Asteroid> split() {
+        ArrayList<Asteroid> chunks = new ArrayList<>();
+
+        if (this instanceof Large) {
+            Medium md1 = new Medium(new Random());
+            Medium md2 = new Medium(new Random());
+            md1.setLocation(getLocation());
+            md2.setLocation(getLocation());
+            chunks.add(md1);
+            chunks.add(md2);
+        } else if (this instanceof Medium) {
+            Small sm1 = new Small(new Random());
+            Small sm2 = new Small(new Random());
+            sm1.setLocation(getLocation());
+            sm2.setLocation(getLocation());
+            chunks.add(sm1);
+            chunks.add(sm2);
+        }
+
+        return chunks;
     }
 
 }
