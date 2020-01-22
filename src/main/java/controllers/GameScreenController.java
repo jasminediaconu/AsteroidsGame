@@ -448,13 +448,9 @@ public class GameScreenController {
         if (up) {
             player.thrust();
             // Start thrust sound
-            if (thrustSound.getClip() == null) {
-                thrustSound.playSound("src/main/resources/audio/thrust.wav");
-            } else if (thrustSound.getClip() != null && !thrustSound.getClip().isActive()) {
-                thrustSound.playSound("src/main/resources/audio/thrust.wav");
-            }
-        } else if (thrustSound.getClip() != null && thrustSound.getClip().isActive()) {
-            thrustSound.stop();
+            thrustSound.playThrusterSound();
+        } else {
+            thrustSound.stopThrusterSound();
         }
 
         if (right) {
@@ -466,15 +462,11 @@ public class GameScreenController {
 
         if (left || right) {
             // Start rotate sound effect
-            if (rotateSound.getClip() == null) {
-                rotateSound.playSound("src/main/resources/audio/rotate.wav");
-            } else if (rotateSound.getClip() != null && !rotateSound.getClip().isActive()) {
-                rotateSound.playSound("src/main/resources/audio/rotate.wav");
-            }
+            rotateSound.playRotatingSound();
 
-        } else if (rotateSound.getClip() != null && rotateSound.getClip().isActive()) {
+        } else {
             // Stop rotate sound effect
-            rotateSound.stop();
+            rotateSound.stopRotatingSound();
         }
 
         if (space && player.canFire()) {

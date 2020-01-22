@@ -99,7 +99,32 @@ public class AudioController {
         playSound("src/main/resources/audio/exp_" + track + ".wav");
     }
 
-    public void playThrusters() {
-
+    public void playThrusterSound() {
+        if (getClip() == null) {
+            playSound("src/main/resources/audio/thrust.wav");
+        } else if (getClip() != null && !getClip().isActive()) {
+            playSound("src/main/resources/audio/thrust.wav");
+        }
     }
+    
+    public void stopThrusterSound() {
+        if(getClip() != null && getClip().isActive()) {
+            stop();
+        }
+    }
+
+    public void playRotatingSound() {
+        if (getClip() == null) {
+            playSound("src/main/resources/audio/rotate.wav");
+        } else if (getClip() != null && !getClip().isActive()) {
+            playSound("src/main/resources/audio/rotate.wav");
+        }
+    }
+    
+    public void stopRotatingSound() {
+        if (getClip() != null && getClip().isActive()) {
+            stop();
+        }
+    }
+    
 }
