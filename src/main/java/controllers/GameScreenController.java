@@ -308,7 +308,6 @@ public class GameScreenController {
      * @param object SpaceEntity type
      */
     private void addSpaceEntity(SpaceEntity object) {
-        System.out.println("adding space entity");
         object.setView(new ImageView(new Image(object.getUrl())));
         object.getView().setTranslateX(object.getLocation().getX());
         object.getView().setTranslateY(object.getLocation().getY());
@@ -566,10 +565,6 @@ public class GameScreenController {
             addBullet(player.shoot(), player);
         }
         if (fkey) {
-            Random rand = new Random();
-            int x = rand.nextInt(screenSize);
-            int y = rand.nextInt(screenSize);
-            player.setLocation(new Point2D(x, y));
             player.teleport();
         }
         if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
