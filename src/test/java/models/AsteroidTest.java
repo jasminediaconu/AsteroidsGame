@@ -3,11 +3,14 @@ package models;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import controllers.GameScreenController;
+
+import java.util.ArrayList;
 import java.util.Random;
 import javafx.geometry.Point2D;
 import models.game.Asteroid;
@@ -285,5 +288,39 @@ class AsteroidTest {
                 small.getSprite(0));
         assertEquals("/views/sprites/asteroids/asteroidBrown_small1.png",
                 small.getSprite(1));
+    }
+
+    @Test
+    void splitTest() {
+        Random random = new Random();
+        Small small = new Small(random);
+        Medium medium = new Medium(random);
+        Large large = new Large(random);
+
+        ArrayList<Asteroid> medList = large.split();
+        ArrayList<Asteroid> smList = medium.split();
+        ArrayList<Asteroid> emptyList = small.split();
+
+
+        assertEquals(2,medList.size());
+        assertEquals(2,smList.size());
+        assertNotNull(medList.get(0));
+        assertNotNull(medList.get(1));
+        assertNotNull(smList.get(0));
+        assertNotNull(smList.get(1));
+
+        assertEquals(0,emptyList.size());
+    }
+
+    @Test
+    void enumTest() {
+        assertEquals(Asteroid.Origin.TOP, Asteroid.Origin.getOrigin(4));
+        assertEquals(Asteroid.Origin.TOP, Asteroid.Origin.getOrigin(-1));
+        assertEquals(Asteroid.Origin.TOP, Asteroid.Origin.getOrigin(442351));
+        assertEquals(Asteroid.Origin.TOP, Asteroid.Origin.getOrigin(0));
+
+        assertEquals(Asteroid.Origin.BOTTOM, Asteroid.Origin.getOrigin(1));
+        assertEquals(Asteroid.Origin.LEFT, Asteroid.Origin.getOrigin(2));
+        assertEquals(Asteroid.Origin.RIGHT, Asteroid.Origin.getOrigin(3));
     }
 }

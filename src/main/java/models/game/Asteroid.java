@@ -41,68 +41,8 @@ public abstract class Asteroid extends SpaceEntity {
      */
     public Asteroid(int maxVelocity, int maxRotation, Random rand) {
 
-        Point2D course;
 
-        int gaussianCourse = (int) (rand.nextGaussian()
-                * ((screenSize / 2) - courseMargin) + (screenSize / 2));
-        int gaussianSpawn = (int) (rand.nextGaussian()
-                * ((screenSize / 2) + spawnMargin) + (screenSize / 2));
-        int boundary = screenSize + spawnMargin;
-        int x;
-        int y;
-
-        switch (rand.nextInt(4)) {
-            case 0:
-                x = gaussianSpawn;
-                y = -spawnMargin;
-                setLocation(new Point2D(x, y));
-
-                x = gaussianCourse;
-                y = screenSize / 2;
-                course = new Point2D(x, y);
-                setVelocity(course.subtract(getLocation()));
-
-                caseNr = 0;
-                break;
-            case 1:
-                x = gaussianSpawn;
-                y = boundary;
-                setLocation(new Point2D(x, y));
-
-                x = gaussianCourse;
-                y = screenSize / 2;
-                course = new Point2D(x, y);
-                setVelocity(course.subtract(getLocation()));
-
-                caseNr = 1;
-                break;
-            case 2:
-                x = -spawnMargin;
-                y = gaussianSpawn;
-                setLocation(new Point2D(x, y));
-
-                x = screenSize / 2;
-                y = gaussianCourse;
-                course = new Point2D(x, y);
-                setVelocity(course.subtract(getLocation()));
-
-                caseNr = 2;
-                break;
-            case 3:
-                x = boundary;
-                y = gaussianSpawn;
-                setLocation(new Point2D(x, y));
-
-                x = screenSize / 2;
-                y = gaussianCourse;
-                course = new Point2D(x, y);
-                setVelocity(course.subtract(getLocation()));
-
-                caseNr = 3;
-                break;
-            default:
-                break;
-        }
+        setOrigin(rand);
 
         setVelocity(getVelocity().normalize().multiply(
                 rand.nextDouble() * maxVelocity + minVelocity
@@ -175,6 +115,71 @@ public abstract class Asteroid extends SpaceEntity {
         }
 
         return chunks;
+    }
+
+    public enum Origin {
+        TOP,
+        BOTTOM,
+        LEFT,
+        RIGHT;
+
+        public static Origin getOrigin(int choice) {
+            if(choice < values().length && choice >= 0)
+                return values()[choice];
+            else return values()[0];
+        }
+    }
+
+    public void setOrigin(Random rand) {
+        Origin o = Origin.getOrigin(rand.nextInt(Origin.values().length));
+
+        int gaussianCourse = (int) (rand.nextGaussian()
+                * ((screenSize / 2) - courseMargin) + (screenSize / 2));
+        int gaussianSpawn = (int) (rand.nextGaussian()
+                * ((screenSize / 2) + spawnMargin) + (screenSize / 2));
+        int boundary = screenSize + spawnMargin;
+
+        switch (o) {
+            case TOP:
+                spawnTop(gaussianSpawn,gaussianCourse);
+                caseNr = 0;
+                break;
+            case BOTTOM:
+                spawnBottom(gaussianSpawn,gaussianCourse);
+                caseNr = 1;
+                break;
+            case LEFT:
+                spawnLeft(gaussianSpawn,gaussianCourse);
+                caseNr = 2;
+                break;
+            case RIGHT:
+                spawnRight(gaussianSpawn,gaussianCourse);
+                caseNr = 3;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void spawnTop(int gaussianSpawn, int gaussianCourse) {
+        setLocation(new Point2D(gaussianSpawn, -spawnMargin));
+        Point2D course = new Point2D(gaussianCourse, (int)(screenSize / 2));
+        setVelocity(course.subtract(getLocation()));
+    }
+    public void spawnBottom(int gaussianSpawn, int gaussianCourse) {
+        setLocation(new Point2D(gaussianSpawn, screenSize + spawnMargin));
+        Point2D course = new Point2D(gaussianCourse, (int)(screenSize / 2));
+        setVelocity(course.subtract(getLocation()));
+    }
+    public void spawnLeft(int gaussianSpawn, int gaussianCourse) {
+        setLocation(new Point2D(-spawnMargin, gaussianSpawn));
+        Point2D course = new Point2D((int)(screenSize / 2), gaussianCourse);
+        setVelocity(course.subtract(getLocation()));
+    }
+    public void spawnRight(int gaussianSpawn, int gaussianCourse) {
+        setLocation(new Point2D(screenSize + spawnMargin, gaussianSpawn));
+        Point2D course = new Point2D((int)(screenSize / 2), gaussianCourse);
+        setVelocity(course.subtract(getLocation()));
     }
 
 }
