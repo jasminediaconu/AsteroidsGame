@@ -29,15 +29,6 @@ public class Small extends Asteroid {
     }
 
     /**
-     * Small asteroids don't split into anything.
-     * @return empty list
-     */
-    @Override
-    public List<Asteroid> split() {
-        return new ArrayList<>();
-    }
-
-    /**
      * {@inheritDoc}
      */
     public String getUrl() {

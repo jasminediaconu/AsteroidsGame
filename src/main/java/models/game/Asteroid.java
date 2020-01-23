@@ -2,7 +2,7 @@ package models.game;
 
 import static controllers.GameScreenController.screenSize;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.geometry.Point2D;
@@ -39,80 +39,16 @@ public abstract class Asteroid extends SpaceEntity {
      * @param maxRotation the maximum possible rotation of this asteroid.
      */
     public Asteroid(int maxVelocity, int maxRotation, Random rand) {
-        Point2D course;
 
-        int gaussianCourse = (int) (rand.nextGaussian()
-                * ((screenSize / 2) - courseMargin) + (screenSize / 2));
-        int gaussianSpawn = (int) (rand.nextGaussian()
-                * ((screenSize / 2) + spawnMargin) + (screenSize / 2));
-        int boundary = screenSize + spawnMargin;
-        int x;
-        int y;
 
-        switch (rand.nextInt(4)) {
-            case 0:
-                x = gaussianSpawn;
-                y = -spawnMargin;
-                setLocation(new Point2D(x, y));
-
-                x = gaussianCourse;
-                y = screenSize / 2;
-                course = new Point2D(x, y);
-                setVelocity(course.subtract(getLocation()));
-
-                caseNr = 0;
-                break;
-            case 1:
-                x = gaussianSpawn;
-                y = boundary;
-                setLocation(new Point2D(x, y));
-
-                x = gaussianCourse;
-                y = screenSize / 2;
-                course = new Point2D(x, y);
-                setVelocity(course.subtract(getLocation()));
-
-                caseNr = 1;
-                break;
-            case 2:
-                x = -spawnMargin;
-                y = gaussianSpawn;
-                setLocation(new Point2D(x, y));
-
-                x = screenSize / 2;
-                y = gaussianCourse;
-                course = new Point2D(x, y);
-                setVelocity(course.subtract(getLocation()));
-
-                caseNr = 2;
-                break;
-            case 3:
-                x = boundary;
-                y = gaussianSpawn;
-                setLocation(new Point2D(x, y));
-
-                x = screenSize / 2;
-                y = gaussianCourse;
-                course = new Point2D(x, y);
-                setVelocity(course.subtract(getLocation()));
-
-                caseNr = 3;
-                break;
-            default:
-                break;
-        }
+        setOrigin(rand);
 
         setVelocity(getVelocity().normalize().multiply(
                 rand.nextDouble() * maxVelocity + minVelocity
         ));
         setRotationSpeed(rand.nextInt(maxRotation * 2) - maxRotation);
-    }
 
-    /**
-     * Method called when asteroid is hit by a bullet.
-     * @return a list of 2 asteroids of the next type.
-     */
-    public abstract List<Asteroid> split();
+    }
 
     /**
      * Method that spawns in a new random asteroid.
@@ -120,18 +56,15 @@ public abstract class Asteroid extends SpaceEntity {
      */
     public static Asteroid spawnAsteroid(double number) {
         Random random = new Random();
-        Asteroid asteroid;
-
         if (number < smallSpawnThreshold) {
-            asteroid = new Small(random);
+            return new Small(random);
         } else if (number < medSpawnThreshold) {
-            asteroid = new Medium(random);
+            return new Medium(random);
         } else {
-            asteroid = new Large(random);
+            return new Large(random);
         }
-
-        return asteroid;
     }
+
 
     /**
      * Checks if asteroid is off screen.
@@ -141,20 +74,144 @@ public abstract class Asteroid extends SpaceEntity {
         double x = this.getLocation().getX();
         double y = this.getLocation().getY();
 
-        return x < 0 || y < 0 || x > screenSize || y > screenSize;
+        if (x < 0 || y < 0 || x > screenSize || y > screenSize) {
+            return true;
+        }
+
+        return false;
     }
 
     @Override
     public void checkMove() {
-        // do nothing
+
+    }
+
+    public int caseTest() {
+        return caseNr;
     }
 
     /**
-     * Used in tests.
-     * @return type of asteroid that is created.
+     * Creates Asteroids when called, dependent on this Asteroid's type.
+     * @return ArrayList of Asteroids to be spawned by GameScreenController
      */
-    public int caseTest() {
-        return caseNr;
+    public ArrayList<Asteroid> split() {
+        ArrayList<Asteroid> chunks = new ArrayList<>();
+
+        if (this instanceof Large) {
+            Medium md1 = new Medium(new Random());
+            Medium md2 = new Medium(new Random());
+            md1.setLocation(getLocation());
+            md2.setLocation(getLocation());
+            chunks.add(md1);
+            chunks.add(md2);
+        } else if (this instanceof Medium) {
+            Small sm1 = new Small(new Random());
+            Small sm2 = new Small(new Random());
+            sm1.setLocation(getLocation());
+            sm2.setLocation(getLocation());
+            chunks.add(sm1);
+            chunks.add(sm2);
+        }
+
+        return chunks;
+    }
+
+    public enum Origin {
+        TOP,
+        BOTTOM,
+        LEFT,
+        RIGHT;
+
+        /**
+         * Returns the enum result based on an integer index input.
+         * @param choice The integer to select output.
+         * @return The enum corresponding to the chosen index
+         */
+        public static Origin getOrigin(int choice) {
+            if (choice < values().length && choice >= 0) {
+                return values()[choice];
+            }
+            else { return values()[0]; }
+        }
+    }
+
+    /**
+     * Sets the spawn location for the Asteroid and gives it a speed and direction.
+     * @param rand The Random class instance to use for this class and testing purposes.
+     */
+    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
+    public final void setOrigin(Random rand) {
+        Origin o = Origin.getOrigin(rand.nextInt(Origin.values().length));
+
+        int gaussianCourse = (int) (rand.nextGaussian()
+                * ((screenSize / 2) - courseMargin) + (screenSize / 2));
+        int gaussianSpawn = (int) (rand.nextGaussian()
+                * ((screenSize / 2) + spawnMargin) + (screenSize / 2));
+
+        switch (o) {
+            case TOP:
+                spawnTop(gaussianSpawn,gaussianCourse);
+                caseNr = 0;
+                break;
+            case BOTTOM:
+                spawnBottom(gaussianSpawn,gaussianCourse);
+                caseNr = 1;
+                break;
+            case LEFT:
+                spawnLeft(gaussianSpawn,gaussianCourse);
+                caseNr = 2;
+                break;
+            case RIGHT:
+                spawnRight(gaussianSpawn,gaussianCourse);
+                caseNr = 3;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Sets a spawn on the top of the screen and sets an appropriate course vector.
+     * @param gaussianSpawn The spawn point
+     * @param gaussianCourse The course direction
+     */
+    public void spawnTop(int gaussianSpawn, int gaussianCourse) {
+        setLocation(new Point2D(gaussianSpawn, -spawnMargin));
+        Point2D course = new Point2D(gaussianCourse, (int)(screenSize / 2));
+        setVelocity(course.subtract(getLocation()));
+    }
+
+    /**
+     * Sets a spawn on the bottom of the screen and sets an appropriate course vector.
+     * @param gaussianSpawn The spawn point
+     * @param gaussianCourse The course direction
+     */
+    public void spawnBottom(int gaussianSpawn, int gaussianCourse) {
+        setLocation(new Point2D(gaussianSpawn, screenSize + spawnMargin));
+        Point2D course = new Point2D(gaussianCourse, (int)(screenSize / 2));
+        setVelocity(course.subtract(getLocation()));
+    }
+
+    /**
+     * Sets a spawn on the left of the screen and sets an appropriate course vector.
+     * @param gaussianSpawn The spawn point
+     * @param gaussianCourse The course direction
+     */
+    public void spawnLeft(int gaussianSpawn, int gaussianCourse) {
+        setLocation(new Point2D(-spawnMargin, gaussianSpawn));
+        Point2D course = new Point2D((int)(screenSize / 2), gaussianCourse);
+        setVelocity(course.subtract(getLocation()));
+    }
+
+    /**
+     * Sets a spawn on the right of the screen and sets an appropriate course vector.
+     * @param gaussianSpawn The spawn point
+     * @param gaussianCourse The course direction
+     */
+    public void spawnRight(int gaussianSpawn, int gaussianCourse) {
+        setLocation(new Point2D(screenSize + spawnMargin, gaussianSpawn));
+        Point2D course = new Point2D((int)(screenSize / 2), gaussianCourse);
+        setVelocity(course.subtract(getLocation()));
     }
 
 }
