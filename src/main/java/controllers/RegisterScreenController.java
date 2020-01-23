@@ -93,6 +93,7 @@ public class RegisterScreenController {
 
     /**
      * Getter for Main Screen scene.
+     *
      * @return mainScreen
      */
     public Scene getMainScreen() {
@@ -119,12 +120,13 @@ public class RegisterScreenController {
      * @param actionEvent type ActionEvent
      */
     public void openMainScreen(ActionEvent actionEvent) {
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(mainScreen);
     }
 
     /**
      * Getter for Menu Screen scene.
+     *
      * @return menuScreen
      */
     public Scene getMenuScreen() {
@@ -133,6 +135,7 @@ public class RegisterScreenController {
 
     /**
      * Setter for Main Screen Scene.
+     *
      * @param scene type Scene
      */
     public void setMenuScreen(Scene scene) {
@@ -142,10 +145,11 @@ public class RegisterScreenController {
     /**
      * Function triggered when pressing the 'Login' button.
      * It returns the Menu Screen scene.
+     *
      * @param actionEvent type ActionEvent
      */
     public void openMenuScreen(ActionEvent actionEvent) {
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(menuScreen);
     }
 

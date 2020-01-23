@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -56,6 +57,7 @@ public class MainController {
 
     /**
      * Setter for the Login Scene.
+     *
      * @throws IOException Exception type
      */
     public void setLoginScene() throws IOException {
@@ -67,6 +69,7 @@ public class MainController {
 
     /**
      * Setter for the Register Scene.
+     *
      * @throws IOException Exception type
      */
     public void setRegisterScene() throws IOException {
@@ -78,6 +81,7 @@ public class MainController {
 
     /**
      * Setter for the LeaderBoard Scene.
+     *
      * @throws IOException Exception type
      */
     public void setLeaderBoardScene() throws IOException {
@@ -93,6 +97,7 @@ public class MainController {
 
     /**
      * Setter for the Menu Scene.
+     *
      * @throws IOException Exception type
      */
     public void setMenuScene() throws IOException {

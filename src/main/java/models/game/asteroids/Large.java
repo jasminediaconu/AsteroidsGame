@@ -3,6 +3,7 @@ package models.game.asteroids;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import models.game.Asteroid;
 
 public class Large extends Asteroid {
@@ -27,7 +28,7 @@ public class Large extends Asteroid {
     }
 
     /**
-     *{@inheritDoc}
+     * {@inheritDoc}
      */
     @Override
     public int getScore() {
@@ -45,6 +46,7 @@ public class Large extends Asteroid {
 
     /**
      * Returns a sprite based on an integer received as a parameter.
+     *
      * @param sprite The nr of the sprite to return.
      * @return The url to the sprite's PNG.
      */

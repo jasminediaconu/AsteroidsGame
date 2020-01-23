@@ -13,6 +13,7 @@ public class AudioController {
 
     /**
      * Method plays music in a separate thread using a .wav file loaded from a path.
+     *
      * @param path path to the wav file to play
      */
     public void playMusic(String path) {
@@ -35,6 +36,7 @@ public class AudioController {
 
     /**
      * Method plays music in a separate thread using a .wav file loaded from a path.
+     *
      * @param path path to the wav file to play
      */
     public void playSound(String path) {

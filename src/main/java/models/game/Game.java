@@ -38,11 +38,12 @@ public class Game {
 
     /**
      * Constructor.
-     * @param id id.
-     * @param username username.
-     * @param alias alias.
+     *
+     * @param id        id.
+     * @param username  username.
+     * @param alias     alias.
      * @param timestamp timestamp.
-     * @param score score.
+     * @param score     score.
      */
     public Game(int id, String username, String alias, Date timestamp, int score) {
         this.id = id;
@@ -54,6 +55,7 @@ public class Game {
 
     /**
      * Getter for id.
+     *
      * @return id of this game.
      */
     public int getId() {
@@ -62,6 +64,7 @@ public class Game {
 
     /**
      * Setter for id.
+     *
      * @param id Id that is going to be set for the game.
      */
     public void setId(int id) {
@@ -70,6 +73,7 @@ public class Game {
 
     /**
      * Getter for username.
+     *
      * @return username associated with this game.
      */
     public String getUsername() {
@@ -78,6 +82,7 @@ public class Game {
 
     /**
      * Setter for username.
+     *
      * @param username new value of username.
      */
     public void setUsername(String username) {
@@ -86,6 +91,7 @@ public class Game {
 
     /**
      * Getter for alias.
+     *
      * @return alias associated with this game.
      */
     public String getAlias() {
@@ -94,6 +100,7 @@ public class Game {
 
     /**
      * Setter for alias.
+     *
      * @param alias new value of alias.
      */
     public void setAlias(String alias) {
@@ -102,6 +109,7 @@ public class Game {
 
     /**
      * Getter for timestamp.
+     *
      * @return timestamp of this game.
      */
     public Date getTimestamp() {
@@ -110,6 +118,7 @@ public class Game {
 
     /**
      * Setter for timestamp.
+     *
      * @param timestamp new value of timestamp.
      */
     public void setTimestamp(Date timestamp) {
@@ -118,6 +127,7 @@ public class Game {
 
     /**
      * Getter for score.
+     *
      * @return score of this game.
      */
     public int getScore() {
@@ -126,6 +136,7 @@ public class Game {
 
     /**
      * Setter for score.
+     *
      * @param score new value of score.
      */
     public void setScore(int score) {
@@ -145,6 +156,7 @@ public class Game {
 
     /**
      * Equals method for Game object.
+     *
      * @param o Object other
      * @return true iff all fields are equal
      */
@@ -168,6 +180,7 @@ public class Game {
 
     /**
      * Standard IntelliJ generated hashCode.
+     *
      * @return int hash
      */
     @Override

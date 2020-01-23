@@ -24,7 +24,6 @@ public class Sniper extends Hostile {
     private transient Player player;
 
 
-
     public Sniper(Player p) {
         this.player = p;
         setLocation(spawnPoint);
@@ -84,6 +83,7 @@ public class Sniper extends Hostile {
     /**
      * Finds the difference in degrees between the current direction
      * the Sniper is flying and the direction the player ship is.
+     *
      * @return The amount of degrees.
      */
     public double findPlayer(Point2D target) {

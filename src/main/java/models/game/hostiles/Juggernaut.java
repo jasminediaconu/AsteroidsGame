@@ -1,10 +1,12 @@
 package models.game.hostiles;
 
-import controllers.GameScreenController;
+import static views.GameScreenView.screenSize;
+
 import javafx.geometry.Point2D;
 
 import models.game.Bullet;
 import models.game.Hostile;
+
 
 public class Juggernaut extends Hostile {
 
@@ -73,11 +75,11 @@ public class Juggernaut extends Hostile {
 
     @Override
     public void checkMove() {
-        if (getLocation().getX() > GameScreenController.screenSize) {
+        if (getLocation().getX() > screenSize) {
             setVelocity(getVelocity().subtract(2 * getVelocity().getX(), 0));
             course = course + 90;
         }
-        if (getLocation().getY() > GameScreenController.screenSize) {
+        if (getLocation().getY() > screenSize) {
             setVelocity(getVelocity().subtract(0, 2 * getVelocity().getY()));
             course = course + 90;
         }
