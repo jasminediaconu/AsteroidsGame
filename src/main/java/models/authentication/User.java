@@ -1,6 +1,7 @@
 package models.authentication;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
@@ -60,7 +61,7 @@ public class User {
     }
 
     public String getSaltAsString() throws UnsupportedEncodingException {
-        return new String(salt, "UTF-8");
+        return new String(salt, StandardCharsets.UTF_8);
     }
 
     /**
@@ -100,12 +101,7 @@ public class User {
      * @return password String
      */
     public String getPasswordAsString() {
-        try {
-            return new String(password, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return new String(password, StandardCharsets.UTF_8);
     }
 
     /**

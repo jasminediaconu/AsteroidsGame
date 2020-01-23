@@ -2,7 +2,7 @@ package models.game;
 
 import static controllers.GameScreenController.screenSize;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javafx.geometry.Point2D;
@@ -15,7 +15,6 @@ public abstract class Asteroid extends SpaceEntity {
     //see spawnAsteroid()
     private static final double smallSpawnThreshold = 0.1;
     private static final double medSpawnThreshold = 0.3;
-    private static final double largeSpawnThreshold = 1.0;
 
     private static final double minVelocity = 1;
     private static final int spawnMargin = 100;
@@ -40,7 +39,6 @@ public abstract class Asteroid extends SpaceEntity {
      * @param maxRotation the maximum possible rotation of this asteroid.
      */
     public Asteroid(int maxVelocity, int maxRotation, Random rand) {
-
         Point2D course;
 
         int gaussianCourse = (int) (rand.nextGaussian()
@@ -108,8 +106,13 @@ public abstract class Asteroid extends SpaceEntity {
                 rand.nextDouble() * maxVelocity + minVelocity
         ));
         setRotationSpeed(rand.nextInt(maxRotation * 2) - maxRotation);
-
     }
+
+    /**
+     * Method called when asteroid is hit by a bullet.
+     * @return a list of 2 asteroids of the next type.
+     */
+    public abstract List<Asteroid> split();
 
     /**
      * Method that spawns in a new random asteroid.
@@ -117,15 +120,18 @@ public abstract class Asteroid extends SpaceEntity {
      */
     public static Asteroid spawnAsteroid(double number) {
         Random random = new Random();
-        if (number < smallSpawnThreshold) {
-            return new Small(random);
-        } else if (number < medSpawnThreshold) {
-            return new Medium(random);
-        } else {
-            return new Large(random);
-        }
-    }
+        Asteroid asteroid;
 
+        if (number < smallSpawnThreshold) {
+            asteroid = new Small(random);
+        } else if (number < medSpawnThreshold) {
+            asteroid = new Medium(random);
+        } else {
+            asteroid = new Large(random);
+        }
+
+        return asteroid;
+    }
 
     /**
      * Checks if asteroid is off screen.
@@ -135,46 +141,20 @@ public abstract class Asteroid extends SpaceEntity {
         double x = this.getLocation().getX();
         double y = this.getLocation().getY();
 
-        if (x < 0 || y < 0 || x > screenSize || y > screenSize) {
-            return true;
-        }
-
-        return false;
+        return x < 0 || y < 0 || x > screenSize || y > screenSize;
     }
 
     @Override
     public void checkMove() {
-
-    }
-
-    public int caseTest() {
-        return caseNr;
+        // do nothing
     }
 
     /**
-     * Creates Asteroids when called, dependent on this Asteroid's type.
-     * @return ArrayList of Asteroids to be spawned by GameScreenController
+     * Used in tests.
+     * @return type of asteroid that is created.
      */
-    public ArrayList<Asteroid> split() {
-        ArrayList<Asteroid> chunks = new ArrayList<>();
-
-        if (this instanceof Large) {
-            Medium md1 = new Medium(new Random());
-            Medium md2 = new Medium(new Random());
-            md1.setLocation(getLocation());
-            md2.setLocation(getLocation());
-            chunks.add(md1);
-            chunks.add(md2);
-        } else if (this instanceof Medium) {
-            Small sm1 = new Small(new Random());
-            Small sm2 = new Small(new Random());
-            sm1.setLocation(getLocation());
-            sm2.setLocation(getLocation());
-            chunks.add(sm1);
-            chunks.add(sm2);
-        }
-
-        return chunks;
+    public int caseTest() {
+        return caseNr;
     }
 
 }

@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 import models.authentication.User;
 import org.junit.jupiter.api.Assertions;
@@ -88,7 +89,7 @@ class UserTest {
         assertNotNull(user.getPasswordAsString());
         assertNotNull(user.getPasswordAsString().getBytes());
 
-        assertEquals(new String(password, "UTF-8"), user.getPasswordAsString());
+        assertEquals(new String(password, StandardCharsets.UTF_8), user.getPasswordAsString());
     }
 
     @Test

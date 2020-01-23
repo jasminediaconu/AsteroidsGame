@@ -1,9 +1,9 @@
 package models.game.asteroids;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-
 import models.game.Asteroid;
-
 
 public class Small extends Asteroid {
 
@@ -29,6 +29,15 @@ public class Small extends Asteroid {
     }
 
     /**
+     * Small asteroids don't split into anything.
+     * @return empty list
+     */
+    @Override
+    public List<Asteroid> split() {
+        return new ArrayList<>();
+    }
+
+    /**
      * {@inheritDoc}
      */
     public String getUrl() {
@@ -39,7 +48,6 @@ public class Small extends Asteroid {
 
     /**
      * Returns a sprite based on an integer received as a parameter.
-     *
      * @param sprite The nr of the sprite to return.
      * @return The url to the sprite's PNG.
      */

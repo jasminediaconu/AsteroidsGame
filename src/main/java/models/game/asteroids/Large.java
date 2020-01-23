@@ -1,9 +1,9 @@
 package models.game.asteroids;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
-
 import models.game.Asteroid;
-
 
 public class Large extends Asteroid {
 
@@ -16,6 +16,8 @@ public class Large extends Asteroid {
     private static final String sprite3 =
             "/views/sprites/asteroids/asteroidBrown_big3.png";
 
+    private static final ArrayList<String> sprites = new ArrayList<String>();
+
     private static final int maxRotation = 2;
     private static final int maxVelocity = 2;
     private static final int score = 100;
@@ -25,7 +27,7 @@ public class Large extends Asteroid {
     }
 
     /**
-     * {@inheritDoc}
+     *{@inheritDoc}
      */
     @Override
     public int getScore() {
@@ -43,20 +45,28 @@ public class Large extends Asteroid {
 
     /**
      * Returns a sprite based on an integer received as a parameter.
-     *
      * @param sprite The nr of the sprite to return.
      * @return The url to the sprite's PNG.
      */
-    @SuppressWarnings("PMD.AvoidLiteralsInIfCondition")
     public String getSprite(int sprite) {
-        if (sprite == 0) {
-            return sprite0;
-        } else if (sprite == 1) {
-            return sprite1;
-        } else if (sprite == 2) {
-            return sprite2;
-        } else {
-            return sprite3;
-        }
+        sprites.add(sprite0);
+        sprites.add(sprite1);
+        sprites.add(sprite2);
+        sprites.add(sprite3);
+
+        return sprites.get(sprite);
+    }
+
+    @Override
+    public List<Asteroid> split() {
+        Medium md1 = new Medium(new Random());
+        Medium md2 = new Medium(new Random());
+        md1.setLocation(this.getLocation());
+        md2.setLocation(this.getLocation());
+
+        List<Asteroid> res = new ArrayList<>();
+        res.add(md1);
+        res.add(md2);
+        return res;
     }
 }
