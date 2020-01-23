@@ -120,13 +120,17 @@ public abstract class Asteroid extends SpaceEntity {
      */
     public static Asteroid spawnAsteroid(double number) {
         Random random = new Random();
+        Asteroid asteroid;
+
         if (number < smallSpawnThreshold) {
-            return new Small(random);
+            asteroid = new Small(random);
         } else if (number < medSpawnThreshold) {
-            return new Medium(random);
+            asteroid = new Medium(random);
         } else {
-            return new Large(random);
+            asteroid = new Large(random);
         }
+
+        return asteroid;
     }
 
     /**
