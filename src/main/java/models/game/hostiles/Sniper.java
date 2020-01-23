@@ -41,7 +41,7 @@ public class Sniper extends Hostile {
         }
 
         if (Math.random() < rotateChance && !fleeing) {
-            course = findPlayer();
+            course = findPlayer(player.getLocation());
         }
 
         if (course > (rotationSpeed / 2)) {
@@ -86,8 +86,7 @@ public class Sniper extends Hostile {
      * the Sniper is flying and the direction the player ship is.
      * @return The amount of degrees.
      */
-    private double findPlayer() {
-        Point2D target = player.getLocation();
+    public double findPlayer(Point2D target) {
 
         double x1 = target.subtract(getLocation()).getX();
         double y1 = target.subtract(getLocation()).getY();
