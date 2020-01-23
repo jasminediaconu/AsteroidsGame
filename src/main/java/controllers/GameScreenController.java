@@ -686,4 +686,3 @@ public class GameScreenController {
         this.player = player;
     }
 }
-

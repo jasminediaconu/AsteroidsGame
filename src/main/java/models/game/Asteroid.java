@@ -15,7 +15,6 @@ public abstract class Asteroid extends SpaceEntity {
     //see spawnAsteroid()
     private static final double smallSpawnThreshold = 0.1;
     private static final double medSpawnThreshold = 0.3;
-    private static final double largeSpawnThreshold = 1.0;
 
     private static final double minVelocity = 1;
     private static final int spawnMargin = 100;
@@ -153,6 +152,5 @@ public abstract class Asteroid extends SpaceEntity {
     public int caseTest() {
         return caseNr;
     }
-
 
 }
