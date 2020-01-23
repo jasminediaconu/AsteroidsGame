@@ -100,14 +100,6 @@ public abstract class SpaceEntity {
      */
     public abstract String getUrl();
 
-    /**
-     * Sets sprite of SpaceEntity with a file path.
-     * @param url link to sprite image.
-     */
-    public void setImage(String url) {
-        this.view = new ImageView(new Image(url));
-    }
-
     public Node getView() {
         return view;
     }

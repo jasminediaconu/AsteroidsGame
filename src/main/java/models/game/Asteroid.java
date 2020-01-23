@@ -15,7 +15,6 @@ public abstract class Asteroid extends SpaceEntity {
     //see spawnAsteroid()
     private static final double smallSpawnThreshold = 0.1;
     private static final double medSpawnThreshold = 0.3;
-    private static final double largeSpawnThreshold = 1.0;
 
     private static final double minVelocity = 1;
     private static final int spawnMargin = 100;
@@ -121,13 +120,17 @@ public abstract class Asteroid extends SpaceEntity {
      */
     public static Asteroid spawnAsteroid(double number) {
         Random random = new Random();
+        Asteroid asteroid;
+
         if (number < smallSpawnThreshold) {
-            return new Small(random);
+            asteroid = new Small(random);
         } else if (number < medSpawnThreshold) {
-            return new Medium(random);
+            asteroid = new Medium(random);
         } else {
-            return new Large(random);
+            asteroid = new Large(random);
         }
+
+        return asteroid;
     }
 
     /**
@@ -153,6 +156,5 @@ public abstract class Asteroid extends SpaceEntity {
     public int caseTest() {
         return caseNr;
     }
-
 
 }
