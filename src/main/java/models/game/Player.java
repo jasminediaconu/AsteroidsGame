@@ -60,7 +60,7 @@ public class Player extends SpaceEntity {
         setVelocity(getVelocity().add(
                 acceleration * Math.cos(Math.toRadians(getRotation())),
                 acceleration * Math.sin(Math.toRadians(getRotation()))
-                ));
+        ));
     }
 
     /**
@@ -68,6 +68,7 @@ public class Player extends SpaceEntity {
      * 5 degrees to the right.
      */
     public void rotateRight() {
+
         setRotation(getRotation() + 4);
     }
 
@@ -114,6 +115,15 @@ public class Player extends SpaceEntity {
     }
 
     /**
+     * Setter for the life.
+     *
+     * @param lives new value of life.
+     */
+    public void setLives(int lives) {
+        this.lives = lives;
+    }
+
+    /**
      * Increments the player's score by the value passed.
      * @param value value.
      */
@@ -131,7 +141,17 @@ public class Player extends SpaceEntity {
     }
 
     /**
+     * Setter for totalScore.
+     *
+     * @param totalScore new value for totalScore.
+     */
+    public void setTotalScore(int totalScore) {
+        this.totalScore = totalScore;
+    }
+
+    /**
      * Getter for currentScore.
+     *
      * @return current score of the player.
      */
     public int getCurrentScore() {
@@ -140,6 +160,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter of currentScore.
+     *
      * @param currentScore new value for currentScore.
      */
     public void setCurrentScore(int currentScore) {
@@ -154,7 +175,7 @@ public class Player extends SpaceEntity {
 
         // Start laser sound effect
         AudioController audioController = new AudioController();
-        audioController.playSound("src/main/resources/audio/laser_lo.wav");
+        audioController.playLaser();
 
         this.currentFireCooldown = fireCooldown;
         return new Bullet(this);
@@ -205,6 +226,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Returns the shield of the player.
+     *
      * @return Shield
      */
     public Shield getShield() {
@@ -213,6 +235,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for the Shield.
+     *
      * @param shield new value of Shield
      */
     public void setShield(Shield shield) {
@@ -221,6 +244,7 @@ public class Player extends SpaceEntity {
 
     /**
      * This method creates a new Shield for the player.
+     *
      * @return shield.
      */
     public Shield activateShield() {
@@ -230,6 +254,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Returns seconds left of invulnerability.
+     *
      * @return current invulnerabilityTime
      */
     public double getInvulnerabilityTime() {
@@ -238,6 +263,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for invulnerabilityTime, needed for testing.
+     *
      * @param ivt new value
      */
     public void setInvulnerabilityTime(double ivt) {
