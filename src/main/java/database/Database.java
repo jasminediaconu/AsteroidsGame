@@ -83,29 +83,17 @@ public class Database {
      * @param game object to insert
      */
     public void insertGame(Game game) {
-        insertGame(game.getId(),
-                game.getUsername(),
-                game.getAlias(),
-                game.getTimestamp(),
-                game.getScore());
-    }
+        int id = game.getId();
+        String username = game.getUsername();
+        String alias = game.getAlias();
+        Date timestamp = game.getTimestamp();
+        int score = game.getScore();
 
-    /**
-     * Inserts a record into the game table.
-     * If the game id = 0 it will be added to the database with
-     * the next available id.
-     * @param id        id of game
-     * @param username  username of player
-     * @param alias     alias of player
-     * @param timestamp timestamp of game
-     * @param score     score of player
-     */
-    public void insertGame(int id, String username, String alias, Date timestamp, int score)  {
         try (PreparedStatement stm = connection
-                .prepareStatement("insert into game values(?, ?, ?, ?, ?)")) {
+            .prepareStatement("insert into game values(?, ?, ?, ?, ?)")) {
 
             if (id != 0) {
-                stm.setInt(1,id);
+                stm.setInt(1, id);
             }
 
             stm.setString(2, username);
@@ -118,8 +106,8 @@ public class Database {
             System.out.print("Message: ");
             System.out.print("error: connection couldn't be established\n");
         }
-    }
 
+    }
 
     /**
      * Inserts a record into the user table.
@@ -193,11 +181,7 @@ public class Database {
 
             stm.close();
 
-            if (rowsAffected == 0) {
-                return false;
-            } else {
-                return true;
-            }
+            return rowsAffected != 0;
 
         } catch (SQLException e) {
             System.out.println("error: connection couldn't be established,"

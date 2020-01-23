@@ -80,9 +80,9 @@ public abstract class SpaceEntity {
      * helper function of move, which updates te view of the spaceEntity.
      */
     public final void updateView() {
+        getView().setRotate(getRotation());
         getView().setTranslateX(getLocation().getX());
         getView().setTranslateY(getLocation().getY());
-        getView().setRotate(getRotation());
     }
 
     /**
@@ -99,14 +99,6 @@ public abstract class SpaceEntity {
      * @return the sprite URL.
      */
     public abstract String getUrl();
-
-    /**
-     * Sets sprite of SpaceEntity with a file path.
-     * @param url link to sprite image.
-     */
-    public void setImage(String url) {
-        this.view = new ImageView(new Image(url));
-    }
 
     public Node getView() {
         return view;

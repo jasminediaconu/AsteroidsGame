@@ -337,7 +337,8 @@ class DatabaseTest {
     @Test
     void insertGameException() throws SQLException {
         Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
-        db.insertGame(0, "", "", null, 0);
+        Game game = new Game(0, "", "", null, 0);
+        db.insertGame(game);
 
         assertTrue(outContent.toString().contains("error: connection couldn't be established\n"));
     }

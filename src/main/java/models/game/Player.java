@@ -2,32 +2,25 @@ package models.game;
 
 import controllers.AudioController;
 import controllers.GameScreenController;
-
 import java.util.Random;
-
 import javafx.geometry.Point2D;
-
 
 public class Player extends SpaceEntity {
 
     private static final int center = GameScreenController.screenSize / 2;
 
     //amount of time (in seconds roughly) the player has to wait until it can fire again
-    private transient final double fireCooldown = 0.2;
+    private final transient double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
-    private transient final double teleportCooldown = 5;
+    private final transient double teleportCooldown = 5;
     private transient double currentTeleportCooldown = teleportCooldown;
-
-    //acceleration modifier, very sensitive.
-    private transient double acceleration = 0.069;
 
     private Shield shield;
 
     private transient double invulnerabilityTime;
 
-    private int lives;
-
-    private int totalScore;
+    private transient int lives;
+    private transient int totalScore;
     /**
      * Current score of player.
      * Needed to keep count of the 10000 points, so the extra life can be added.
@@ -62,6 +55,8 @@ public class Player extends SpaceEntity {
      * Thrust spaceship.
      */
     public void thrust() {
+        //acceleration modifier, very sensitive.
+        double acceleration = 0.069;
         setVelocity(getVelocity().add(
                 acceleration * Math.cos(Math.toRadians(getRotation())),
                 acceleration * Math.sin(Math.toRadians(getRotation()))
@@ -105,7 +100,6 @@ public class Player extends SpaceEntity {
 
     /**
      * Checks if the player has lives left.
-     *
      * @return false is the player has 0 lives, true if they have more.
      */
     public boolean hasLives() {
@@ -114,7 +108,6 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for the lives.
-     *
      * @return how many lives the player has.
      */
     public int getLives() {
@@ -132,7 +125,6 @@ public class Player extends SpaceEntity {
 
     /**
      * Increments the player's score by the value passed.
-     *
      * @param value value.
      */
     public void incrementScore(int value) {
@@ -142,7 +134,6 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for totalScore.
-     *
      * @return total score of player.
      */
     public int getTotalScore() {
@@ -186,13 +177,12 @@ public class Player extends SpaceEntity {
         AudioController audioController = new AudioController();
         audioController.playLaser();
 
-        this.currentFireCooldown = this.fireCooldown;
+        this.currentFireCooldown = fireCooldown;
         return new Bullet(this);
     }
 
     /**
      * Checks if the player can fire their weapon.
-     *
      * @return boolean the player can fire
      */
     public boolean canFire() {
