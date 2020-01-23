@@ -55,27 +55,6 @@ public class AudioController {
     }
 
     /**
-     * Method pauses music at current point if it is playing.
-     */
-    public void pause() {
-        if (clip.isActive()) {
-            pausePoint = clip.getMicrosecondPosition();
-            clip.stop();
-        }
-    }
-
-    /**
-     * Method plays music at the point it was paused.
-     */
-    public void resumePlayback() {
-        if (!clip.isActive()) {
-            clip.setMicrosecondPosition(pausePoint);
-            clip.start();
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
-        }
-    }
-
-    /**
      * Stops current audio playback, resetting the pause timer to 0.
      */
     public void stop() {
