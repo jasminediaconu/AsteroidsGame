@@ -1,8 +1,8 @@
 package models.game;
 
-import static controllers.GameScreenController.screenSize;
+import static views.GameScreenView.screenSize;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.geometry.Point2D;
@@ -25,7 +25,6 @@ public abstract class Asteroid extends SpaceEntity {
 
     /**
      * Method to retrieve the point value of an asteroid.
-     *
      * @return int representing points awarded to player if they hit this asteroid.
      */
     public abstract int getScore();
@@ -36,7 +35,6 @@ public abstract class Asteroid extends SpaceEntity {
      * a random rotation between -maxRotation and maxRotation,
      * and a random velocity between -maxVelocity and maxVelocity
      * with a direction towards the screen.
-     *
      * @param maxVelocity the maximum possible velocity of this asteroid.
      * @param maxRotation the maximum possible rotation of this asteroid.
      */
@@ -51,16 +49,9 @@ public abstract class Asteroid extends SpaceEntity {
         setRotationSpeed(rand.nextInt(maxRotation * 2) - maxRotation);
 
     }
-    /**
-     * Method called when asteroid is hit by a bullet.
-     *
-     * @return a list of 2 asteroids of the next type.
-     */
-    public abstract List<Asteroid> split();
 
     /**
      * Method that spawns in a new random asteroid.
-     *
      * @return A new Asteroid.
      */
     public static Asteroid spawnAsteroid(double number) {
@@ -77,7 +68,6 @@ public abstract class Asteroid extends SpaceEntity {
 
     /**
      * Checks if asteroid is off screen.
-     *
      * @return true iff asteroid is off screen, false otherwise
      */
     public boolean isOffscreen() {
@@ -96,11 +86,6 @@ public abstract class Asteroid extends SpaceEntity {
 
     }
 
-    /**
-     * Used in tests.
-     *
-     * @return type of asteroid that is created.
-     */
     public int caseTest() {
         return caseNr;
     }
@@ -145,8 +130,9 @@ public abstract class Asteroid extends SpaceEntity {
         public static Origin getOrigin(int choice) {
             if (choice < values().length && choice >= 0) {
                 return values()[choice];
+            } else {
+                return values()[0];
             }
-            else { return values()[0]; }
         }
     }
 

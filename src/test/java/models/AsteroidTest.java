@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import static views.GameScreenView.screenSize;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import javafx.geometry.Point2D;
@@ -300,8 +301,7 @@ class AsteroidTest {
         ArrayList<Asteroid> medList = large.split();
         ArrayList<Asteroid> smList = medium.split();
         ArrayList<Asteroid> emptyList = small.split();
-
-
+        assertEquals(0,emptyList.size());
         assertEquals(2,medList.size());
         assertEquals(2,smList.size());
         assertNotNull(medList.get(0));
@@ -309,7 +309,7 @@ class AsteroidTest {
         assertNotNull(smList.get(0));
         assertNotNull(smList.get(1));
 
-        assertEquals(0,emptyList.size());
+
     }
 
     @Test

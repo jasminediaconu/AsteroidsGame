@@ -6,7 +6,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
+import java.util.ListIterator;
+
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -429,11 +430,12 @@ public class GameScreenController {
         if (Math.random() < hostileSpawnChance) {
             if (hostiles.size() == magicNumber) {
 
-                for (SpaceEntity ufo : hostiles) {
+                for (ListIterator<Hostile> iterator = hostiles.listIterator();
+                     iterator.hasNext();) {
+                    Hostile ufo = iterator.next();
                     if (ufo instanceof Sniper) {
                         gameScreenView.addHostile(hostiles, new Juggernaut());
-                    }
-                    if (ufo instanceof Juggernaut) {
+                    } else if (ufo instanceof Juggernaut) {
                         gameScreenView.addHostile(hostiles, new Sniper(getPlayer()));
                     }
                 }
@@ -444,6 +446,7 @@ public class GameScreenController {
             } else {
                 gameScreenView.addHostile(hostiles, new Juggernaut());
             }
+
         }
     }
 

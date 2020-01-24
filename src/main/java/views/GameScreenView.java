@@ -56,7 +56,7 @@ public class GameScreenView {
      */
     public AnchorPane createContent(Player player) {
 
-        addSpaceEntity(player, anchorPane);
+        addSpaceEntity(player);
         player.getView().setScaleX(0.69);
         player.getView().setScaleY(0.69);
 
@@ -118,8 +118,7 @@ public class GameScreenView {
      *
      * @param object SpaceEntity type
      */
-    public void addSpaceEntity(SpaceEntity object,
-                               AnchorPane anchorPane) {
+    public void addSpaceEntity(SpaceEntity object) {
         object.setView(new ImageView(new Image(object.getUrl())));
         object.getView().setTranslateX(object.getLocation().getX());
         object.getView().setTranslateY(object.getLocation().getY());
@@ -144,7 +143,7 @@ public class GameScreenView {
             bullet.setLocation(new Point2D(x, y));
 
             bullets.add(bullet);
-            addSpaceEntity(bullet, anchorPane);
+            addSpaceEntity(bullet);
         }
     }
 
@@ -155,7 +154,7 @@ public class GameScreenView {
      * @param shield Shield type
      */
     public void addShield(Player player, Shield shield) {
-        addSpaceEntity(shield, anchorPane);
+        addSpaceEntity(shield);
 
         double x = player.getView().getTranslateX() + player.getView().getTranslateY();
         double y = player.getView().getTranslateY() + player.getView().getTranslateY();
@@ -170,7 +169,7 @@ public class GameScreenView {
      */
     public void addAsteroid(List<Asteroid> asteroids, Asteroid asteroid) {
         asteroids.add(asteroid);
-        addSpaceEntity(asteroid, anchorPane);
+        addSpaceEntity(asteroid);
     }
 
     /**
@@ -180,7 +179,7 @@ public class GameScreenView {
      */
     public void addHostile(List<Hostile> hostiles, Hostile hostile) {
         hostiles.add(hostile);
-        addSpaceEntity(hostile, anchorPane);
+        addSpaceEntity(hostile);
     }
 
     /**
