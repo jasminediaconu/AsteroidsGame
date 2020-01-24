@@ -1,13 +1,16 @@
 package models.game;
 
+import static views.GameScreenView.screenSize;
+
 import controllers.AudioController;
-import controllers.GameScreenController;
+
 import java.util.Random;
+
 import javafx.geometry.Point2D;
 
 public class Player extends SpaceEntity {
 
-    private static final int center = GameScreenController.screenSize / 2;
+    private static final int center = screenSize / 2;
 
     //amount of time (in seconds roughly) the player has to wait until it can fire again
     private final transient double fireCooldown = 0.2;
@@ -100,6 +103,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Checks if the player has lives left.
+     *
      * @return false is the player has 0 lives, true if they have more.
      */
     public boolean hasLives() {
@@ -108,6 +112,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for the lives.
+     *
      * @return how many lives the player has.
      */
     public int getLives() {
@@ -125,6 +130,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Increments the player's score by the value passed.
+     *
      * @param value value.
      */
     public void incrementScore(int value) {
@@ -134,6 +140,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for totalScore.
+     *
      * @return total score of player.
      */
     public int getTotalScore() {
@@ -183,6 +190,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Checks if the player can fire their weapon.
+     *
      * @return boolean the player can fire
      */
     public boolean canFire() {
@@ -284,8 +292,8 @@ public class Player extends SpaceEntity {
     public void teleport() {
         if (currentTeleportCooldown <= Double.MIN_VALUE * 2) {
             Random rand = new Random();
-            int x = rand.nextInt(GameScreenController.screenSize);
-            int y = rand.nextInt(GameScreenController.screenSize);
+            int x = rand.nextInt(screenSize);
+            int y = rand.nextInt(screenSize);
             setLocation(new Point2D(x, y));
             currentTeleportCooldown = teleportCooldown;
         }

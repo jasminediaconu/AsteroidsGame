@@ -1,6 +1,6 @@
 package models.game;
 
-import static controllers.GameScreenController.screenSize;
+import static views.GameScreenView.screenSize;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -130,8 +130,9 @@ public abstract class Asteroid extends SpaceEntity {
         public static Origin getOrigin(int choice) {
             if (choice < values().length && choice >= 0) {
                 return values()[choice];
+            } else {
+                return values()[0];
             }
-            else { return values()[0]; }
         }
     }
 

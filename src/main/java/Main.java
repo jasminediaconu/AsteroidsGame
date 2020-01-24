@@ -11,6 +11,7 @@ public class Main extends Application {
     /**
      * This function will start the MainScreen, which will have the option to
      * redirect the user to the Login or Register page.
+     *
      * @param stage The stage
      * @throws Exception When the FXML files couldn't be loaded.
      */

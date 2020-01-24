@@ -48,12 +48,12 @@ class BulletTest {
     @Test
     void constructorTest() {
         SpaceEntity origin = new Player();
-        origin.setVelocity(new Point2D(10,0));
+        origin.setVelocity(new Point2D(10, 0));
         Bullet b = new Bullet(origin);
 
         //Velocity should be 10 + 8
-        Point2D velocity = new Point2D(22,0);
-        assertEquals(velocity,b.getVelocity());
+        Point2D velocity = new Point2D(22, 0);
+        assertEquals(velocity, b.getVelocity());
         assertEquals(origin.getRotation() + 90, b.getRotation());
     }
 
@@ -114,7 +114,7 @@ class BulletTest {
 
         playerBullet.updateLocation();
 
-        assertEquals(new Point2D(1,1), playerBullet.getLocation());
+        assertEquals(new Point2D(1, 1), playerBullet.getLocation());
         assertEquals(1.0, playerBullet.getRotation());
         assertEquals(start.distance(end), playerBullet.getDistanceTravelled());
     }

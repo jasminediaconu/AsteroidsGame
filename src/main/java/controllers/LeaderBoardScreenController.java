@@ -1,10 +1,12 @@
 package controllers;
 
 import database.Database;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ResourceBundle;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,7 +19,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+
 import javax.swing.Action;
+
 import models.game.Game;
 import models.game.LeaderBoardGame;
 
@@ -47,6 +51,7 @@ public class LeaderBoardScreenController implements Initializable {
 
     /**
      * Getter for Menu Screen scene.
+     *
      * @return menuScreen
      */
     public Scene getMenuScreen() {
@@ -55,6 +60,7 @@ public class LeaderBoardScreenController implements Initializable {
 
     /**
      * Setter for Main Screen Scene.
+     *
      * @param scene type Scene
      */
     public void setMenuScreen(Scene scene) {
@@ -64,10 +70,11 @@ public class LeaderBoardScreenController implements Initializable {
     /**
      * Function triggered when pressing the 'Back' button.
      * It returns the Menu Screen scene.
+     *
      * @param actionEvent type ActionEvent
      */
     public void openMenuScreen(ActionEvent actionEvent) {
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(menuScreen);
     }
 
@@ -85,7 +92,8 @@ public class LeaderBoardScreenController implements Initializable {
 
     /**
      * Initializes leaderboard screen.
-     * @param url URL
+     *
+     * @param url            URL
      * @param resourceBundle ResourceBundle
      */
     public void initialize(URL url, ResourceBundle resourceBundle) {

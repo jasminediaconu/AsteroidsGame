@@ -25,6 +25,7 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Constructor for a Bullet.
+     *
      * @param firedFrom SpaceEntity that fired the bullet
      */
     public Bullet(SpaceEntity firedFrom) {
@@ -90,6 +91,7 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Getter for the distance the bullet has travelled.
+     *
      * @return distance the bullet has travelled
      */
     public double getDistanceTravelled() {
@@ -98,6 +100,7 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Getter for firedByPlayer.
+     *
      * @return true if bullet was fired by player, false otherwise.
      */
     public boolean getFiredByPlayer() {
@@ -106,15 +109,17 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Setter for firedByPlayer.
+     *
      * @param shot new value for firedByPlayer.
      */
     public void setFiredByPlayer(boolean shot) {
         this.firedByPlayer = shot;
     }
 
-    
+
     /**
      * Gets the origin of the bullet (the SpaceEntity that fired it).
+     *
      * @return SpaceEntity origin
      */
     public SpaceEntity getOrigin() {
@@ -123,6 +128,7 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Gets the speed of the bullet.
+     *
      * @return double defaultSpeed
      */
     public double getSpeed() {
@@ -141,6 +147,7 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Getter for the default bullet speed.
+     *
      * @return double defaultspeed
      */
     public static double getDefaultSpeed() {
@@ -149,6 +156,7 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Getter for the default sniper bullet speed.
+     *
      * @return double SniperSpeed
      */
     public static double getSniperSpeed() {
@@ -157,6 +165,7 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Getter for the default juggernaut bullet speed.
+     *
      * @return double JuggernautSpeed
      */
     public static double getJuggernautSpeed() {
@@ -165,6 +174,7 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Setter for the distance the bullet has travelled.
+     *
      * @param distance distance to set distanceTravlled to.
      */
     public void setDistanceTravelled(double distance) {
@@ -173,6 +183,7 @@ public class Bullet extends SpaceEntity {
 
     /**
      * Getter for the max distance a bullet can travel.
+     *
      * @return max Distance
      */
     public double getMaxDistance() {

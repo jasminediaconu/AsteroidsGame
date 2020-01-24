@@ -7,32 +7,39 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" stylesheets="@../../defaultStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainScreenController">
-   <children>
-      <ImageView fitHeight="800.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/stars.png" />
-         </image>
-      </ImageView>
-      <Button layoutX="251.0" layoutY="532.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="50.0" prefWidth="298.0" text="Exit">
-         <font>
-            <Font name="Century Gothic" size="25.0" />
-         </font>
-      </Button>
-      <Button layoutX="251.0" layoutY="440.0" mnemonicParsing="false" onAction="#openRegisterScreen" prefHeight="50.0" prefWidth="298.0" text="Register">
-         <font>
-            <Font name="Century Gothic" size="25.0" />
-         </font>
-      </Button>
-      <Button layoutX="251.0" layoutY="350.0" mnemonicParsing="false" onAction="#openLoginScreen" prefHeight="50.0" prefWidth="298.0" text="Login">
-         <font>
-            <Font name="Century Gothic" size="25.0" />
-         </font>
-      </Button>
-      <Text id="title" fill="WHITE" layoutX="162.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Asteroids">
-         <font>
-            <Font name="Century Gothic" size="96.0" />
-         </font>
-      </Text>
-   </children>
+<AnchorPane fx:id="anchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="800.0" prefWidth="800.0" stylesheets="@../../defaultStyle.css"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controllers.MainScreenController">
+    <children>
+        <ImageView fitHeight="800.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../images/stars.png"/>
+            </image>
+        </ImageView>
+        <Button layoutX="251.0" layoutY="532.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="50.0"
+                prefWidth="298.0" text="Exit">
+            <font>
+                <Font name="Century Gothic" size="25.0"/>
+            </font>
+        </Button>
+        <Button layoutX="251.0" layoutY="440.0" mnemonicParsing="false" onAction="#openRegisterScreen" prefHeight="50.0"
+                prefWidth="298.0" text="Register">
+            <font>
+                <Font name="Century Gothic" size="25.0"/>
+            </font>
+        </Button>
+        <Button layoutX="251.0" layoutY="350.0" mnemonicParsing="false" onAction="#openLoginScreen" prefHeight="50.0"
+                prefWidth="298.0" text="Login">
+            <font>
+                <Font name="Century Gothic" size="25.0"/>
+            </font>
+        </Button>
+        <Text id="title" fill="WHITE" layoutX="162.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              text="Asteroids">
+            <font>
+                <Font name="Century Gothic" size="96.0"/>
+            </font>
+        </Text>
+    </children>
 </AnchorPane>

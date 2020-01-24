@@ -8,10 +8,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import controllers.GameScreenController;
+import static views.GameScreenView.screenSize;
 
 import java.util.ArrayList;
 import java.util.Random;
+
 import javafx.geometry.Point2D;
 import models.game.Asteroid;
 import models.game.SpaceEntity;
@@ -39,7 +40,7 @@ class AsteroidTest {
 
     @Test
     void randomGeneration() {
-        int[] caseCounter = {0,0,0,0};
+        int[] caseCounter = {0, 0, 0, 0};
 
         for (int i = 0; i < 400; i++) {
             Asteroid sm = new Small(random);
@@ -47,7 +48,7 @@ class AsteroidTest {
         }
 
         for (int i = 0; i < 4; i++) {
-            assertNotEquals(0,caseCounter[i]);
+            assertNotEquals(0, caseCounter[i]);
             System.out.println("Instances of case " + i + ": " + caseCounter[i]);
         }
     }
@@ -83,9 +84,9 @@ class AsteroidTest {
         System.out.println("Instances of Small: " + smCount);
         System.out.println("Instances of Med: " + mdCount);
         System.out.println("Instances of Large: " + lgCount);
-        assertNotEquals(0,smCount);
-        assertNotEquals(0,mdCount);
-        assertNotEquals(0,lgCount);
+        assertNotEquals(0, smCount);
+        assertNotEquals(0, mdCount);
+        assertNotEquals(0, lgCount);
     }
 
     @Test
@@ -113,16 +114,16 @@ class AsteroidTest {
         Random random = mock(Random.class);
         when(random.nextGaussian()).thenReturn(0.0);
         when(random.nextInt(4)).thenReturn(0)
-        .thenReturn(1)
-        .thenReturn(2)
-        .thenReturn(3);
+                .thenReturn(1)
+                .thenReturn(2)
+                .thenReturn(3);
         when(random.nextDouble()).thenReturn(5.0);
         Point2D start = new Point2D(400, -100);
         SpaceEntity asteroid = new Small(random);
 
         assertEquals(asteroid.getLocation(), start);
 
-        Point2D result = new Point2D(0,  41);
+        Point2D result = new Point2D(0, 41);
         assertEquals(asteroid.getVelocity(), result);
     }
 
@@ -214,7 +215,7 @@ class AsteroidTest {
     @Test
     public void testIsOffScreen1() {
         Asteroid asteroid = large;
-        asteroid.setLocation(new Point2D(56, GameScreenController.screenSize + 1));
+        asteroid.setLocation(new Point2D(56, screenSize + 1));
         assertEquals(true, asteroid.isOffscreen());
     }
 
@@ -228,21 +229,21 @@ class AsteroidTest {
     @Test
     public void mutantOffsetTrueTest() {
         Asteroid md = medium;
-        md.setLocation(new Point2D(-1,-1));
+        md.setLocation(new Point2D(-1, -1));
         assertTrue(md.isOffscreen());
     }
 
     @Test
     public void mutantOffsetFalseTest() {
         Asteroid lg = large;
-        lg.setLocation(new Point2D(0,0));
+        lg.setLocation(new Point2D(0, 0));
         assertFalse(lg.isOffscreen());
     }
 
     @Test
     public void mutantOffsetFalseTest2() {
         Asteroid md = medium;
-        md.setLocation(new Point2D(800,800));
+        md.setLocation(new Point2D(800, 800));
         assertFalse(md.isOffscreen());
     }
 
@@ -300,8 +301,7 @@ class AsteroidTest {
         ArrayList<Asteroid> medList = large.split();
         ArrayList<Asteroid> smList = medium.split();
         ArrayList<Asteroid> emptyList = small.split();
-
-
+        assertEquals(0,emptyList.size());
         assertEquals(2,medList.size());
         assertEquals(2,smList.size());
         assertNotNull(medList.get(0));
@@ -309,7 +309,7 @@ class AsteroidTest {
         assertNotNull(smList.get(0));
         assertNotNull(smList.get(1));
 
-        assertEquals(0,emptyList.size());
+
     }
 
     @Test

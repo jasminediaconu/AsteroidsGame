@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.any;
 
 import database.Database;
+
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -159,7 +160,7 @@ class AuthenticationServiceTest {
 
     @Test
     void setLoginLockedTest() {
-        long time  = 23L;
+        long time = 23L;
         authService.setLoginLocked(time);
 
         Mockito.verify(mockDB).insertLoginAttempt(time);

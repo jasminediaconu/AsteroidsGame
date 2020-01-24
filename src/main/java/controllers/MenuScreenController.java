@@ -1,6 +1,7 @@
 package controllers;
 
 import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -18,6 +19,7 @@ public class MenuScreenController {
 
     /**
      * Getter for LeaderBoard Screen scene.
+     *
      * @return mainScreen
      */
     public Scene getLeaderBoardScreen() {
@@ -26,6 +28,7 @@ public class MenuScreenController {
 
     /**
      * Setter for LeaderBoard Screen Scene.
+     *
      * @param scene type Scene
      */
     public void setLeaderBoardScreen(Scene scene) {
@@ -35,15 +38,17 @@ public class MenuScreenController {
     /**
      * Function triggered when pressing the 'Back' button.
      * It returns the LeaderBoard Screen scene.
+     *
      * @param actionEvent type ActionEvent
      */
     public void openLeaderBoardScreen(ActionEvent actionEvent) {
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(leaderBoardScreen);
     }
 
     /**
      * Getter for Game Screen scene.
+     *
      * @return mainScreen
      */
     public Scene getGameScreen() {
@@ -52,6 +57,7 @@ public class MenuScreenController {
 
     /**
      * Setter for Game Screen scene.
+     *
      * @param scene type Scene
      */
     public void setGameScreen(Scene scene) {
@@ -61,13 +67,15 @@ public class MenuScreenController {
     /**
      * Function triggered when pressing the 'Play' button.
      * It returns the Game Screen scene.
+     *
      * @param actionEvent type ActionEvent
      */
     public void openGameScreen(ActionEvent actionEvent) throws IOException {
         GameScreenController gameScreenController = new GameScreenController();
         gameScreenController.setLeaderBoardScreen(leaderBoardScreen);
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(gameScreenController.getGameScene());
+        gameScreenController.startGame();
     }
 
     /**

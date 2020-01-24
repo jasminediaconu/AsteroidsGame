@@ -112,7 +112,8 @@ public class LoginScreenController {
     /**
      * Checks if username is long enough.
      * If not displays error message and gives the usernameField a red border.
-     * @param username TextField
+     *
+     * @param username   TextField
      * @param errorLabel Label to display
      * @return true iff username is long enough
      */
@@ -134,7 +135,8 @@ public class LoginScreenController {
     /**
      * Checks if username is long enough.
      * If not displays error message and gives the usernameField a red border.
-     * @param password TextField
+     *
+     * @param password           TextField
      * @param passwordErrorLabel Label to display
      * @return true iff password is long enough
      */
@@ -156,19 +158,20 @@ public class LoginScreenController {
     /**
      * Adds a listener to the TextField that checks if the input is valid.
      * (contains no disallowed characters)
+     *
      * @param textField TextField to add listener to
      */
     @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     public static void setInvalidCharListener(TextField textField) {
-        textField.textProperty().addListener(
-            (obs, oldValue, newValue) -> { // Currently only checks for whitespaces
-                textField.setText(newValue.replaceAll(" ", ""));
-            }
-        );
+        textField.textProperty()
+                .addListener((obs, oldValue, newValue) -> { // Currently only checks for whitespaces
+                    textField.setText(newValue.replaceAll(" ", ""));
+                });
     }
 
     /**
      * Getter for Main Screen scene.
+     *
      * @return mainScreen
      */
     public Scene getMainScreen() {
@@ -177,6 +180,7 @@ public class LoginScreenController {
 
     /**
      * Setter for Main Screen Scene.
+     *
      * @param scene type Scene
      */
     public void setMainScreen(Scene scene) {
@@ -188,15 +192,17 @@ public class LoginScreenController {
     /**
      * Function triggered when pressing the 'Back' button.
      * It returns the Main Screen scene.
+     *
      * @param actionEvent type ActionEvent
      */
     public void openMainScreen(ActionEvent actionEvent) {
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(mainScreen);
     }
 
     /**
      * Getter for Menu Screen scene.
+     *
      * @return menuScreen
      */
     public Scene getMenuScreen() {
@@ -205,6 +211,7 @@ public class LoginScreenController {
 
     /**
      * Setter for Main Screen Scene.
+     *
      * @param scene type Scene
      */
     public void setMenuScreen(Scene scene) {
@@ -216,7 +223,7 @@ public class LoginScreenController {
      * It returns the Menu Screen scene.
      */
     public void openMenuScreen(ActionEvent actionEvent) {
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(menuScreen);
     }
 

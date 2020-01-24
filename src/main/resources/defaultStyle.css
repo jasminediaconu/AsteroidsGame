@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Russo+One&display=swap');
 
 * {
-     -fx-font-family: 'Russo One';
- }
+    -fx-font-family: 'Russo One';
+}
 
 AnchorPane {
     -fx-background-image: url("/views/images/stars.png");
@@ -22,7 +22,9 @@ TextField, PasswordField {
     -fx-font-size: 18px;
 }
 
-Pane { -fx-content-display: none;}
+Pane {
+    -fx-content-display: none;
+}
 
 Text {
     -fx-fill: white;

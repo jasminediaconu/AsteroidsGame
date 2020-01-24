@@ -13,9 +13,9 @@ public class HostileTest {
     @Test
     void ufoLinkTest() {
         Juggernaut jg = new Juggernaut();
-        assertEquals("/views/sprites/Juggernaut.png",jg.getUrl());
+        assertEquals("/views/sprites/Juggernaut.png", jg.getUrl());
         Sniper sp = new Sniper(new Player());
-        assertEquals("/views/sprites/Sniper.png",sp.getUrl());
+        assertEquals("/views/sprites/Sniper.png", sp.getUrl());
     }
 
 }

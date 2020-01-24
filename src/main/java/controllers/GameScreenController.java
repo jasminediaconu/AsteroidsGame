@@ -1,46 +1,32 @@
 package controllers;
 
 import database.Database;
-
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
+import java.util.ListIterator;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.robot.Robot;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.game.Asteroid;
 import models.game.Bullet;
 import models.game.Game;
 import models.game.Hostile;
 import models.game.Player;
-import models.game.Shield;
 import models.game.SpaceEntity;
-import models.game.asteroids.Large;
-import models.game.asteroids.Medium;
-import models.game.asteroids.Small;
 import models.game.hostiles.Juggernaut;
 import models.game.hostiles.Sniper;
+import views.GameScreenView;
 
 /**
  * The type GameScreen ViewController.
@@ -49,17 +35,12 @@ import models.game.hostiles.Sniper;
 public class GameScreenController {
     // default values
     public static int scoreUp = 10000;
-    public static final int screenSize = 800;
-    private static final  double asteroidSpawnChance = 0.01;
+    private static final double asteroidSpawnChance = 0.01;
     private static final double hostileSpawnChance = 0.003;
-    private static final int maxHostileCount = 2;
     private static final int magicNumber = 1;
 
     //FXML stuff
-    @FXML
-    private transient Pane pauseScreen;
     private transient Scene leaderBoardScreen;
-    private transient URL pauseScreenFile;
     private transient Scene gameScene;
     private transient AnimationTimer timer;
     private transient AnchorPane anchorPane;
@@ -68,21 +49,18 @@ public class GameScreenController {
     private transient AudioController rotateSound = new AudioController();
     private transient AudioController thrustSound = new AudioController();
 
+    // booleans
     public transient boolean isPaused = false;
     public transient boolean isStopped = false;
     public transient boolean soundEffect = false;
     private static boolean pauseScreenInitiated = false;
     private transient boolean isShieldActive = false;
 
-
     // SpaceEntity lists
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<Hostile> hostiles = new ArrayList<>();
 
-    //TODO: change text to icon
-    private transient Text playerLives;
-    private transient Text score;
     private transient Player player;
 
     // key booleans
@@ -97,17 +75,44 @@ public class GameScreenController {
 
     private transient Robot robot = new Robot();
 
+    private transient GameScreenView gameScreenView;
+
     /**
      * GameScreenController constructor.
      */
     public GameScreenController() {
+        gameScreenView = new GameScreenView(this);
 
-        anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(screenSize, screenSize);
-        gameScene = new Scene(createContent());
+        player = new Player();
+
+        anchorPane = gameScreenView.createContent(player);
+        gameScene = new Scene(anchorPane);
 
         checkKeyPressed(gameScene);
         checkKeyReleased(gameScene);
+    }
+
+    /**
+     * This method starts the timer that will handle the game updates
+     * on the screen, check for the collisions and call the necessary
+     * methods that deal with thw game logic.
+     */
+    public void startGame() {
+        timer = new AnimationTimer() {
+            public void handle(long now) {
+                try {
+                    checkButtons();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (!isPaused) {
+                    onUpdate();
+                }
+            }
+        };
+
+        timer.start();
     }
 
     /**
@@ -132,7 +137,7 @@ public class GameScreenController {
             } else if ((e.getCode() == KeyCode.P)) {
                 pkey = !pkey;
             } else if (e.getCode() == KeyCode.Q) {
-                gameEnd();
+                gameEnd(timer);
             }
         });
     }
@@ -188,146 +193,26 @@ public class GameScreenController {
     }
 
     /**
-     * Sets up the initial scene of the game.
-     *
-     * @return The generated parent
+     * This method updates the player lives.
+     * When they earn 10,000 points they will earn an extra life.
+     * When they collide with another element they will loose a life.
+     * @param addLife boolean type
+     * @param anchorPane Pane type
      */
-    private Parent createContent() {
-        player = new Player();
-        addSpaceEntity(player);
-
-        player.getView().setScaleX(0.69);
-        player.getView().setScaleY(0.69);
-
-        // Attach the default style sheet to the Game Screen
-        anchorPane.getStylesheets().add(new File("src/main/resources/defaultStyle.css")
-                .toURI().toString());
-
-        // Add labels to the screen
-        score = new Text("Score: " + player.getCurrentScore());
-        playerLives = new Text("Lives: " + player.getLives());
-
-        playerLives.setStyle("-fx-font-size: 28px;");
-        playerLives.setX(100.0);
-        playerLives.setY(100.0);
-
-        score.setStyle("-fx-font-size: 28px;");
-        score.setX(400.0);
-        score.setY(100.0);
-
-        anchorPane.getChildren().add(score);
-        anchorPane.getChildren().add(playerLives);
-        timer = new AnimationTimer() {
-            public void handle(long now) {
-                try {
-                    checkButtons();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                if (!isPaused) {
-                    onUpdate();
-                }
-            }
-        };
-
-        timer.start();
-        return anchorPane;
-    }
-
-    private void createPauseScreen() {
-        if (pauseScreen == null || pauseScreenFile == null) {
-            try {
-                pauseScreenFile = new File("src/main/resources/views/fxml/pauseScreen.fxml")
-                        .toURI().toURL();
-                pauseScreen = FXMLLoader.load(pauseScreenFile);
-                pauseScreen.setTranslateX(100.0);
-                pauseScreen.setTranslateY(100.0);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * This method adds a Bullet object when the user press the SPACE key.
-     *
-     * @param bullet    Bullet type
-     * @param firedFrom SpaceEntity that fired the bullet
-     */
-    public void addBullet(Bullet bullet, SpaceEntity firedFrom) {
-        if (bullet == null) {
-            return;
-        }
-        double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
-        double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
-
-        bullet.setLocation(new Point2D(x, y));
-
-        bullets.add(bullet);
-        addSpaceEntity(bullet);
-    }
-
-    /**
-     * This method adds a Shield object when the user press the DOWN key.
-     *
-     * @param shield Shield type
-     */
-    private void addShield(Shield shield) {
-        addSpaceEntity(shield);
-
-        double x = player.getView().getTranslateX() + player.getView().getTranslateY();
-        double y = player.getView().getTranslateY() + player.getView().getTranslateY();
-
-        shield.setLocation(new Point2D(x, y));
-    }
-
-    /**
-     * This method adds an Asteroid object on the screen.
-     *
-     * @param asteroid SpaceEntity type
-     */
-    private void addAsteroid(Asteroid asteroid) {
-        asteroids.add(asteroid);
-        addSpaceEntity(asteroid);
-    }
-
-    /**
-     * This method adds a hostile UFO object on the screen.
-     *
-     * @param hostile Hostile type
-     */
-    private void addHostile(Hostile hostile) {
-        hostiles.add(hostile);
-        addSpaceEntity(hostile);
-    }
-
-    /**
-     * This method adds a generic SpaceEntity on the screen.
-     *
-     * @param object SpaceEntity type
-     */
-    private void addSpaceEntity(SpaceEntity object) {
-        object.setView(new ImageView(new Image(object.getUrl())));
-        object.getView().setTranslateX(object.getLocation().getX());
-        object.getView().setTranslateY(object.getLocation().getY());
-        anchorPane.getChildren().add(object.getView());
-    }
-
-    private void updateLives(boolean addLife) {
+    private void updateLives(boolean addLife, Pane anchorPane) {
         if (addLife) {
             player.addLife();
         } else {
             player.removeLife();
             isShieldActive = true;
-            addShield(player.activateShield());
+            gameScreenView.addShield(player, player.activateShield());
 
             for (Asteroid asteroid : asteroids) {
                 asteroid.setAlive(false);
                 anchorPane.getChildren().remove(asteroid.getView());
             }
         }
-        playerLives.setText("Lives: " + player.getLives());
+        gameScreenView.setLives(player);
     }
 
     /**
@@ -335,7 +220,7 @@ public class GameScreenController {
      */
     private void onUpdate() {
         if (!pauseScreenInitiated) {
-            createPauseScreen();
+            gameScreenView.createPauseScreen();
             pauseScreenInitiated = true;
         }
 
@@ -343,10 +228,10 @@ public class GameScreenController {
             return;
         }
 
-        generateElements(bullets, asteroids, hostiles, player);
+        generateElements(bullets, asteroids, hostiles);
 
         checkAsteroidCollision(asteroids, player);
-        checkBulletCollision(bullets, player);
+        checkBulletCollision(bullets, player, anchorPane);
         checkEnemyCollision(hostiles, player);
 
         bullets.removeIf(SpaceEntity::isDead);
@@ -357,41 +242,55 @@ public class GameScreenController {
         asteroids.forEach(SpaceEntity::move);
         hostiles.forEach(Hostile::move);
 
-        checkPlayer(player, asteroids);
+        checkPlayer(player, asteroids, anchorPane);
 
         checkSpawnHostile();
 
         if (Math.random() < asteroidSpawnChance) {
-            addAsteroid(Asteroid.spawnAsteroid(Math.random()));
+            gameScreenView.addAsteroid(asteroids, Asteroid.spawnAsteroid(Math.random()));
         }
 
     }
 
+    /**
+     * This method takes care of generating elements on the screen.
+     * @param bullets List type
+     * @param asteroids List type
+     * @param hostiles List type
+     */
     private void generateElements(List<Bullet> bullets, List<Asteroid> asteroids,
-                                  List<Hostile> hostiles, Player player) {
+                                  List<Hostile> hostiles) {
         ArrayList<Asteroid> newAsteroids = new ArrayList<>();
         for (Bullet bullet : bullets) {
             for (Asteroid asteroid : asteroids) {
-                checkBullet(bullet, asteroid, newAsteroids);
+                checkBullet(bullet, asteroid, newAsteroids, anchorPane);
             }
 
             //check if a player bullet collided with an hostile
             for (Hostile hostile : hostiles) {
-                checkEnemy(bullet, hostile);
+                checkEnemy(bullet, hostile, anchorPane);
             }
         }
 
         for (Asteroid asteroid : newAsteroids) {
-            addAsteroid(asteroid);
+            gameScreenView.addAsteroid(asteroids, asteroid);
         }
 
         for (Hostile hostile : hostiles) {
-            addBullet(hostile.action(), hostile);
+            gameScreenView.addBullet(bullets, hostile.action(), hostile);
         }
     }
 
+    /**
+     * This method checks if the bullet hits asteroids on the screen.
+     * @param bullet Bullet type
+     * @param asteroid Asteroid type
+     * @param newAsteroids ArrayList type
+     * @param anchorPane AnchorPane type
+     */
     private void checkBullet(Bullet bullet, Asteroid asteroid,
-                             ArrayList<Asteroid> newAsteroids) {
+                             ArrayList<Asteroid> newAsteroids,
+                             AnchorPane anchorPane) {
         if (bullet.isColliding(asteroid)) {
             bullet.setAlive(false);
             asteroid.setAlive(false);
@@ -401,7 +300,7 @@ public class GameScreenController {
 
             if (bullet.getOrigin() == player) {
                 player.incrementScore(asteroid.getScore());
-                score.setText("Score: " + player.getCurrentScore());
+                gameScreenView.updateScore(player);
             }
 
             newAsteroids.addAll(asteroid.split());
@@ -414,12 +313,18 @@ public class GameScreenController {
         }
     }
 
-    private void checkEnemy(Bullet bullet, Hostile hostile) {
+    /**
+     * This method checks if the enemy got hit by the player bullets.
+     * @param bullet Bullet type
+     * @param hostile Hostile type
+     * @param anchorPane AnchorPane type
+     */
+    private void checkEnemy(Bullet bullet, Hostile hostile, AnchorPane anchorPane) {
         if (bullet.isColliding(hostile) && bullet.getOrigin() == player) {
             bullet.setAlive(false);
             hostile.setAlive(false);
             player.incrementScore(hostile.getScore());
-            score.setText("Score: " + player.getCurrentScore());
+            gameScreenView.updateScore(player);
             anchorPane.getChildren().removeAll(bullet.getView(), hostile.getView());
         }
 
@@ -428,22 +333,34 @@ public class GameScreenController {
         }
     }
 
+    /**
+     * This method checks if the asteroids collide with the player,
+     * making them loose a life.
+     * @param asteroids List type
+     * @param player Player type
+     */
     private void checkAsteroidCollision(List<Asteroid> asteroids,
                                         Player player) {
         //check if player collided with an asteroid.
         for (SpaceEntity asteroid : asteroids) {
             if (player.isColliding(asteroid) && !isShieldActive) {
-                updateLives(false);
+                updateLives(false, anchorPane);
             }
         }
     }
 
-    private void checkBulletCollision(List<Bullet> bullets, Player player) {
-
+    /**
+     * This method checks if the enemy bullets collide with the player,
+     * making them loose a life.
+     * @param bullets List type
+     * @param player Player type
+     * @param anchorPane AnchorPane type
+     */
+    private void checkBulletCollision(List<Bullet> bullets, Player player, AnchorPane anchorPane) {
         //check if player collided with an enemy bullet.
         for (Bullet bullet : bullets) {
             if (bullet.getOrigin() != player && player.isColliding(bullet) && !isShieldActive) {
-                updateLives(false);
+                updateLives(false, anchorPane);
             }
             if (!bullet.checkDistance()) {
                 anchorPane.getChildren().remove(bullet.getView());
@@ -451,24 +368,37 @@ public class GameScreenController {
         }
     }
 
+    /**
+     * This method checks if the player is colliding with a hostile,
+     * making them loose a life.
+     * @param hostiles List type
+     * @param player Player type
+     */
     private void checkEnemyCollision(List<Hostile> hostiles,
                                      Player player) {
         //check if player collided with an enemy ship.
         for (SpaceEntity ufo : hostiles) {
             if (player.isColliding(ufo) && !isShieldActive) {
-                updateLives(false);
+                updateLives(false, anchorPane);
             }
         }
     }
 
-    private void checkPlayer(Player player, List<Asteroid> asteroids) {
+    /**
+     * This method checks the player moves.
+     * @param player Player type
+     * @param asteroids List type
+     * @param anchorPane AnchorPane type
+     */
+    private void checkPlayer(Player player, List<Asteroid> asteroids,
+                             AnchorPane anchorPane) {
         player.move();
         player.cooldown();
         player.updateInvulnerabilityTime();
 
         //checks if player is qualified to get a life.
         if (player.getCurrentScore() >= scoreUp) {
-            updateLives(true);
+            updateLives(true, anchorPane);
             player.setCurrentScore(player.getCurrentScore() - scoreUp);
         }
 
@@ -488,42 +418,40 @@ public class GameScreenController {
                 asteroids.remove(asteroid);
                 anchorPane.getChildren().remove(asteroid.getView());
             }
-            gameEnd();
+
+            gameEnd(timer);
         }
     }
 
+    /**
+     * This method takes care of how the hostiles should spawn on the screen.
+     */
     private void checkSpawnHostile() {
         if (Math.random() < hostileSpawnChance) {
-
-            if (hostiles.size() >= maxHostileCount) {
-                return;
-            }
-
             if (hostiles.size() == magicNumber) {
 
-                for (SpaceEntity ufo : hostiles) {
-                    if (ufo instanceof Sniper) {
-                        addHostile(new Juggernaut());
-                    }
-                    if (ufo instanceof Juggernaut) {
-                        addHostile(new Sniper(getPlayer()));
-                    }
-                }
+                Hostile ufo = hostiles.get(0);
 
+                if (ufo instanceof Sniper) {
+                    gameScreenView.addHostile(hostiles, new Juggernaut());
+                } else if (ufo instanceof Juggernaut) {
+                    gameScreenView.addHostile(hostiles, new Sniper(getPlayer()));
+                }
             }
 
             if (Math.round(Math.random()) == 0) {
-                addHostile(new Sniper(getPlayer()));
+                gameScreenView.addHostile(hostiles, new Sniper(getPlayer()));
             } else {
-                addHostile(new Juggernaut());
+                gameScreenView.addHostile(hostiles, new Juggernaut());
             }
+
         }
     }
 
     /**
      * Method to call functions that execute behaviour of buttons.
      */
-    private void checkButtons() throws IOException {
+    public void checkButtons() throws IOException {
         if (up) {
             player.thrust();
             // Start thrust sound
@@ -557,23 +485,19 @@ public class GameScreenController {
         }
 
         if (space && player.canFire()) {
-            addBullet(player.shoot(), player);
+            gameScreenView.addBullet(bullets, player.shoot(), player);
         }
         if (fkey) {
             player.teleport();
         }
         if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
-            addShield(player.activateShield());
+            gameScreenView.addShield(player, player.activateShield());
             isShieldActive = true;
         }
 
         checkPause(pkey);
 
-        if (skey) {
-            //TODO turn on sound
-            //TODO turn off sound
-            soundEffect = !soundEffect;
-        }
+        soundEffect = !soundEffect;
     }
 
     /**
@@ -584,12 +508,12 @@ public class GameScreenController {
     public void checkPause(boolean paused) throws IOException {
         if (paused) {
             isPaused = true;
-            if (!anchorPane.getChildren().contains(pauseScreen)) {
-                anchorPane.getChildren().add(pauseScreen);
+            if (!gameScreenView.containsPauseScreen()) {
+                gameScreenView.addPauseScreen();
             }
         } else {
             isPaused = false;
-            anchorPane.getChildren().remove(pauseScreen);
+            gameScreenView.removePauseScreen();
         }
     }
 
@@ -618,38 +542,14 @@ public class GameScreenController {
      * The current game gets added to the database.
      * The highscore/leaderboard screen gets shown(??).
      */
-    private void gameEnd() {
-        System.out.println("Game end");
+    private void gameEnd(AnimationTimer timer) {
         isPaused = false;
         timer.stop();
         isStopped = true;
-        anchorPane.getChildren().remove(pauseScreen);
+        gameScreenView.removePauseScreen();
 
-        Pane saveScreen = new Pane();
-        saveScreen.setPrefSize(400, 270);
-        saveScreen.setStyle("-fx-background-color: black");
-        saveScreen.setTranslateX(200.0);
-        saveScreen.setTranslateY(200.0);
-
-        Text text = new Text("Fill in your alias");
-        text.setLayoutX(90);
-        text.setLayoutY(60);
-        text.setStyle("-fx-font-size: 28px;");
-
-        TextField aliasField = new TextField();
-        aliasField.setPromptText("Alias");
-        aliasField.setLayoutX(90);
-        aliasField.setLayoutY(110);
-
-        Button button = new Button("Save score");
-        button.setLayoutX(90);
-        button.setLayoutY(180);
-
-        saveScreen.getChildren().addAll(text, aliasField, button);
-
-        button.setOnAction((ActionEvent event) -> saveScore(event, aliasField.getText()));
-        anchorPane.getChildren().add(saveScreen);
-        saveScreen.toFront();
+        // creat end game screen
+        gameScreenView.createEndGameScreen();
     }
 
     /**
@@ -657,7 +557,7 @@ public class GameScreenController {
      *
      * @param alias String alias
      */
-    private void saveScore(ActionEvent actionEvent, String alias) {
+    public void saveScore(ActionEvent actionEvent, String alias) {
         if (!alias.isBlank() && !alias.isEmpty()) {
             Game game = new Game(0,
                     "username",
@@ -673,11 +573,19 @@ public class GameScreenController {
         }
     }
 
+    /**
+     * Getter for the player.
+     * @return player Player type
+     */
     public Player getPlayer() {
         return player;
     }
 
+    /**
+     * Setter for the player.
+     */
     public void setPlayer(Player player) {
         this.player = player;
     }
 }
+
