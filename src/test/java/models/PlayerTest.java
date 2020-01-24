@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static views.GameScreenView.screenSize;
 
 import controllers.GameScreenController;
 import javafx.geometry.Point2D;
@@ -26,58 +27,58 @@ public class PlayerTest {
 
     @Test
     void respawnTest() {
-        player.setLocation(new Point2D(100,100));
+        player.setLocation(new Point2D(100, 100));
         assertTrue(player.isAlive());
-        assertEquals(new Point2D(100,100), player.getLocation());
+        assertEquals(new Point2D(100, 100), player.getLocation());
 
         player.setAlive(false);
         assertTrue(player.isDead());
 
         player.respawn();
 
-        assertEquals(new Point2D(400,400), player.getLocation());
-        assertEquals(new Point2D(0,0), player.getVelocity());
-        assertEquals(0,player.getRotation());
+        assertEquals(new Point2D(400, 400), player.getLocation());
+        assertEquals(new Point2D(0, 0), player.getVelocity());
+        assertEquals(0, player.getRotation());
         assertTrue(player.isAlive());
     }
 
     @Test
     void thrust() {
-        Point2D velocity = new Point2D(10,0);
+        Point2D velocity = new Point2D(10, 0);
         player.setVelocity(velocity);
 
         //Player acceleration is 0.069
         player.thrust();
         Point2D newVelocity = velocity.add((0.069 * Math.cos(Math.toRadians(player.getRotation()))),
                 (0.069 * Math.sin(Math.toRadians(player.getRotation()))));
-        assertEquals(newVelocity,player.getVelocity());
-        assertEquals(new Point2D(10 + 0.069, 0),player.getVelocity());
+        assertEquals(newVelocity, player.getVelocity());
+        assertEquals(new Point2D(10 + 0.069, 0), player.getVelocity());
     }
 
     @Test
     void thrust2() {
-        Point2D velocity = new Point2D(10,0);
+        Point2D velocity = new Point2D(10, 0);
         player.setVelocity(velocity);
         player.setRotation(1);
         //Player acceleration is 0.069
         player.thrust();
         Point2D newVelocity = velocity.add((0.069 * Math.cos(Math.toRadians(player.getRotation()))),
                 (0.069 * Math.sin(Math.toRadians(player.getRotation()))));
-        assertEquals(newVelocity,player.getVelocity());
+        assertEquals(newVelocity, player.getVelocity());
         assertEquals(new Point2D(10 + 0.06898949096579,
-                0.0012042160441725624),player.getVelocity());
+                0.0012042160441725624), player.getVelocity());
     }
 
     @Test
     void rotationTest() {
-        assertEquals(0,player.getRotation());
+        assertEquals(0, player.getRotation());
 
         player.rotateRight();
-        assertEquals(4,player.getRotation());
+        assertEquals(4, player.getRotation());
         player.rotateLeft();
         player.rotateLeft();
-        assertEquals(-4,player.getRotation());
-        assertEquals(new Point2D(0,0),player.getVelocity());
+        assertEquals(-4, player.getRotation());
+        assertEquals(new Point2D(0, 0), player.getVelocity());
     }
 
     @Test
@@ -123,9 +124,6 @@ public class PlayerTest {
         player.addLife();
         assertEquals(1, player.getLives());
         assertTrue(player.hasLives());
-
-        player.setLives(10);
-        assertEquals(10, player.getLives());
     }
 
     @Test
@@ -138,9 +136,6 @@ public class PlayerTest {
         player.incrementScore(10000);
         assertEquals(10015, player.getTotalScore());
 
-        player.setTotalScore(10);
-        assertEquals(10, player.getTotalScore());
-
         player.setCurrentScore(10);
         assertEquals(10, player.getCurrentScore());
     }
@@ -149,34 +144,34 @@ public class PlayerTest {
     void wrapAroundTest() {
         player.setLocation(new Point2D(-1, -1));
         player.checkMove();
-        assertEquals(player.getLocation().getX(), GameScreenController.screenSize);
-        assertEquals(player.getLocation().getY(), GameScreenController.screenSize);
+        assertEquals(player.getLocation().getX(), screenSize);
+        assertEquals(player.getLocation().getY(), screenSize);
 
-        player.setLocation(new Point2D(GameScreenController.screenSize + 1,
-            GameScreenController.screenSize + 2));
+        player.setLocation(new Point2D(screenSize + 1,
+                screenSize + 2));
         player.checkMove();
         assertEquals(player.getLocation().getX(), 0);
         assertEquals(player.getLocation().getY(), 0);
 
-        player.setLocation(new Point2D(GameScreenController.screenSize + 1, 1));
+        player.setLocation(new Point2D(screenSize + 1, 1));
         player.checkMove();
         assertEquals(player.getLocation().getX(), 0);
         assertEquals(player.getLocation().getY(), 1);
 
-        player.setLocation(new Point2D(1, GameScreenController.screenSize + 1));
+        player.setLocation(new Point2D(1, screenSize + 1));
         player.checkMove();
         assertEquals(player.getLocation().getX(), 1);
         assertEquals(player.getLocation().getY(), 0);
 
         player.setLocation(new Point2D(-1, 1));
         player.checkMove();
-        assertEquals(player.getLocation().getX(), GameScreenController.screenSize);
+        assertEquals(player.getLocation().getX(), screenSize);
         assertEquals(player.getLocation().getY(), 1);
 
         player.setLocation(new Point2D(1, -1));
         player.checkMove();
         assertEquals(player.getLocation().getX(), 1);
-        assertEquals(player.getLocation().getY(), GameScreenController.screenSize);
+        assertEquals(player.getLocation().getY(), screenSize);
     }
 
     @Test

@@ -1,5 +1,7 @@
 package models.game;
 
+import static views.GameScreenView.screenSize;
+
 import controllers.GameScreenController;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
@@ -60,18 +62,18 @@ public abstract class SpaceEntity {
         double y = this.getLocation().getY();
 
         if (x < 0 && y < 0) {
-            this.setLocation(new Point2D(GameScreenController.screenSize,
-                    GameScreenController.screenSize));
-        } else if (x > GameScreenController.screenSize && y > GameScreenController.screenSize) {
+            this.setLocation(new Point2D(screenSize,
+                    screenSize));
+        } else if (x > screenSize && y > screenSize) {
             this.setLocation(new Point2D(0, 0));
-        } else if (x > GameScreenController.screenSize) {
+        } else if (x > screenSize) {
             this.setLocation(new Point2D(0, y));
-        } else if (y > GameScreenController.screenSize) {
+        } else if (y > screenSize) {
             this.setLocation(new Point2D(x, 0));
         } else if (x < 0) {
-            this.setLocation(new Point2D(GameScreenController.screenSize, y));
+            this.setLocation(new Point2D(screenSize, y));
         } else if (y < 0) {
-            this.setLocation(new Point2D(x, GameScreenController.screenSize));
+            this.setLocation(new Point2D(x, screenSize));
         }
     }
 
@@ -80,13 +82,14 @@ public abstract class SpaceEntity {
      * helper function of move, which updates te view of the spaceEntity.
      */
     public final void updateView() {
+        getView().setRotate(getRotation());
         getView().setTranslateX(getLocation().getX());
         getView().setTranslateY(getLocation().getY());
-        getView().setRotate(getRotation());
     }
 
     /**
      * A function that makes use of javaFX intersects method.
+     *
      * @param other the spaceEntity to check possible collision with.
      * @return boolean collision.
      */
@@ -96,12 +99,14 @@ public abstract class SpaceEntity {
 
     /**
      * Method to get the sprite URL of the spaceEntity subclass.
+     *
      * @return the sprite URL.
      */
     public abstract String getUrl();
 
     /**
      * Sets sprite of SpaceEntity with a file path.
+     *
      * @param url link to sprite image.
      */
     public void setImage(String url) {

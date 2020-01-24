@@ -1,26 +1,20 @@
 package models.game;
 
-import models.game.hostiles.LargeUfo;
-import models.game.hostiles.SmallUfo;
+import javafx.geometry.Point2D;
 
 public abstract class Hostile extends SpaceEntity {
 
-    public Hostile() {
-        super();
-    }
+    protected static final transient Point2D spawnPoint = new Point2D(400, 800);
 
     /**
-     * Method that spawns in a new random UFO.
-     * @return A new UFO.
+     * moves Hostiles.
      */
-    public static Hostile spawnHostile() {
-        double rand = Math.random();
-        final double half = 0.5;
+    public abstract Bullet action();
 
-        if (rand < half) {
-            return new SmallUfo();
-        } else {
-            return new LargeUfo();
-        }
-    }
+    /**
+     * returns new bullet created from hostile.
+     */
+    public abstract Bullet shoot();
+
+    public abstract int getScore();
 }

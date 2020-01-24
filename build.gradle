@@ -68,7 +68,7 @@ test {
     jacoco {
         enabled = true
         includes = []
-        excludes = ['**.controllers.*', '**.Main']
+        excludes = ['**.controllers.*', '**.Main', '**.views.*']
     }
 
     repositories { jcenter() }
@@ -85,7 +85,7 @@ jacocoTestReport {
 
     afterEvaluate {
         classDirectories = files(classDirectories.files.collect {
-            fileTree(dir: it, exclude: ['**/controllers/*', '**/Main'])
+            fileTree(dir: it, exclude: ['**/controllers/*', '**/Main', '**/views/*'])
         })
     }
 }
@@ -104,7 +104,7 @@ jacocoTestCoverageVerification {
             enabled = true
             element = 'CLASS'
             includes = ['**']
-            excludes = ['**controllers*', '**Main']
+            excludes = ['**controllers*', '**Main', '**views*']
             limit {
                 minimum = 0.5
             }

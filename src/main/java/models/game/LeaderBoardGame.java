@@ -33,8 +33,8 @@ public class LeaderBoardGame {
      * Instantiates a new LeaderBoardGame.
      *
      * @param username the username or alias
-     * @param score the score
-     * @param date the date
+     * @param score    the score
+     * @param date     the date
      */
     public LeaderBoardGame(String username, int score, Date date) {
         this.username = username;
@@ -127,6 +127,7 @@ public class LeaderBoardGame {
 
     /**
      * Standard IntelliJ generated hashCode.
+     *
      * @return int hash
      */
     @Override

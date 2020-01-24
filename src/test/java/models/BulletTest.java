@@ -9,8 +9,8 @@ import models.game.Bullet;
 import models.game.Hostile;
 import models.game.Player;
 import models.game.SpaceEntity;
-import models.game.asteroids.Small;
-import models.game.hostiles.SmallUfo;
+import models.game.hostiles.Juggernaut;
+import models.game.hostiles.Sniper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,46 +19,58 @@ class BulletTest {
 
     private transient Player player;
     private transient Bullet playerBullet;
-    private transient Hostile ufo;
-    private transient Bullet hostileBullet;
+    private transient Hostile sniper;
+    private transient Hostile juggernaut;
+    private transient Bullet sniperBullet;
+    private transient Bullet juggernautBullet;
+
 
     @BeforeEach
     void setUp() {
         player = new Player();
         playerBullet = new Bullet(player);
 
-        ufo = new SmallUfo();
-        hostileBullet = new Bullet(ufo);
+        sniper = new Sniper(player);
+        sniperBullet = new Bullet(sniper);
+
+        juggernaut = new Juggernaut();
+        juggernautBullet = new Bullet(juggernaut);
     }
 
     @Test
     void originTest() {
         assertEquals(player, playerBullet.getOrigin());
-        assertEquals(ufo, hostileBullet.getOrigin());
+        assertEquals(sniper, sniperBullet.getOrigin());
+        assertEquals(juggernaut, juggernautBullet.getOrigin());
+
     }
 
     @Test
     void constructorTest() {
         SpaceEntity origin = new Player();
-        origin.setVelocity(new Point2D(10,0));
+        origin.setVelocity(new Point2D(10, 0));
         Bullet b = new Bullet(origin);
 
         //Velocity should be 10 + 8
-        Point2D velocity = new Point2D(22,0);
-        assertEquals(velocity,b.getVelocity());
+        Point2D velocity = new Point2D(22, 0);
+        assertEquals(velocity, b.getVelocity());
         assertEquals(origin.getRotation() + 90, b.getRotation());
     }
 
     @Test
     void getUrlTest() {
         assertEquals("/views/sprites/laserBlue16.png", playerBullet.getUrl());
-        assertEquals("/views/sprites/laserGreen16.png", hostileBullet.getUrl());
+        assertEquals("/views/sprites/laserGreen16.png", sniperBullet.getUrl());
+        assertEquals("/views/sprites/laserGreen16.png", juggernautBullet.getUrl());
+
     }
 
     @Test
     void testSpeed() {
         assertEquals(Bullet.getDefaultSpeed(), playerBullet.getSpeed());
-        assertEquals(Bullet.getHostileSpeed(), hostileBullet.getSpeed());
+        assertEquals(Bullet.getSniperSpeed(), sniperBullet.getSpeed());
+        assertEquals(Bullet.getJuggernautSpeed(), juggernautBullet.getSpeed());
+
     }
 
     @Test
@@ -102,7 +114,7 @@ class BulletTest {
 
         playerBullet.updateLocation();
 
-        assertEquals(new Point2D(1,1), playerBullet.getLocation());
+        assertEquals(new Point2D(1, 1), playerBullet.getLocation());
         assertEquals(1.0, playerBullet.getRotation());
         assertEquals(start.distance(end), playerBullet.getDistanceTravelled());
     }

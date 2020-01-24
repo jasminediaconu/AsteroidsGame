@@ -1,91 +1,69 @@
 package controllers;
 
 import database.Database;
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
+import java.util.ListIterator;
 
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.robot.Robot;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import models.game.Asteroid;
 import models.game.Bullet;
 import models.game.Game;
 import models.game.Hostile;
 import models.game.Player;
-import models.game.Shield;
 import models.game.SpaceEntity;
-import models.game.asteroids.Large;
-import models.game.asteroids.Medium;
-import models.game.asteroids.Small;
+import models.game.hostiles.Juggernaut;
+import models.game.hostiles.Sniper;
+import views.GameScreenView;
 
 /**
  * The type GameScreen ViewController.
  */
+@SuppressWarnings("PMD.DataflowAnomalyAnalysis")
 public class GameScreenController {
-
-    public static final int screenSize = 800;
-
-    public transient boolean isPaused = false;
-
-    public transient boolean isStopped = false;
-
-    public transient boolean soundEffect = false;
-
+    // default values
     public static int scoreUp = 10000;
+    private static final double asteroidSpawnChance = 0.01;
+    private static final double hostileSpawnChance = 0.003;
+    private static final int magicNumber = 1;
 
-    private transient ActionEvent event;
-
-    private transient AnimationTimer timer;
-
-    private static boolean pauseScreenInitiated = false;
-
-    //TODO: make spawn chances increase with a higher score.
-    private static final double asteroidSpawnChance = 0.03;
-    private static final double hostileSpawnChance = 0.0005;
-    private static final int hostileCount = 0;
-
-    private transient AnchorPane anchorPane;
-    @FXML private transient Pane pauseScreen;
+    //FXML stuff
     private transient Scene leaderBoardScreen;
-
-    private transient URL pauseScreenFile;
     private transient Scene gameScene;
-    private transient Scene leaderBoardScene;
+    private transient AnimationTimer timer;
+    private transient AnchorPane anchorPane;
+
+    // audio
+    private transient AudioController rotateSound = new AudioController();
+    private transient AudioController thrustSound = new AudioController();
+
+    // booleans
+    public transient boolean isPaused = false;
+    public transient boolean isStopped = false;
+    public transient boolean soundEffect = false;
+    private static boolean pauseScreenInitiated = false;
+    private transient boolean isShieldActive = false;
+
+    // SpaceEntity lists
     private transient List<Bullet> bullets = new ArrayList<>();
     private transient List<Asteroid> asteroids = new ArrayList<>();
     private transient List<Hostile> hostiles = new ArrayList<>();
-    private transient List<SpaceEntity> ufos = new ArrayList<>();
 
-    private transient Robot robot = new Robot();
-
-    private transient Text score;
-
-    //TODO: change text to icon
-    private transient Text playerLives;
     private transient Player player;
 
+    // key booleans
     private transient boolean up = false;
     private transient boolean right = false;
     private transient boolean left = false;
@@ -94,116 +72,32 @@ public class GameScreenController {
     private transient boolean fkey = false;
     private transient boolean pkey = false;
     private transient boolean skey = false;
-    private transient boolean qkey = false;
 
-    private transient boolean isShieldActive = false;
+    private transient Robot robot = new Robot();
 
-    private transient AudioController rotateSound = new AudioController();
-    private transient AudioController thrustSound = new AudioController();
+    private transient GameScreenView gameScreenView;
 
     /**
      * GameScreenController constructor.
      */
     public GameScreenController() {
+        gameScreenView = new GameScreenView(this);
 
-        anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(screenSize, screenSize);
-        gameScene = new Scene(createContent());
-
-        gameScene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.A) {
-                left = true;
-            } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
-                right = true;
-            } else if (e.getCode() == KeyCode.UP  || e.getCode() == KeyCode.W) {
-                up = true;
-            } else if (e.getCode() == KeyCode.SPACE) {
-                space = true;
-            } else if (e.getCode() == KeyCode.F) {
-                fkey = true;
-            } else if (e.getCode() == KeyCode.DOWN) {
-                down = true;
-            } else if ((e.getCode() == KeyCode.P)) {
-                pkey = pkey ? false : true;
-            } else if (e.getCode() == KeyCode.S) {
-                skey = skey ? false : true;
-            } else if (e.getCode() == KeyCode.Q) {
-                gameEnd();
-            }
-        });
-
-        gameScene.setOnKeyReleased(e -> {
-            if (e.getCode() == KeyCode.LEFT || e.getCode() == KeyCode.A) {
-                left = false;
-            } else if (e.getCode() == KeyCode.RIGHT || e.getCode() == KeyCode.D) {
-                right = false;
-            } else if (e.getCode() == KeyCode.UP  || e.getCode() == KeyCode.W) {
-                up = false;
-            } else if (e.getCode() == KeyCode.SPACE) {
-                space = false;
-            } else if (e.getCode() == KeyCode.F) {
-                fkey = false;
-            } else if (e.getCode() == KeyCode.DOWN) {
-                down = false;
-            } else if (e.getCode() == KeyCode.S) {
-                skey = false;
-            }
-        });
-    }
-
-    /**
-     * Getter for the Game Scene.
-     * @return gameScene Scene type
-     */
-    public Scene getGameScene() {
-        return gameScene;
-    }
-
-    /**
-     * Getter for LeaderBoard Screen scene.
-     * @return mainScreen
-     */
-    public Scene getLeaderBoardScreen() {
-        return leaderBoardScreen;
-    }
-
-    /**
-     * Setter for LeaderBoard Screen Scene.
-     * @param scene type Scene
-     */
-    public void setLeaderBoardScreen(Scene scene) {
-        leaderBoardScreen = scene;
-    }
-
-    /**
-     * Sets up the initial scene of the game.
-     * @return The generated parent
-     */
-    private Parent createContent() {
         player = new Player();
-        addSpaceEntity(player);
 
-        player.getView().setScaleX(0.69);
-        player.getView().setScaleY(0.69);
+        anchorPane = gameScreenView.createContent(player);
+        gameScene = new Scene(anchorPane);
 
-        // Attach the default style sheet to the Game Screen
-        anchorPane.getStylesheets().add(new File("src/main/resources/defaultStyle.css")
-                .toURI().toString());
+        checkKeyPressed(gameScene);
+        checkKeyReleased(gameScene);
+    }
 
-        // Add labels to the screen
-        score = new Text("Score: " + player.getCurrentScore());
-        playerLives = new Text("Lives: " + player.getLives());
-
-        playerLives.setStyle("-fx-font-size: 28px;");
-        playerLives.setX(100.0);
-        playerLives.setY(100.0);
-
-        score.setStyle("-fx-font-size: 28px;");
-        score.setX(400.0);
-        score.setY(100.0);
-
-        anchorPane.getChildren().add(score);
-        anchorPane.getChildren().add(playerLives);
+    /**
+     * This method starts the timer that will handle the game updates
+     * on the screen, check for the collisions and call the necessary
+     * methods that deal with thw game logic.
+     */
+    public void startGame() {
         timer = new AnimationTimer() {
             public void handle(long now) {
                 try {
@@ -219,104 +113,114 @@ public class GameScreenController {
         };
 
         timer.start();
-        return anchorPane;
     }
 
-    private void createPauseScreen() {
-        if (pauseScreen == null || pauseScreenFile == null) {
-            try {
-                pauseScreenFile = new File("src/main/resources/views/fxml/pauseScreen.fxml")
-                        .toURI().toURL();
-                pauseScreen = FXMLLoader.load(pauseScreenFile);
-                pauseScreen.setTranslateX(100.0);
-                pauseScreen.setTranslateY(100.0);
-            } catch (IOException e) {
-                e.printStackTrace();
+    /**
+     * This method checks if certain keys are pressed during the game.
+     *
+     * @param scene Scene type
+     */
+    private void checkKeyPressed(Scene scene) {
+        scene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.LEFT) {
+                left = true;
+            } else if (e.getCode() == KeyCode.RIGHT) {
+                right = true;
+            } else if (e.getCode() == KeyCode.UP) {
+                up = true;
+            } else if (e.getCode() == KeyCode.SPACE) {
+                space = true;
+            } else if (e.getCode() == KeyCode.F) {
+                fkey = true;
+            } else if (e.getCode() == KeyCode.DOWN) {
+                down = true;
+            } else if ((e.getCode() == KeyCode.P)) {
+                pkey = !pkey;
+            } else if (e.getCode() == KeyCode.Q) {
+                gameEnd(timer);
             }
-        }
+        });
     }
 
     /**
-     * This method adds a Bullet object when the user press the SPACE key.
-     * @param bullet Bullet type
-     * @param firedFrom SpaceEntity that fired the bullet
+     * This method checks if certain keys are released during the game.
+     *
+     * @param scene Scene type.
      */
-    private void addBullet(Bullet bullet, SpaceEntity firedFrom) {
-        bullets.add(bullet);
-        addSpaceEntity(bullet);
-        double x = firedFrom.getView().getTranslateX() + firedFrom.getView().getTranslateY() / 12;
-        double y = firedFrom.getView().getTranslateY() + firedFrom.getView().getTranslateY() / 10;
-
-        bullet.setLocation(new Point2D(x, y));
+    private void checkKeyReleased(Scene scene) {
+        scene.setOnKeyReleased(e -> {
+            if (e.getCode() == KeyCode.LEFT) {
+                left = false;
+            } else if (e.getCode() == KeyCode.RIGHT) {
+                right = false;
+            } else if (e.getCode() == KeyCode.UP) {
+                up = false;
+            } else if (e.getCode() == KeyCode.SPACE) {
+                space = false;
+            } else if (e.getCode() == KeyCode.F) {
+                fkey = false;
+            } else if (e.getCode() == KeyCode.DOWN) {
+                down = false;
+            }
+        });
     }
 
     /**
-     * This method adds a Shield object when the user press the DOWN key.
-     * @param shield Shield type
+     * Getter for the Game Scene.
+     *
+     * @return gameScene Scene type
      */
-    private void addShield(Shield shield) {
-        addSpaceEntity(shield);
-
-        double x = player.getView().getTranslateX() + player.getView().getTranslateY();
-        double y = player.getView().getTranslateY() + player.getView().getTranslateY();
-
-        shield.setLocation(new Point2D(x, y));
+    public Scene getGameScene() {
+        return gameScene;
     }
 
     /**
-     * This method adds an Asteroid object on the screen.
-     * @param asteroid SpaceEntity type
+     * Getter for LeaderBoard Screen scene.
+     *
+     * @return mainScreen
      */
-    private void addAsteroid(Asteroid asteroid) {
-        asteroids.add(asteroid);
-        addSpaceEntity(asteroid);
+    public Scene getLeaderBoardScreen() {
+        return leaderBoardScreen;
     }
 
     /**
-     * This method adds a hostile UFO object on the screen.
-     * @param hostile Hostile type
+     * Setter for LeaderBoard Screen Scene.
+     *
+     * @param scene type Scene
      */
-    private void addHostile(Hostile hostile) {
-        hostiles.add(hostile);
-        addSpaceEntity(hostile);
+    public void setLeaderBoardScreen(Scene scene) {
+        leaderBoardScreen = scene;
     }
 
     /**
-     * This method adds a generic SpaceEntity on the screen.
-     * @param object SpaceEntity type
+     * This method updates the player lives.
+     * When they earn 10,000 points they will earn an extra life.
+     * When they collide with another element they will loose a life.
+     * @param addLife boolean type
+     * @param anchorPane Pane type
      */
-    private void addSpaceEntity(SpaceEntity object) {
-        object.setView(new ImageView(new Image(object.getUrl())));
-        object.getView().setTranslateX(object.getLocation().getX());
-        object.getView().setTranslateY(object.getLocation().getY());
-        anchorPane.getChildren().add(object.getView());
-    }
-
-    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
-    private void updateLives(boolean addLife) {
+    private void updateLives(boolean addLife, Pane anchorPane) {
         if (addLife) {
             player.addLife();
         } else {
             player.removeLife();
             isShieldActive = true;
-            addShield(player.activateShield());
+            gameScreenView.addShield(player, player.activateShield());
 
-            for (Asteroid asteroid: asteroids) {
+            for (Asteroid asteroid : asteroids) {
                 asteroid.setAlive(false);
                 anchorPane.getChildren().remove(asteroid.getView());
             }
         }
-        playerLives.setText("Lives: " + player.getLives());
+        gameScreenView.setLives(player);
     }
 
     /**
      * This method updates the objects on the screen according to the Timer.
      */
-    @SuppressWarnings("PMD.DataflowAnomalyAnalysis")
     private void onUpdate() {
-
         if (!pauseScreenInitiated) {
-            createPauseScreen();
+            gameScreenView.createPauseScreen();
             pauseScreenInitiated = true;
         }
 
@@ -324,94 +228,177 @@ public class GameScreenController {
             return;
         }
 
-        //checkButtons();
+        generateElements(bullets, asteroids, hostiles);
 
-        ArrayList<Medium> newMeds = new ArrayList<>();
-        ArrayList<Small> newSmalls = new ArrayList<>();
+        checkAsteroidCollision(asteroids, player);
+        checkBulletCollision(bullets, player, anchorPane);
+        checkEnemyCollision(hostiles, player);
 
+        bullets.removeIf(SpaceEntity::isDead);
+        asteroids.removeIf(SpaceEntity::isDead);
+        hostiles.removeIf(SpaceEntity::isDead);
+
+        bullets.forEach(SpaceEntity::move);
+        asteroids.forEach(SpaceEntity::move);
+        hostiles.forEach(Hostile::move);
+
+        checkPlayer(player, asteroids, anchorPane);
+
+        checkSpawnHostile();
+
+        if (Math.random() < asteroidSpawnChance) {
+            gameScreenView.addAsteroid(asteroids, Asteroid.spawnAsteroid(Math.random()));
+        }
+
+    }
+
+    /**
+     * This method takes care of generating elements on the screen.
+     * @param bullets List type
+     * @param asteroids List type
+     * @param hostiles List type
+     */
+    private void generateElements(List<Bullet> bullets, List<Asteroid> asteroids,
+                                  List<Hostile> hostiles) {
+        ArrayList<Asteroid> newAsteroids = new ArrayList<>();
         for (Bullet bullet : bullets) {
             for (Asteroid asteroid : asteroids) {
-                if (bullet.isColliding(asteroid)) {
-                    bullet.setAlive(false);
-                    asteroid.setAlive(false);
+                checkBullet(bullet, asteroid, newAsteroids, anchorPane);
+            }
 
-                    AudioController explosion = new AudioController();
-                    Random random = new Random();
-                    int track = random.nextInt(4) + 1;
-                    explosion.playSound("src/main/resources/audio/exp_" + track + ".wav");
-
-                    if (bullet.getOrigin() == player) {
-                        player.incrementScore(asteroid.getScore());
-                        score.setText("Score: " + player.getCurrentScore());
-                    }
-
-                    if (asteroid instanceof Large) {
-                        Medium md1 = new Medium(new Random());
-                        Medium md2 = new Medium(new Random());
-                        md1.setLocation(asteroid.getLocation());
-                        md2.setLocation(asteroid.getLocation());
-                        newMeds.add(md1);
-                        newMeds.add(md2);
-                    } else if (asteroid instanceof Medium) {
-                        Small sm1 = new Small(new Random());
-                        Small sm2 = new Small(new Random());
-                        sm1.setLocation(asteroid.getLocation());
-                        sm2.setLocation(asteroid.getLocation());
-                        newSmalls.add(sm1);
-                        newSmalls.add(sm2);
-                    }
-
-                    anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
-                }
-                if (!bullet.checkDistance()) {
-                    anchorPane.getChildren().remove(bullet.getView());
-                }
+            //check if a player bullet collided with an hostile
+            for (Hostile hostile : hostiles) {
+                checkEnemy(bullet, hostile, anchorPane);
             }
         }
 
-        for (Small sm : newSmalls) {
-            addAsteroid(sm);
-        }
-        for (Medium md : newMeds) {
-            addAsteroid(md);
+        for (Asteroid asteroid : newAsteroids) {
+            gameScreenView.addAsteroid(asteroids, asteroid);
         }
 
+        for (Hostile hostile : hostiles) {
+            gameScreenView.addBullet(bullets, hostile.action(), hostile);
+        }
+    }
+
+    /**
+     * This method checks if the bullet hits asteroids on the screen.
+     * @param bullet Bullet type
+     * @param asteroid Asteroid type
+     * @param newAsteroids ArrayList type
+     * @param anchorPane AnchorPane type
+     */
+    private void checkBullet(Bullet bullet, Asteroid asteroid,
+                             ArrayList<Asteroid> newAsteroids,
+                             AnchorPane anchorPane) {
+        if (bullet.isColliding(asteroid)) {
+            bullet.setAlive(false);
+            asteroid.setAlive(false);
+
+            AudioController explosion = new AudioController();
+            explosion.playExplosion();
+
+            if (bullet.getOrigin() == player) {
+                player.incrementScore(asteroid.getScore());
+                gameScreenView.updateScore(player);
+            }
+
+            newAsteroids.addAll(asteroid.split());
+
+            anchorPane.getChildren().removeAll(bullet.getView(), asteroid.getView());
+        }
+
+        if (!bullet.checkDistance()) {
+            anchorPane.getChildren().remove(bullet.getView());
+        }
+    }
+
+    /**
+     * This method checks if the enemy got hit by the player bullets.
+     * @param bullet Bullet type
+     * @param hostile Hostile type
+     * @param anchorPane AnchorPane type
+     */
+    private void checkEnemy(Bullet bullet, Hostile hostile, AnchorPane anchorPane) {
+        if (bullet.isColliding(hostile) && bullet.getOrigin() == player) {
+            bullet.setAlive(false);
+            hostile.setAlive(false);
+            player.incrementScore(hostile.getScore());
+            gameScreenView.updateScore(player);
+            anchorPane.getChildren().removeAll(bullet.getView(), hostile.getView());
+        }
+
+        if (!bullet.checkDistance()) {
+            anchorPane.getChildren().remove(bullet.getView());
+        }
+    }
+
+    /**
+     * This method checks if the asteroids collide with the player,
+     * making them loose a life.
+     * @param asteroids List type
+     * @param player Player type
+     */
+    private void checkAsteroidCollision(List<Asteroid> asteroids,
+                                        Player player) {
         //check if player collided with an asteroid.
-        for (SpaceEntity asteroid: asteroids) {
+        for (SpaceEntity asteroid : asteroids) {
             if (player.isColliding(asteroid) && !isShieldActive) {
-                updateLives(false);
+                updateLives(false, anchorPane);
             }
         }
+    }
 
+    /**
+     * This method checks if the enemy bullets collide with the player,
+     * making them loose a life.
+     * @param bullets List type
+     * @param player Player type
+     * @param anchorPane AnchorPane type
+     */
+    private void checkBulletCollision(List<Bullet> bullets, Player player, AnchorPane anchorPane) {
         //check if player collided with an enemy bullet.
-        for (Bullet bullet: bullets) {
+        for (Bullet bullet : bullets) {
             if (bullet.getOrigin() != player && player.isColliding(bullet) && !isShieldActive) {
-                updateLives(false);
+                updateLives(false, anchorPane);
             }
             if (!bullet.checkDistance()) {
                 anchorPane.getChildren().remove(bullet.getView());
             }
         }
+    }
 
+    /**
+     * This method checks if the player is colliding with a hostile,
+     * making them loose a life.
+     * @param hostiles List type
+     * @param player Player type
+     */
+    private void checkEnemyCollision(List<Hostile> hostiles,
+                                     Player player) {
         //check if player collided with an enemy ship.
-        for (SpaceEntity ufo: ufos) {
+        for (SpaceEntity ufo : hostiles) {
             if (player.isColliding(ufo) && !isShieldActive) {
-                updateLives(false);
+                updateLives(false, anchorPane);
             }
         }
+    }
 
-        bullets.removeIf(SpaceEntity::isDead);
-        asteroids.removeIf(SpaceEntity::isDead);
-
-        bullets.forEach(SpaceEntity::move);
-        asteroids.forEach(SpaceEntity::move);
+    /**
+     * This method checks the player moves.
+     * @param player Player type
+     * @param asteroids List type
+     * @param anchorPane AnchorPane type
+     */
+    private void checkPlayer(Player player, List<Asteroid> asteroids,
+                             AnchorPane anchorPane) {
         player.move();
         player.cooldown();
         player.updateInvulnerabilityTime();
 
         //checks if player is qualified to get a life.
         if (player.getCurrentScore() >= scoreUp) {
-            updateLives(true);
+            updateLives(true, anchorPane);
             player.setCurrentScore(player.getCurrentScore() - scoreUp);
         }
 
@@ -424,29 +411,47 @@ public class GameScreenController {
             anchorPane.getChildren().remove(player.getShield().getView());
             isShieldActive = false;
         }
+
         //checks if player died.
         if (!player.hasLives()) {
-            for (Asteroid asteroid:asteroids) {
+            for (Asteroid asteroid : asteroids) {
                 asteroids.remove(asteroid);
                 anchorPane.getChildren().remove(asteroid.getView());
             }
-            gameEnd();
-        }
 
-        if (Math.random() < asteroidSpawnChance) {
-            addAsteroid(Asteroid.spawnAsteroid(Math.random()));
-        }
-
-        if (Math.random() < hostileSpawnChance && hostileCount < 2) {
-            addHostile(Hostile.spawnHostile());
+            gameEnd(timer);
         }
     }
 
+    /**
+     * This method takes care of how the hostiles should spawn on the screen.
+     */
+    private void checkSpawnHostile() {
+        if (Math.random() < hostileSpawnChance) {
+            if (hostiles.size() == magicNumber) {
+
+                Hostile ufo = hostiles.get(0);
+
+                if (ufo instanceof Sniper) {
+                    gameScreenView.addHostile(hostiles, new Juggernaut());
+                } else if (ufo instanceof Juggernaut) {
+                    gameScreenView.addHostile(hostiles, new Sniper(getPlayer()));
+                }
+            }
+
+            if (Math.round(Math.random()) == 0) {
+                gameScreenView.addHostile(hostiles, new Sniper(getPlayer()));
+            } else {
+                gameScreenView.addHostile(hostiles, new Juggernaut());
+            }
+
+        }
+    }
 
     /**
      * Method to call functions that execute behaviour of buttons.
      */
-    private void checkButtons() throws IOException {
+    public void checkButtons() throws IOException {
         if (up) {
             player.thrust();
             // Start thrust sound
@@ -480,42 +485,35 @@ public class GameScreenController {
         }
 
         if (space && player.canFire()) {
-            addBullet(player.shoot(), player);
+            gameScreenView.addBullet(bullets, player.shoot(), player);
         }
         if (fkey) {
             player.teleport();
         }
         if (down && player.getInvulnerabilityTime() > 0 && !isShieldActive) {
-            addShield(player.activateShield());
+            gameScreenView.addShield(player, player.activateShield());
             isShieldActive = true;
         }
 
         checkPause(pkey);
 
-        if (skey) {
-            if (!soundEffect) {
-                soundEffect = true;
-                //TODO turn on sound
-            } else {
-                soundEffect = false;
-                //TODO turn off sound
-            }
-        }
+        soundEffect = !soundEffect;
     }
 
     /**
      * Method that checks if the Pause Menu is showing on the screen or not.
+     *
      * @throws IOException type
      */
     public void checkPause(boolean paused) throws IOException {
         if (paused) {
             isPaused = true;
-            if (!anchorPane.getChildren().contains(pauseScreen)) {
-                anchorPane.getChildren().add(pauseScreen);
+            if (!gameScreenView.containsPauseScreen()) {
+                gameScreenView.addPauseScreen();
             }
         } else {
             isPaused = false;
-            anchorPane.getChildren().remove(pauseScreen);
+            gameScreenView.removePauseScreen();
         }
     }
 
@@ -544,45 +542,22 @@ public class GameScreenController {
      * The current game gets added to the database.
      * The highscore/leaderboard screen gets shown(??).
      */
-    private void gameEnd() {
-        System.out.println("Game end");
+    private void gameEnd(AnimationTimer timer) {
         isPaused = false;
         timer.stop();
         isStopped = true;
-        anchorPane.getChildren().remove(pauseScreen);
+        gameScreenView.removePauseScreen();
 
-        Pane saveScreen = new Pane();
-        saveScreen.setPrefSize(400,270);
-        saveScreen.setStyle("-fx-background-color: black");
-        saveScreen.setTranslateX(200.0);
-        saveScreen.setTranslateY(200.0);
-
-        Text text = new Text("Fill in your alias");
-        text.setLayoutX(90);
-        text.setLayoutY(60);
-        text.setStyle("-fx-font-size: 28px;");
-
-        TextField aliasField = new TextField();
-        aliasField.setPromptText("Alias");
-        aliasField.setLayoutX(90);
-        aliasField.setLayoutY(110);
-
-        Button button = new Button("Save score");
-        button.setLayoutX(90);
-        button.setLayoutY(180);
-
-        saveScreen.getChildren().addAll(text, aliasField, button);
-
-        button.setOnAction((ActionEvent event) -> saveScore(event, aliasField.getText()));
-        anchorPane.getChildren().add(saveScreen);
-        saveScreen.toFront();
+        // creat end game screen
+        gameScreenView.createEndGameScreen();
     }
 
     /**
      * Adds a new game to the database with the score and provided alias.
+     *
      * @param alias String alias
      */
-    private void saveScore(ActionEvent actionEvent, String alias) {
+    public void saveScore(ActionEvent actionEvent, String alias) {
         if (!alias.isBlank() && !alias.isEmpty()) {
             Game game = new Game(0,
                     "username",
@@ -593,9 +568,24 @@ public class GameScreenController {
             Database d = new Database();
             d.insertGame(game);
 
-            Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+            Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             primaryStage.setScene(getLeaderBoardScreen());
         }
+    }
+
+    /**
+     * Getter for the player.
+     * @return player Player type
+     */
+    public Player getPlayer() {
+        return player;
+    }
+
+    /**
+     * Setter for the player.
+     */
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }
 

@@ -7,7 +7,8 @@ public class Shield extends SpaceEntity {
 
     /**
      * Shield constructor.
-      * @param player SpaceEntity type
+     *
+     * @param player SpaceEntity type
      */
     public Shield(SpaceEntity player) {
         origin = player;
@@ -35,6 +36,7 @@ public class Shield extends SpaceEntity {
 
     /**
      * Gets the origin of the shield (the player).
+     *
      * @return SpaceEntity origin
      */
     public SpaceEntity getOrigin() {

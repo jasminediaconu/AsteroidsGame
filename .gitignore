@@ -3,7 +3,7 @@ build/**
 .gradle/**
 logs/**
 out/**
-
+codemr/**
 
 # Not strictly necessary, however, *.jar files are often ignored and this one is required by the Gradle wrapper.
 !gradle/wrapper/gradle-wrapper.jar
@@ -13,3 +13,5 @@ out/**
 
 # database
 src/main/resources/database/semdatabase.db
+
+codemr/*

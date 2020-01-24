@@ -10,76 +10,91 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" stylesheets="@../../defaultStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LoginScreenController">
-   <children>
-      <ImageView fitHeight="800.0" fitWidth="800.0">
-         <image>
-            <Image url="@../images/stars.png" />
-         </image>
-      </ImageView>
-      <Text fill="WHITE" layoutX="72.0" layoutY="566.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password" wrappingWidth="189.0">
-         <font>
-            <Font name="Century Gothic" size="36.0" />
-         </font>
-      </Text>
-      <Button layoutX="430.0" layoutY="509.0" mnemonicParsing="false" onAction="#openMainScreen" prefHeight="50.0" prefWidth="298.0" text="Back">
-         <font>
-            <Font name="Century Gothic" size="25.0" />
-         </font>
-      </Button>
-      <Button fx:id="loginButton" layoutX="430.0" layoutY="430.0" mnemonicParsing="false" onAction="#login" prefHeight="50.0" prefWidth="298.0" text="Login">
-         <font>
-            <Font name="Century Gothic" size="25.0" />
-         </font>
-      </Button>
-      <Text fill="WHITE" layoutX="72.0" layoutY="388.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
-         <font>
-            <Font name="Century Gothic" size="50.0" />
-         </font>
-      </Text>
-      <Text fill="WHITE" layoutX="72.0" layoutY="450.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" wrappingWidth="189.0">
-         <font>
-            <Font name="Century Gothic" size="36.0" />
-         </font>
-      </Text>
-      <Button layoutX="430.0" layoutY="588.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="50.0" prefWidth="298.0" text="Exit">
-         <font>
-            <Font name="Century Gothic" size="25.0" />
-         </font>
-      </Button>
-      <Text id="title" fill="WHITE" layoutX="162.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Asteroids">
-         <font>
-            <Font name="Century Gothic" size="96.0" />
-         </font>
-      </Text>
-      <TextField fx:id="usernameField" onKeyReleased="#validateInput" layoutX="72.0" layoutY="462.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert username">
-         <font>
-            <Font size="18.0" />
-         </font></TextField>
-      <Label fx:id="usernameErrorLabel" layoutX="72.0" layoutY="500.0" style="-fx-opacity: 0;" text="Username is less than 4 characters" textFill="#c95517">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <PasswordField fx:id="passwordField" onKeyReleased="#validateInput" layoutX="72.0" layoutY="576.0" prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </PasswordField>
-      <Label fx:id="passwordErrorLabel" layoutX="72.0" layoutY="615.0" style="-fx-opacity: 0;" text="Password is less than 5 characters" textFill="#c95517">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label fx:id="errorMessage" layoutX="72.0" layoutY="638.0" style="-fx-opacity: 0;" text="Login failed: try again" textFill="#c90505">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label fx:id="successMessage" layoutX="82.0" layoutY="648.0" style="-fx-opacity: 0;" text="Login succeeded!" textFill="#14c91d">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
+            prefWidth="800.0" stylesheets="@../../defaultStyle.css" xmlns="http://javafx.com/javafx/11.0.1"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.LoginScreenController">
+    <children>
+        <ImageView fitHeight="800.0" fitWidth="800.0">
+            <image>
+                <Image url="@../images/stars.png"/>
+            </image>
+        </ImageView>
+        <Text fill="WHITE" layoutX="72.0" layoutY="566.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password"
+              wrappingWidth="189.0">
+            <font>
+                <Font name="Century Gothic" size="36.0"/>
+            </font>
+        </Text>
+        <Button layoutX="430.0" layoutY="509.0" mnemonicParsing="false" onAction="#openMainScreen" prefHeight="50.0"
+                prefWidth="298.0" text="Back">
+            <font>
+                <Font name="Century Gothic" size="25.0"/>
+            </font>
+        </Button>
+        <Button fx:id="loginButton" layoutX="430.0" layoutY="430.0" mnemonicParsing="false" onAction="#login"
+                prefHeight="50.0" prefWidth="298.0" text="Login">
+            <font>
+                <Font name="Century Gothic" size="25.0"/>
+            </font>
+        </Button>
+        <Text fill="WHITE" layoutX="72.0" layoutY="388.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
+            <font>
+                <Font name="Century Gothic" size="50.0"/>
+            </font>
+        </Text>
+        <Text fill="WHITE" layoutX="72.0" layoutY="450.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username"
+              wrappingWidth="189.0">
+            <font>
+                <Font name="Century Gothic" size="36.0"/>
+            </font>
+        </Text>
+        <Button layoutX="430.0" layoutY="588.0" mnemonicParsing="false" onMouseClicked="#exit" prefHeight="50.0"
+                prefWidth="298.0" text="Exit">
+            <font>
+                <Font name="Century Gothic" size="25.0"/>
+            </font>
+        </Button>
+        <Text id="title" fill="WHITE" layoutX="162.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              text="Asteroids">
+            <font>
+                <Font name="Century Gothic" size="96.0"/>
+            </font>
+        </Text>
+        <TextField fx:id="usernameField" onKeyReleased="#validateInput" layoutX="72.0" layoutY="462.0" prefHeight="31.0"
+                   prefWidth="189.0" promptText="Insert username">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </TextField>
+        <Label fx:id="usernameErrorLabel" layoutX="72.0" layoutY="500.0" style="-fx-opacity: 0;"
+               text="Username is less than 4 characters" textFill="#c95517">
+            <font>
+                <Font size="15.0"/>
+            </font>
+        </Label>
+        <PasswordField fx:id="passwordField" onKeyReleased="#validateInput" layoutX="72.0" layoutY="576.0"
+                       prefHeight="31.0" prefWidth="189.0" promptText="Insert password">
+            <font>
+                <Font size="18.0"/>
+            </font>
+        </PasswordField>
+        <Label fx:id="passwordErrorLabel" layoutX="72.0" layoutY="615.0" style="-fx-opacity: 0;"
+               text="Password is less than 5 characters" textFill="#c95517">
+            <font>
+                <Font size="15.0"/>
+            </font>
+        </Label>
+        <Label fx:id="errorMessage" layoutX="72.0" layoutY="638.0" style="-fx-opacity: 0;"
+               text="Login failed: try again" textFill="#c90505">
+            <font>
+                <Font size="20.0"/>
+            </font>
+        </Label>
+        <Label fx:id="successMessage" layoutX="82.0" layoutY="648.0" style="-fx-opacity: 0;" text="Login succeeded!"
+               textFill="#14c91d">
+            <font>
+                <Font size="20.0"/>
+            </font>
+        </Label>
+    </children>
 </AnchorPane>

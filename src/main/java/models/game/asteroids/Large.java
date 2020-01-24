@@ -1,9 +1,9 @@
 package models.game.asteroids;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import models.game.Asteroid;
-
-import java.util.Random;
 
 public class Large extends Asteroid {
 
@@ -15,6 +15,8 @@ public class Large extends Asteroid {
             "/views/sprites/asteroids/asteroidBrown_big2.png";
     private static final String sprite3 =
             "/views/sprites/asteroids/asteroidBrown_big3.png";
+
+    private static final ArrayList<String> sprites = new ArrayList<String>();
 
     private static final int maxRotation = 2;
     private static final int maxVelocity = 2;
@@ -46,16 +48,12 @@ public class Large extends Asteroid {
      * @param sprite The nr of the sprite to return.
      * @return The url to the sprite's PNG.
      */
-    @SuppressWarnings("PMD.AvoidLiteralsInIfCondition")
     public String getSprite(int sprite) {
-        if (sprite == 0) {
-            return sprite0;
-        } else if (sprite == 1) {
-            return sprite1;
-        } else if (sprite == 2) {
-            return sprite2;
-        } else {
-            return sprite3;
-        }
+        sprites.add(sprite0);
+        sprites.add(sprite1);
+        sprites.add(sprite2);
+        sprites.add(sprite3);
+
+        return sprites.get(sprite);
     }
 }

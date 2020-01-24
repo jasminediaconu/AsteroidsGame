@@ -33,34 +33,34 @@ class SpaceEntityTest {
 
     @Test
     void getterTest() {
-        assertEquals(0,spaceEntity.getRotation());
+        assertEquals(0, spaceEntity.getRotation());
 
-        Point2D centreScreen = new Point2D(400,400);
-        assertEquals(centreScreen,spaceEntity.getLocation());
+        Point2D centreScreen = new Point2D(400, 400);
+        assertEquals(centreScreen, spaceEntity.getLocation());
 
-        assertEquals(0,spaceEntity.getRotationSpeed());
+        assertEquals(0, spaceEntity.getRotationSpeed());
 
-        Point2D speedVector = new Point2D(0,0);
-        assertEquals(speedVector,spaceEntity.getVelocity());
+        Point2D speedVector = new Point2D(0, 0);
+        assertEquals(speedVector, spaceEntity.getVelocity());
 
-        assertEquals("/views/sprites/playerShip.png",spaceEntity.getUrl());
+        assertEquals("/views/sprites/playerShip.png", spaceEntity.getUrl());
     }
 
     @Test
     void setterTest() {
         spaceEntity.setRotation(50);
-        assertEquals(50,spaceEntity.getRotation());
+        assertEquals(50, spaceEntity.getRotation());
 
-        Point2D point = new Point2D(450,284);
+        Point2D point = new Point2D(450, 284);
         spaceEntity.setLocation(point);
-        assertEquals(point,spaceEntity.getLocation());
+        assertEquals(point, spaceEntity.getLocation());
 
         spaceEntity.setRotationSpeed(50);
-        assertEquals(50,spaceEntity.getRotationSpeed());
+        assertEquals(50, spaceEntity.getRotationSpeed());
 
-        Point2D speedVector = new Point2D(10,-40);
+        Point2D speedVector = new Point2D(10, -40);
         spaceEntity.setVelocity(speedVector);
-        assertEquals(speedVector,spaceEntity.getVelocity());
+        assertEquals(speedVector, spaceEntity.getVelocity());
     }
 
     @Test

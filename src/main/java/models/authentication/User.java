@@ -1,6 +1,7 @@
 package models.authentication;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
@@ -34,6 +35,7 @@ public class User {
      * Only a username is required because this class can be used to construct
      * a models.authentication.User in "environments" where no password/alias/salt may be available
      * (e.g. when retrieving a user from the database the password is not available)
+     *
      * @param username Username of the user
      */
     public User(String username) {
@@ -43,6 +45,7 @@ public class User {
     /**
      * Alternative constructor for User.
      * Used on login to create attemptedUser
+     *
      * @param username username of the user
      * @param password (attempted) password of the user
      */
@@ -53,6 +56,7 @@ public class User {
 
     /**
      * Getter for the salt.
+     *
      * @return the salt as a byte array
      */
     public byte[] getSalt() {
@@ -60,11 +64,12 @@ public class User {
     }
 
     public String getSaltAsString() throws UnsupportedEncodingException {
-        return new String(salt, "UTF-8");
+        return new String(salt, StandardCharsets.UTF_8);
     }
 
     /**
      * Setter for the salt.
+     *
      * @param salt byte array of salt to be set
      */
     public void setSalt(byte[] salt) {
@@ -73,6 +78,7 @@ public class User {
 
     /**
      * Getter for the username.
+     *
      * @return username as a String
      */
     public String getUsername() {
@@ -81,6 +87,7 @@ public class User {
 
     /**
      * Setter for the username.
+     *
      * @param username String to set username to
      */
     public void setUsername(String username) {
@@ -89,6 +96,7 @@ public class User {
 
     /**
      * Getter for the password.
+     *
      * @return password String
      */
     public byte[] getPassword() {
@@ -97,19 +105,16 @@ public class User {
 
     /**
      * Getter for the password.
+     *
      * @return password String
      */
     public String getPasswordAsString() {
-        try {
-            return new String(password, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return new String(password, StandardCharsets.UTF_8);
     }
 
     /**
      * Setter for the password.
+     *
      * @param password String to set password to
      */
     public void setPassword(byte[] password) {
@@ -118,6 +123,7 @@ public class User {
 
     /**
      * Getter for the alias.
+     *
      * @return alias String
      */
     public String getAlias() {
@@ -126,6 +132,7 @@ public class User {
 
     /**
      * Setter for the alias.
+     *
      * @param alias String to set alias to
      */
     public void setAlias(String alias) {

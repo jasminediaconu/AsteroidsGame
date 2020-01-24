@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+
 import models.authentication.User;
 import models.game.Game;
 import org.junit.jupiter.api.Assertions;
@@ -83,7 +84,7 @@ class DatabaseTest {
 
 
         try {
-            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            PreparedStatement stm = Mockito.mock(PreparedStatement.class);
             Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
 
             db.insertUser(user);
@@ -105,7 +106,7 @@ class DatabaseTest {
         String username = "name";
 
         try {
-            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            PreparedStatement stm = Mockito.mock(PreparedStatement.class);
             Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
 
             ResultSet rs = Mockito.mock(ResultSet.class);
@@ -138,7 +139,7 @@ class DatabaseTest {
         user.setPassword(pass);
 
         try {
-            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            PreparedStatement stm = Mockito.mock(PreparedStatement.class);
             Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
 
             ResultSet rs = Mockito.mock(ResultSet.class);
@@ -173,7 +174,7 @@ class DatabaseTest {
         String statement = "delete from user where username = ?";
 
         try {
-            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            PreparedStatement stm = Mockito.mock(PreparedStatement.class);
             Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
             Mockito.when(stm.executeUpdate()).thenReturn(0);
 
@@ -195,7 +196,7 @@ class DatabaseTest {
         String statement = "delete from user where username = ?";
 
         try {
-            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            PreparedStatement stm = Mockito.mock(PreparedStatement.class);
             Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
             Mockito.when(stm.executeUpdate()).thenReturn(1);
 
@@ -216,13 +217,14 @@ class DatabaseTest {
         int id = 1;
 
         try {
-            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            PreparedStatement stm = Mockito.mock(PreparedStatement.class);
             Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
 
             ResultSet rs = Mockito.mock(ResultSet.class);
             Mockito.when(stm.executeQuery()).thenReturn(rs);
             Mockito.when(rs.next()).thenAnswer(new Answer<Object>() {
                 boolean called = false;
+
                 @Override
                 public Object answer(InvocationOnMock invocation) throws Throwable {
                     if (!called) {
@@ -258,13 +260,14 @@ class DatabaseTest {
                 + "* from game order by score desc limit 12";
 
         try {
-            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            PreparedStatement stm = Mockito.mock(PreparedStatement.class);
             Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
 
             ResultSet rs = Mockito.mock(ResultSet.class);
             Mockito.when(stm.executeQuery()).thenReturn(rs);
             Mockito.when(rs.next()).thenAnswer(new Answer<Object>() {
                 boolean called = false;
+
                 @Override
                 public Object answer(InvocationOnMock invocation) throws Throwable {
                     if (!called) {
@@ -299,7 +302,7 @@ class DatabaseTest {
         String statement = "insert into login_attempt values(?)";
 
         try {
-            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            PreparedStatement stm = Mockito.mock(PreparedStatement.class);
             Mockito.when(conn.prepareStatement(statement)).thenReturn(stm);
 
             db.insertLoginAttempt(0L);
@@ -315,7 +318,7 @@ class DatabaseTest {
     @Test
     void getLastLoginLocked() {
         try {
-            PreparedStatement stm  = Mockito.mock(PreparedStatement.class);
+            PreparedStatement stm = Mockito.mock(PreparedStatement.class);
             ResultSet rs = Mockito.mock(ResultSet.class);
 
             Mockito.when(conn.prepareStatement(any())).thenReturn(stm);
@@ -337,7 +340,8 @@ class DatabaseTest {
     @Test
     void insertGameException() throws SQLException {
         Mockito.when(conn.prepareStatement(any())).thenThrow(SQLException.class);
-        db.insertGame(0, "", "", null, 0);
+        Game game = new Game(0, "", "", null, 0);
+        db.insertGame(game);
 
         assertTrue(outContent.toString().contains("error: connection couldn't be established\n"));
     }
@@ -395,7 +399,7 @@ class DatabaseTest {
 
         boolean negativeId = false;
 
-        for (Game game:games) {
+        for (Game game : games) {
             if (game.getId() <= 0) {
                 negativeId = true;
             }

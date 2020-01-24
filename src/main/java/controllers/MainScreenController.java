@@ -16,6 +16,7 @@ public class MainScreenController {
 
     /**
      * Getter for Login Screen scene.
+     *
      * @return loginScreen
      */
     public Scene getLoginScreen() {
@@ -29,7 +30,7 @@ public class MainScreenController {
      * @param actionEvent type ActionEvent
      */
     public void openLoginScreen(ActionEvent actionEvent) {
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(loginScreen);
     }
 
@@ -44,6 +45,7 @@ public class MainScreenController {
 
     /**
      * Getter for Register Screen scene.
+     *
      * @return registerScreen
      */
     public Scene getRegisterScreen() {
@@ -66,7 +68,7 @@ public class MainScreenController {
      * @param actionEvent type ActionEvent
      */
     public void openRegisterScreen(ActionEvent actionEvent) {
-        Stage primaryStage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
+        Stage primaryStage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         primaryStage.setScene(registerScreen);
     }
 

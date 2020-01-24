@@ -1,31 +1,29 @@
 package models.game;
 
-import controllers.AudioController;
-import controllers.GameScreenController;
-import java.util.Random;
-import javafx.geometry.Point2D;
+import static views.GameScreenView.screenSize;
 
+import controllers.AudioController;
+
+import java.util.Random;
+
+import javafx.geometry.Point2D;
 
 public class Player extends SpaceEntity {
 
-    private static final int center = GameScreenController.screenSize / 2;
+    private static final int center = screenSize / 2;
 
     //amount of time (in seconds roughly) the player has to wait until it can fire again
-    private transient final double fireCooldown = 0.2;
+    private final transient double fireCooldown = 0.2;
     private transient double currentFireCooldown = 1;
-    private transient final double teleportCooldown = 5;
+    private final transient double teleportCooldown = 5;
     private transient double currentTeleportCooldown = teleportCooldown;
-
-    //acceleration modifier, very sensitive.
-    private transient double acceleration = 0.069;
 
     private Shield shield;
 
     private transient double invulnerabilityTime;
 
-    private int lives;
-
-    private int totalScore;
+    private transient int lives;
+    private transient int totalScore;
     /**
      * Current score of player.
      * Needed to keep count of the 10000 points, so the extra life can be added.
@@ -60,10 +58,12 @@ public class Player extends SpaceEntity {
      * Thrust spaceship.
      */
     public void thrust() {
+        //acceleration modifier, very sensitive.
+        double acceleration = 0.069;
         setVelocity(getVelocity().add(
                 acceleration * Math.cos(Math.toRadians(getRotation())),
                 acceleration * Math.sin(Math.toRadians(getRotation()))
-                ));
+        ));
     }
 
     /**
@@ -103,6 +103,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Checks if the player has lives left.
+     *
      * @return false is the player has 0 lives, true if they have more.
      */
     public boolean hasLives() {
@@ -111,6 +112,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for the lives.
+     *
      * @return how many lives the player has.
      */
     public int getLives() {
@@ -119,6 +121,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for the life.
+     *
      * @param lives new value of life.
      */
     public void setLives(int lives) {
@@ -127,6 +130,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Increments the player's score by the value passed.
+     *
      * @param value value.
      */
     public void incrementScore(int value) {
@@ -136,6 +140,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for totalScore.
+     *
      * @return total score of player.
      */
     public int getTotalScore() {
@@ -144,6 +149,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for totalScore.
+     *
      * @param totalScore new value for totalScore.
      */
     public void setTotalScore(int totalScore) {
@@ -152,6 +158,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Getter for currentScore.
+     *
      * @return current score of the player.
      */
     public int getCurrentScore() {
@@ -160,6 +167,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter of currentScore.
+     *
      * @param currentScore new value for currentScore.
      */
     public void setCurrentScore(int currentScore) {
@@ -174,14 +182,15 @@ public class Player extends SpaceEntity {
 
         // Start laser sound effect
         AudioController audioController = new AudioController();
-        audioController.playSound("src/main/resources/audio/laser_lo.wav");
+        audioController.playLaser();
 
-        this.currentFireCooldown = this.fireCooldown;
+        this.currentFireCooldown = fireCooldown;
         return new Bullet(this);
     }
 
     /**
      * Checks if the player can fire their weapon.
+     *
      * @return boolean the player can fire
      */
     public boolean canFire() {
@@ -225,6 +234,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Returns the shield of the player.
+     *
      * @return Shield
      */
     public Shield getShield() {
@@ -233,6 +243,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for the Shield.
+     *
      * @param shield new value of Shield
      */
     public void setShield(Shield shield) {
@@ -241,6 +252,7 @@ public class Player extends SpaceEntity {
 
     /**
      * This method creates a new Shield for the player.
+     *
      * @return shield.
      */
     public Shield activateShield() {
@@ -250,6 +262,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Returns seconds left of invulnerability.
+     *
      * @return current invulnerabilityTime
      */
     public double getInvulnerabilityTime() {
@@ -258,6 +271,7 @@ public class Player extends SpaceEntity {
 
     /**
      * Setter for invulnerabilityTime, needed for testing.
+     *
      * @param ivt new value
      */
     public void setInvulnerabilityTime(double ivt) {
@@ -278,8 +292,8 @@ public class Player extends SpaceEntity {
     public void teleport() {
         if (currentTeleportCooldown <= Double.MIN_VALUE * 2) {
             Random rand = new Random();
-            int x = rand.nextInt(GameScreenController.screenSize);
-            int y = rand.nextInt(GameScreenController.screenSize);
+            int x = rand.nextInt(screenSize);
+            int y = rand.nextInt(screenSize);
             setLocation(new Point2D(x, y));
             currentTeleportCooldown = teleportCooldown;
         }
