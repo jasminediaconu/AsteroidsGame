@@ -430,14 +430,12 @@ public class GameScreenController {
         if (Math.random() < hostileSpawnChance) {
             if (hostiles.size() == magicNumber) {
 
-                for (ListIterator<Hostile> iterator = hostiles.listIterator();
-                     iterator.hasNext();) {
-                    Hostile ufo = iterator.next();
-                    if (ufo instanceof Sniper) {
-                        gameScreenView.addHostile(hostiles, new Juggernaut());
-                    } else if (ufo instanceof Juggernaut) {
-                        gameScreenView.addHostile(hostiles, new Sniper(getPlayer()));
-                    }
+                Hostile ufo = hostiles.get(0);
+
+                if (ufo instanceof Sniper) {
+                    gameScreenView.addHostile(hostiles, new Juggernaut());
+                } else if (ufo instanceof Juggernaut) {
+                    gameScreenView.addHostile(hostiles, new Sniper(getPlayer()));
                 }
             }
 
