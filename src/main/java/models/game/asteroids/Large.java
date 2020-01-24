@@ -58,17 +58,4 @@ public class Large extends Asteroid {
 
         return sprites.get(sprite);
     }
-
-    @Override
-    public List<Asteroid> split() {
-        Medium md1 = new Medium(new Random());
-        Medium md2 = new Medium(new Random());
-        md1.setLocation(this.getLocation());
-        md2.setLocation(this.getLocation());
-
-        List<Asteroid> res = new ArrayList<>();
-        res.add(md1);
-        res.add(md2);
-        return res;
-    }
 }
